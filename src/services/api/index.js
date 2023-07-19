@@ -9,19 +9,15 @@ export const jsonServerApi = createApi({
     mode: "cors",
   }),
   endpoints: (builder) => ({
-    // getAdmins: builder.query({
-    //   query: () => `User/GetAllUsers`,
-    //   providesTags: ["Admin Setup"],
-    // }),
-    // createAdmin: builder.mutation({
-    //   query: (payload) => ({
-    //     url: `User/AddNewUser`,
-    //     method: "POST",
-    //     body: payload,
-    //   }),
-    //   invalidatesTags: ["Admin Setup"],
-    // }),
+    createLogin: builder.mutation({
+      query: (payload) => ({
+        url: `Authenticate/Authenticate`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Login User"],
+    }),
   }),
 });
 
-export const { useGetAdminsQuery, useCreateAdminMutation } = jsonServerApi;
+export const { useCreateLoginMutation } = jsonServerApi;

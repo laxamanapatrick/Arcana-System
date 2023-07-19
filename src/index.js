@@ -9,7 +9,7 @@ import { store } from "./services/store/store-config";
 import { Provider } from "react-redux";
 
 const Index = () => {
-  const [currentTheme, setCurrentTheme] = useState(lightTheme);
+  const [currentTheme, setCurrentTheme] = useState(darkTheme);
 
   const toggleTheme = () => {
     setCurrentTheme((prevTheme) =>

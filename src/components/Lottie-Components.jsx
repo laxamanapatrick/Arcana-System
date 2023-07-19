@@ -40,7 +40,7 @@ const StyledToast = styled(Box)(({ backgroundColor }) => ({
   width: "300px",
   height: "auto",
   wordWrap: "break-word",
-  padding: "25px 45px",
+  padding: "15px 25px",
 }));
 
 export const NoDataFound = ({ text }) => {
@@ -170,7 +170,7 @@ export const ResponseToast = ({ text, status }) => {
     switch (status) {
       case "success":
         backgroundColor = "green";
-        textColor = "black";
+        textColor = "white";
         break;
       case "error":
         backgroundColor = "red";

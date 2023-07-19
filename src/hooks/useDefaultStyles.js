@@ -3,19 +3,40 @@ import { useTheme } from "@mui/material";
 export const useDefaultStyles = () => {
   const theme = useTheme();
 
+  const textColor = "#d1c9da";
+  const disabledBg = "6c5982";
+
   const defaultButtonStyle = {
+    // ".defaultButtons": {
+    //   color: textColor,
+    //   bgcolor: theme.palette.primary.main,
+    //   ":hover": {
+    //     color: textColor,
+    //     bgcolor: theme.palette.secondary.main,
+    //     variant: "contained",
+    //   },
+    //   ":disabled": {
+    //     color: "gray",
+    //     bgcolor: "gray",
+    //     border: `none`,
+    //     "&.MuiButtonBase-root:disabled": {
+    //       cursor: "not-allowed",
+    //       pointerEvents: "auto",
+    //     },
+    //   },
+    // },
     ".primaryButtons": {
-      color: theme.palette.secondary.main,
+      color: textColor,
       bgcolor: theme.palette.primary.main,
-      border: `1px solid ${theme.palette.secondary.main}`,
+      // border: `1px solid ${theme.palette.secondary.main}`,
       ":hover": {
-        color: theme.palette.primary.main,
+        color: textColor,
         bgcolor: theme.palette.secondary.main,
         variant: "contained",
       },
       ":disabled": {
-        color: "gray",
-        bgcolor: "gray",
+        color: textColor,
+        bgcolor: disabledBg,
         border: `none`,
         "&.MuiButtonBase-root:disabled": {
           cursor: "not-allowed",
@@ -33,8 +54,8 @@ export const useDefaultStyles = () => {
         variant: "contained",
       },
       ":disabled": {
-        color: "gray",
-        bgcolor: "gray",
+        color: textColor,
+        bgcolor: disabledBg,
         border: `none`,
         "&.MuiButtonBase-root:disabled": {
           cursor: "not-allowed",
@@ -46,10 +67,8 @@ export const useDefaultStyles = () => {
 
   const defaultTextFieldStyle = {
     size: "small",
-    color: theme.palette.secondary.main,
-    bgcolor: theme.palette.common.white,
     "& .Mui-focused.MuiFormLabel-root": {
-      color: `${theme.palette.secondary.main} !important`,
+      color: `${theme.palette.common.white} !important`,
     },
     "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
       borderColor: `${theme.palette.secondary.main} !important`,
@@ -59,5 +78,20 @@ export const useDefaultStyles = () => {
     },
   };
 
-  return { defaultButtonStyle, defaultTextFieldStyle };
+  const mobileTextFieldStyle = {
+    size: "small",
+    color: `${theme.palette.primary.main} !important`,
+    background: `${theme.palette.primary.main} !important`,
+    "& .Mui-focused.MuiFormLabel-root": {
+      color: `${theme.palette.primary.main} !important`,
+    },
+    "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: `${theme.palette.primary.main} !important`,
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderRadius: "none",
+    },
+  };
+
+  return { defaultButtonStyle, defaultTextFieldStyle, mobileTextFieldStyle };
 };

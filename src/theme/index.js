@@ -2,17 +2,17 @@ import { createTheme } from "@mui/material";
 
 const colorSchemes = {
   light: {
-    primary: "#452c63",
-    secondary: "#E6E6FA",
-    error: "#F30737",
-  },
-  dark: {
     primary: "#212121",
     secondary: "#757575",
     error: "#ed5574",
   },
+  dark: {
+    primary: "#23024a",
+    secondary: "#7e00d4",
+    error: "#F30737",
+  },
 };
-            
+
 const lightTheme = createTheme({
   palette: {
     mode: "light",
