@@ -3,20 +3,22 @@ import {
   Box,
   Button,
   Drawer,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Paper,
   Stack,
   useMediaQuery,
 } from "@mui/material";
 import { sampleSidebar } from "../../mockData";
 import { useNavigate } from "react-router-dom";
-import { Logout } from "@mui/icons-material";
+import { Close, Logout } from "@mui/icons-material";
+import { useTheme } from "@emotion/react";
 
-const NavigationHeader = () => {
+const NavigationHeader = ({ onClose }) => {
+  const theme = useTheme();
   const changeLogo = useMediaQuery("(max-width: 1024px)");
   return (
     <>
@@ -24,20 +26,40 @@ const NavigationHeader = () => {
         <Box
           display="flex"
           flexDirection="row"
-          justifyContent="center"
+          justifyContent="space-between"
           alignItems="center"
           gap={0}
         >
-          <img
-            src={
-              changeLogo
-                ? "./images/SystemLogo.png"
-                : "./images/SystemLogoName.png"
-            }
-            alt="logo"
-            loading="lazy"
-            style={{ minWidth: "35%", maxWidth: "40%", padding: 0, margin: 0 }}
-          />
+          <div></div>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <img
+              src={
+                changeLogo
+                  ? "./images/SystemLogo.png"
+                  : "./images/SystemLogoName.png"
+              }
+              alt="logo"
+              loading="lazy"
+              style={{
+                minWidth: "35%",
+                maxWidth: "40%",
+                padding: 0,
+                margin: 0,
+              }}
+            />
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              bottom: 0,
+              top: 0,
+              right: 0,
+            }}
+          >
+            <IconButton onClick={onClose}>
+              <Close sx={{ color: theme.palette.primary.main }} />
+            </IconButton>
+          </div>
         </Box>
       </Box>
     </>
@@ -52,11 +74,11 @@ const NavigationFooter = () => {
   };
   return (
     <>
-      <Box width="auto">
+      <Box width="100%">
         <Button
           fullWidth
           sx={{ color: "#30004D" }}
-          startIcon={<Logout />}
+          startIcon={<Logout sx={{ transform: "rotate(180deg)" }} />}
           onClick={handleLogout}
         >
           Logout
@@ -69,7 +91,7 @@ const NavigationFooter = () => {
 const NavigationContent = () => {
   return (
     <>
-      <Stack height="90%" mt={2}>
+      <Stack flexGrow={1} mt={2} maxHeight="48%" sx={{ overflowY: "auto" }}>
         <List>
           {sampleSidebar?.map((item, i) => (
             <ListItem
@@ -96,7 +118,10 @@ const NavigationContent = () => {
                 >
                   {item.icon}
                 </ListItemIcon>
-                <ListItemText primary={item.name} />
+                <ListItemText
+                  primary={item.name}
+                  sx={{ color: "black", fontSize: "10px" }}
+                />
               </ListItemButton>
             </ListItem>
           ))}
@@ -107,20 +132,36 @@ const NavigationContent = () => {
 };
 
 export const NavigationMain = ({ isOpen, onClose }) => {
+  const adjustHeightonDesktop = useMediaQuery("(min-height:930px)");
+  const theme = useTheme();
+
   return (
-    <Drawer open={isOpen} onClose={onClose}>
-      <Paper
-        elevation={20}
-        sx={{ height: "100%", background: "#FFFF", color: "black" }}
+    <>
+      <Drawer
+        open={isOpen}
+        onClose={onClose}
+        sx={{
+          "& .MuiDrawer-paper": {
+            width: 370,
+            background: theme.palette.secondary.main,
+          },
+        }}
       >
-        <Stack display="flex" justifyContent="space-between" height="100%">
-          <NavigationHeader />
-          <NavigationContent />
-          <Stack>
-            <NavigationFooter />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexDirection: "column",
+            height: adjustHeightonDesktop ? "100%" : "95%",
+          }}
+        >
+          <Stack height="100%">
+            <NavigationHeader onClose={onClose} />
+            <NavigationContent />
           </Stack>
-        </Stack>
-      </Paper>
-    </Drawer>
+          <NavigationFooter />
+        </Box>
+      </Drawer>
+    </>
   );
 };

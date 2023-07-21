@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import Layout from "../layout";
 
 const AuthenticatedRoutes = () => {
-  const fullname = useSelector((state) => state.fullname);
+  const fullname = useSelector((state) => state.fullname.fullname);
 
   return !fullname ? <Navigate to="/login" /> : <Layout />;
 };

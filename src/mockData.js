@@ -41,4 +41,243 @@ export const sampleSidebar = [
       },
     ],
   },
+  {
+    id: 2,
+    path: "/group",
+    name: "Group",
+    icon: <Groups2 />,
+    sub: [
+      {
+        id: 1,
+        name: "Deals",
+        path: "/deals",
+        icon: <Groups2 />,
+      },
+      {
+        id: 2,
+        name: "Offers",
+        path: "/offers",
+        icon: <Groups2 />,
+      },
+    ],
+  },
+  {
+    id: 2,
+    path: "/group",
+    name: "Group",
+    icon: <Groups2 />,
+    sub: [
+      {
+        id: 1,
+        name: "Deals",
+        path: "/deals",
+        icon: <Groups2 />,
+      },
+      {
+        id: 2,
+        name: "Offers",
+        path: "/offers",
+        icon: <Groups2 />,
+      },
+    ],
+  },
+  {
+    id: 2,
+    path: "/group",
+    name: "Group",
+    icon: <Groups2 />,
+    sub: [
+      {
+        id: 1,
+        name: "Deals",
+        path: "/deals",
+        icon: <Groups2 />,
+      },
+      {
+        id: 2,
+        name: "Offers",
+        path: "/offers",
+        icon: <Groups2 />,
+      },
+    ],
+  },
+  {
+    id: 2,
+    path: "/group",
+    name: "Group",
+    icon: <Groups2 />,
+    sub: [
+      {
+        id: 1,
+        name: "Deals",
+        path: "/deals",
+        icon: <Groups2 />,
+      },
+      {
+        id: 2,
+        name: "Offers",
+        path: "/offers",
+        icon: <Groups2 />,
+      },
+    ],
+  },
+    {
+    id: 2,
+    path: "/group",
+    name: "Group",
+    icon: <Groups2 />,
+    sub: [
+      {
+        id: 1,
+        name: "Deals",
+        path: "/deals",
+        icon: <Groups2 />,
+      },
+      {
+        id: 2,
+        name: "Offers",
+        path: "/offers",
+        icon: <Groups2 />,
+      },
+    ],
+  },  {
+    id: 2,
+    path: "/group",
+    name: "Group",
+    icon: <Groups2 />,
+    sub: [
+      {
+        id: 1,
+        name: "Deals",
+        path: "/deals",
+        icon: <Groups2 />,
+      },
+      {
+        id: 2,
+        name: "Offers",
+        path: "/offers",
+        icon: <Groups2 />,
+      },
+    ],
+  },
+  {
+    id: 2,
+    path: "/group",
+    name: "Group",
+    icon: <Groups2 />,
+    sub: [
+      {
+        id: 1,
+        name: "Deals",
+        path: "/deals",
+        icon: <Groups2 />,
+      },
+      {
+        id: 2,
+        name: "Offers",
+        path: "/offers",
+        icon: <Groups2 />,
+      },
+    ],
+  },
+  {
+    id: 2,
+    path: "/group",
+    name: "Group",
+    icon: <Groups2 />,
+    sub: [
+      {
+        id: 1,
+        name: "Deals",
+        path: "/deals",
+        icon: <Groups2 />,
+      },
+      {
+        id: 2,
+        name: "Offers",
+        path: "/offers",
+        icon: <Groups2 />,
+      },
+    ],
+  },
+  {
+    id: 2,
+    path: "/group",
+    name: "Group",
+    icon: <Groups2 />,
+    sub: [
+      {
+        id: 1,
+        name: "Deals",
+        path: "/deals",
+        icon: <Groups2 />,
+      },
+      {
+        id: 2,
+        name: "Offers",
+        path: "/offers",
+        icon: <Groups2 />,
+      },
+    ],
+  },  {
+    id: 2,
+    path: "/group",
+    name: "Group",
+    icon: <Groups2 />,
+    sub: [
+      {
+        id: 1,
+        name: "Deals",
+        path: "/deals",
+        icon: <Groups2 />,
+      },
+      {
+        id: 2,
+        name: "Offers",
+        path: "/offers",
+        icon: <Groups2 />,
+      },
+    ],
+  },
+  {
+    id: 2,
+    path: "/group",
+    name: "Group",
+    icon: <Groups2 />,
+    sub: [
+      {
+        id: 1,
+        name: "Deals",
+        path: "/deals",
+        icon: <Groups2 />,
+      },
+      {
+        id: 2,
+        name: "Offers",
+        path: "/offers",
+        icon: <Groups2 />,
+      },
+    ],
+  },
+  {
+    id: 2,
+    path: "/group",
+    name: "Group",
+    icon: <Groups2 />,
+    sub: [
+      {
+        id: 1,
+        name: "Deals",
+        path: "/deals",
+        icon: <Groups2 />,
+      },
+      {
+        id: 2,
+        name: "Offers",
+        path: "/offers",
+        icon: <Groups2 />,
+      },
+    ],
+  },
+  
 ];

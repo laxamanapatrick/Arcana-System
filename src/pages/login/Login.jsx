@@ -17,7 +17,7 @@ const Login = () => {
     { data: response, error: errorResponse, isLoading, isError, isSuccess },
   ] = useCreateLoginMutation();
 
-  const showLogo = useMediaQuery("(min-width:1175px)");
+  const showLogo = useMediaQuery("(min-width:1021px)");
 
   const { handleSubmit, control, errors, isValid } = useFormSetup({
     schema: loginSchema,
@@ -30,8 +30,8 @@ const Login = () => {
   const submitHandler = async (data) => {
     try {
       const res = await createLogin(data).unwrap();
-      dispatch(setFullname(res?.data?.data?.fullname));
-      dispatch(setToken(res?.data?.data?.token));
+      dispatch(setFullname(res?.data?.fullname));
+      dispatch(setToken(res?.data?.token));
       window.setTimeout(() => {
         navigate("/");
       }, 400);
@@ -58,8 +58,8 @@ const Login = () => {
     background: showLogo
       ? "linear-gradient(90deg, rgba(255,255,255,1) 32%, rgba(35,2,74,1) 93%)"
       : "transparent",
-    maxWidth: "42%",
-    minWidth: "20%",
+    maxWidth: "48%",
+    minWidth: "35%",
     borderRadius: "10px",
     height: "47vh",
     position: "relative",

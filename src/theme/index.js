@@ -4,11 +4,15 @@ const colorSchemes = {
   light: {
     primary: "#212121",
     secondary: "#757575",
+    accent: "#766bb9",
     error: "#ed5574",
   },
   dark: {
-    primary: "#23024a",
-    secondary: "#7e00d4",
+    // primary: "#23024a",
+    // secondary: "#7e00d4",
+    primary: "#766bb9",
+    secondary: "#243448",
+    accent: "#766bb9",
     error: "#F30737",
   },
 };
