@@ -31,14 +31,3 @@ const loginSlice = createSlice({
 export const { setFullname, setToken } = loginSlice.actions;
 
 export default loginSlice.reducer;
-
-// export const decodeUser = () => {
-//     let userDatadecrypted;
-//     if (sessionStorage.getItem('userData')) {
-//         const userData = sessionStorage.getItem('userData');
-//         const deciphertext = CryptoJS.AES.decrypt(userData, saltkey)
-//         userDatadecrypted = JSON.parse(deciphertext.toString(CryptoJS.enc.Utf8))
-//     }
-
-//     return userDatadecrypted
-// }

@@ -3,39 +3,19 @@ import { useTheme } from "@mui/material";
 export const useDefaultStyles = () => {
   const theme = useTheme();
 
-  const textColor = "#d1c9da";
   const disabledBg = "6c5982";
 
   const defaultButtonStyle = {
-    // ".defaultButtons": {
-    //   color: textColor,
-    //   bgcolor: theme.palette.primary.main,
-    //   ":hover": {
-    //     color: textColor,
-    //     bgcolor: theme.palette.secondary.main,
-    //     variant: "contained",
-    //   },
-    //   ":disabled": {
-    //     color: "gray",
-    //     bgcolor: "gray",
-    //     border: `none`,
-    //     "&.MuiButtonBase-root:disabled": {
-    //       cursor: "not-allowed",
-    //       pointerEvents: "auto",
-    //     },
-    //   },
-    // },
     ".primaryButtons": {
-      color: textColor,
-      bgcolor: theme.palette.primary.main,
-      // border: `1px solid ${theme.palette.secondary.main}`,
+      color: theme.palette.common.white,
+      bgcolor: theme.palette.secondary.main,
       ":hover": {
-        color: textColor,
-        bgcolor: theme.palette.secondary.main,
+        color: theme.palette.common.white,
+        bgcolor: theme.palette.primary.main,
         variant: "contained",
       },
       ":disabled": {
-        color: textColor,
+        color: theme.palette.common.white,
         bgcolor: disabledBg,
         border: `none`,
         "&.MuiButtonBase-root:disabled": {
@@ -54,7 +34,7 @@ export const useDefaultStyles = () => {
         variant: "contained",
       },
       ":disabled": {
-        color: textColor,
+        color: theme.palette.common.white,
         bgcolor: disabledBg,
         border: `none`,
         "&.MuiButtonBase-root:disabled": {

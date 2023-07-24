@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
   Drawer,
@@ -9,20 +12,23 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Radio,
   Stack,
   useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import { sampleSidebar } from "../../mockData";
-import { useNavigate } from "react-router-dom";
-import { Close, Logout } from "@mui/icons-material";
-import { useTheme } from "@emotion/react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Close, ExpandMore, Logout } from "@mui/icons-material";
+import { useDefaultStyles } from "../../hooks/useDefaultStyles";
+import { useSelector } from "react-redux";
+import { getIconElement } from "../../components/Get-Icon";
 
 const NavigationHeader = ({ onClose }) => {
   const theme = useTheme();
   const changeLogo = useMediaQuery("(max-width: 1024px)");
   return (
     <>
-      <Box width="auto">
+      <Box width="auto" height="160px">
         <Box
           display="flex"
           flexDirection="row"
@@ -31,12 +37,18 @@ const NavigationHeader = ({ onClose }) => {
           gap={0}
         >
           <div></div>
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginLeft: "30px",
+            }}
+          >
             <img
               src={
                 changeLogo
                   ? "./images/SystemLogo.png"
-                  : "./images/SystemLogoName.png"
+                  : "./images/SystemLogo.png"
               }
               alt="logo"
               loading="lazy"
@@ -50,7 +62,7 @@ const NavigationHeader = ({ onClose }) => {
           </div>
           <div
             style={{
-              position: "absolute",
+              marginBottom: "100px",
               bottom: 0,
               top: 0,
               right: 0,
@@ -67,6 +79,7 @@ const NavigationHeader = ({ onClose }) => {
 };
 
 const NavigationFooter = () => {
+  const { defaultButtonStyle } = useDefaultStyles();
   const navigate = useNavigate();
   const handleLogout = () => {
     sessionStorage.clear();
@@ -74,10 +87,10 @@ const NavigationFooter = () => {
   };
   return (
     <>
-      <Box width="100%">
+      <Box width="100%" sx={defaultButtonStyle}>
         <Button
+          className="primaryButtons"
           fullWidth
-          sx={{ color: "#30004D" }}
           startIcon={<Logout sx={{ transform: "rotate(180deg)" }} />}
           onClick={handleLogout}
         >
@@ -89,40 +102,135 @@ const NavigationFooter = () => {
 };
 
 const NavigationContent = () => {
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const sidebarNavigation = useSelector(
+    (state) => state.sidebarNavigation.sidebarNavigation
+  );
+  const permissions = useSelector((state) => state.permissions.permissions);
+  const [subNav, setSubNav] = useState([]);
+
+  const allowedNavigationData = sidebarNavigation.filter((item) => {
+    return permissions.includes(item.name);
+  });
+
+  useEffect(() => {
+    const currentNavItem = allowedNavigationData.find((item) =>
+      pathname.includes(item.path)
+    );
+    const currentSubNav = currentNavItem?.sub?.filter((subItem) =>
+      permissions.includes(subItem.name)
+    );
+    setSubNav(currentSubNav);
+
+  }, []);
+
+  const handleAccordionExpand = (data) => {
+    navigate(data?.path)
+    const permittedSubNav = data?.sub?.filter((subItem) =>
+      permissions.includes(subItem.name)
+    );
+    setSubNav(permittedSubNav);
+  };
+
   return (
     <>
-      <Stack flexGrow={1} mt={2} maxHeight="48%" sx={{ overflowY: "auto" }}>
+      <Stack mt={2} maxHeight="48%" sx={{ overflowY: "auto" }} height="700px">
         <List>
-          {sampleSidebar?.map((item, i) => (
+          {allowedNavigationData?.map((item, i) => (
             <ListItem
               key={i}
               disablePadding
               sx={{ textTransform: "uppercase" }}
             >
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  //   justifyContent: open ? "initial" : "center",
-                  alignItems: "center",
-                  px: 2.5,
-                  gap: 1,
-                }}
+              <Accordion
+                expanded={pathname.includes(item.path)}
+                sx={{ width: "100%", background: "none", color: "none " }}
               >
-                <ListItemIcon
+                <AccordionSummary
+                  expandIcon={<ExpandMore />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                  sx={{ height: "5px" }}
+                  onClick={() => handleAccordionExpand(item)}
+                >
+                  <ListItemButton
+                    sx={{
+                      px: 1,
+                      gap: 1,
+                      height: "40px",
+                      ":hover": {
+                        color: "none",
+                        background: "none",
+                      },
+                      ":active": {
+                        color: "none",
+                        background: "none",
+                      },
+                      ":focus": {
+                        color: "none",
+                        background: "none",
+                      },
+                    }}
+                  >
+                    <ListItemIcon
+                      sx={{
+                        minWidth: 0,
+                        // mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {getIconElement(item.icon)}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={item.name}
+                      sx={{ fontSize: "10px" }}
+                    />
+                  </ListItemButton>
+                </AccordionSummary>
+                <AccordionDetails
                   sx={{
-                    minWidth: 0,
-                    // mr: open ? 3 : "auto",
+                    width: "auto",
+                    display: "flex",
+                    flexDirection: "column",
                     justifyContent: "center",
-                    color: "black",
+                    gap: "2px",
                   }}
                 >
-                  {item.icon}
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.name}
-                  sx={{ color: "black", fontSize: "10px" }}
-                />
-              </ListItemButton>
+                  {subNav?.map((item2, i) => (
+                    <Link
+                      to={item2.path}
+                      style={{ textDecoration: "none" }}
+                      key={i}
+                    >
+                      <Box px={5} display="flex" justifyContent="space-between">
+                        <Button
+                          sx={{
+                            color: theme.palette.common.white,
+                            fontSize: "12px",
+                            ":hover": {
+                              color: theme.palette.common.white,
+                              background: theme.palette.primary.main,
+                            },
+                          }}
+                        >
+                          {item2.name}
+                        </Button>
+                        <Radio
+                          checked={pathname.includes(item2.path)}
+                          sx={{
+                            "& .MuiSvgIcon-root": {
+                              marginBottom: "2.5px",
+                              fontSize: "12px",
+                            },
+                          }}
+                        />
+                      </Box>
+                    </Link>
+                  ))}
+                </AccordionDetails>
+              </Accordion>
             </ListItem>
           ))}
         </List>

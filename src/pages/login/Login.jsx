@@ -6,16 +6,16 @@ import { LoadingButton } from "@mui/lab";
 import { useDefaultStyles } from "../../hooks/useDefaultStyles";
 import { loginSchema, loginValues } from "../../schema";
 import { useCreateLoginMutation } from "../../services/api";
-import { ResponseToast } from "../../components/Lottie-Components";
 import { useDispatch } from "react-redux";
 import { setToken, setFullname } from "../../services/store/loginSlice";
 import { useNavigate } from "react-router-dom";
+import { BasicToast } from "../../components/SweetAlert-Components";
+import { SetSidebarNavigation } from "../../services/store/navigationSlice";
+import { sidebarNavigationData } from "../../routes/navigationData";
+import { setPermissions } from "../../services/store/permissionSlice";
 
 const Login = () => {
-  const [
-    createLogin,
-    { data: response, error: errorResponse, isLoading, isError, isSuccess },
-  ] = useCreateLoginMutation();
+  const [createLogin, { isLoading }] = useCreateLoginMutation();
 
   const showLogo = useMediaQuery("(min-width:1021px)");
 
@@ -32,11 +32,14 @@ const Login = () => {
       const res = await createLogin(data).unwrap();
       dispatch(setFullname(res?.data?.fullname));
       dispatch(setToken(res?.data?.token));
+      dispatch(setPermissions(res?.data?.permission))
+      dispatch(SetSidebarNavigation(sidebarNavigationData))
+      BasicToast("success", `Welcome ${res?.data?.fullname}`, 700);
       window.setTimeout(() => {
         navigate("/");
       }, 400);
     } catch (error) {
-      console.log(error);
+      BasicToast("error", error?.data?.messages[0], 700);
     }
   };
 
@@ -83,12 +86,6 @@ const Login = () => {
 
   return (
     <>
-      {isError && (
-        <ResponseToast text={errorResponse?.data?.messages[0]} status="error" />
-      )}
-      {isSuccess && (
-        <ResponseToast text={response?.messages[0]} status="success" />
-      )}
       <Box sx={pageBackground}>
         <Paper elevation={20} sx={loginPaper}>
           {showLogo ? (

@@ -1,13 +1,19 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { jsonServerApi } from "../api";
-import loginReducer from '../store/loginSlice'
+import loginReducer from "../store/loginSlice";
+import permissionsReducer from "../store/permissionSlice";
+import sidebarNavigationReducer from "./navigationSlice";
+
+const rootReducer = combineReducers({
+  fullname: loginReducer,
+  permissions: permissionsReducer,
+  sidebarNavigation: sidebarNavigationReducer,
+  [jsonServerApi.reducerPath]: jsonServerApi.reducer,
+});
 
 export const store = configureStore({
-  reducer: {
-    fullname: loginReducer,
-    [jsonServerApi.reducerPath]: jsonServerApi.reducer,
-  },
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(jsonServerApi.middleware),
 });

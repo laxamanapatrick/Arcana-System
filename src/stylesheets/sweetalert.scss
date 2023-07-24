@@ -1,0 +1,18 @@
+/* Custom CSS class to adjust the size */
+.basic-swal-size {
+  min-width: 300px;
+  width: auto; /* Adjust the width as per your requirement */
+  height: auto; /* Adjust the height as per your requirement */
+}
+
+/* Adjust title element */
+.basic-swal-size .swal2-title {
+  font-size: 22px; /* Adjust the font size as needed */
+}
+
+/* Adjust icon element */
+.basic-swal-size .swal2-icon {
+  font-size: 11px; /* Adjust the font size as needed */
+  padding: 0;
+  margin-bottom: 0;
+}
