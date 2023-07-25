@@ -2,6 +2,12 @@
 export const sidebarNavigationData = [
   {
     id: 1,
+    path: "/dashboard",
+    name: "Dashboard",
+    icon: "Dashboard",
+  },
+  {
+    id: 2,
     path: "/user-management",
     name: "User Management",
     icon: "AccountBox",
@@ -19,7 +25,7 @@ export const sidebarNavigationData = [
     ],
   },
   {
-    id: 2,
+    id: 3,
     path: "/setup",
     name: "Setup",
     icon: "Dataset",
@@ -37,7 +43,7 @@ export const sidebarNavigationData = [
     ],
   },
   {
-    id: 3,
+    id: 4,
     path: "/inventory",
     name: "Inventory",
     icon: "Inventory",
@@ -50,3 +56,15 @@ export const sidebarNavigationData = [
     ],
   },
 ];
+
+// const subNavigationHeight = 8;
+// <Box
+//   height={`${subNavigationHeight}%`}
+//   maxHeight={`${subNavigationHeight}%`}
+//   display="flex"
+//   alignItems="center"
+//   color={theme.palette.secondary.main}
+//   px={2}
+// >
+//   <Typography sx={{ textDecoration: "underline" }}>Sub Navigation</Typography>
+// </Box>;

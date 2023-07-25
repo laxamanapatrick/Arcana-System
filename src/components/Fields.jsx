@@ -1,10 +1,11 @@
 import React from "react";
 import { Controller } from "react-hook-form";
-import { TextField } from "@mui/material";
+import { InputBase, TextField } from "@mui/material";
 import { PatternFormat, NumericFormat } from "react-number-format";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Autocomplete } from '@mui/material'
+import { Autocomplete } from "@mui/material";
 import moment from "moment";
+import styled from "@emotion/styled";
 
 export const Textfield = ({ name, control, ...textfield }) => {
   return (
@@ -108,27 +109,31 @@ export const Datepicker = ({ name, control, ...datepicker }) => {
   );
 };
 
-export const AutoComplete = ({ name, control, onChange: onValueChange, ...autocomplete }) => {
+export const AutoComplete = ({
+  name,
+  control,
+  onChange: onValueChange,
+  ...autocomplete
+}) => {
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => {
+        const { value, onChange: setValue } = field;
 
-    return (
-      <Controller
-        name={name}
-        control={control}
-        render={({ field }) => {
-          const { value, onChange: setValue } = field
-  
-          return (
-            <Autocomplete
-              {...autocomplete}
-              value={value}
-              onChange={(e, value) => {
-                if (onValueChange) return setValue(onValueChange(e, value))
-  
-                setValue(value)
-              }}
-            />
-          )
-        }}
-      />
-    )
-  }
+        return (
+          <Autocomplete
+            {...autocomplete}
+            value={value}
+            onChange={(e, value) => {
+              if (onValueChange) return setValue(onValueChange(e, value));
+
+              setValue(value);
+            }}
+          />
+        );
+      }}
+    />
+  );
+};

@@ -43,6 +43,27 @@ export const useDefaultStyles = () => {
         },
       },
     },
+    ".addRowButtons": {
+      fontSize: '11px',
+      color: theme.palette.common.white,
+      bgcolor: theme.palette.secondary.main,
+      borderWidth: "1px white",
+      borderColor: theme.palette.common.white,
+      ":hover": {
+        color: theme.palette.common.white,
+        bgcolor: theme.palette.primary.main,
+        variant: "contained",
+      },
+      ":disabled": {
+        color: theme.palette.common.white,
+        bgcolor: disabledBg,
+        border: `none`,
+        "&.MuiButtonBase-root:disabled": {
+          cursor: "not-allowed",
+          pointerEvents: "auto",
+        },
+      },
+    },
   };
 
   const defaultTextFieldStyle = {

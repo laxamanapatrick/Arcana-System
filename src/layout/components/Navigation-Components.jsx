@@ -46,9 +46,10 @@ const NavigationHeader = ({ onClose }) => {
           >
             <img
               src={
-                changeLogo
-                  ? "./images/SystemLogo.png"
-                  : "./images/SystemLogo.png"
+                // changeLogo
+                //   ? "./images/SystemLogo.png"
+                //   : 
+                  "./images/SystemLogo.png"
               }
               alt="logo"
               loading="lazy"
@@ -101,7 +102,7 @@ const NavigationFooter = () => {
   );
 };
 
-const NavigationContent = () => {
+const NavigationContent = ({onClose}) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -201,6 +202,7 @@ const NavigationContent = () => {
                   {subNav?.map((item2, i) => (
                     <Link
                       to={item2.path}
+                      onClick={onClose}
                       style={{ textDecoration: "none" }}
                       key={i}
                     >
@@ -265,7 +267,7 @@ export const NavigationMain = ({ isOpen, onClose }) => {
         >
           <Stack height="100%">
             <NavigationHeader onClose={onClose} />
-            <NavigationContent />
+            <NavigationContent onClose={onClose} />
           </Stack>
           <NavigationFooter />
         </Box>

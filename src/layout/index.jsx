@@ -4,6 +4,7 @@ import {
   IconButton,
   Paper,
   Stack,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
@@ -23,7 +24,6 @@ const Layout = ({ isDrawer, closeDrawer, toggleDrawer }) => {
   const permissions = useSelector((state) => state.permissions.permissions);
 
   const headerHeight = 4;
-  const subNavigationHeight = 8;
 
   const sidebarNavigation = useSelector(
     (state) => state.sidebarNavigation.sidebarNavigation
@@ -63,29 +63,19 @@ const Layout = ({ isDrawer, closeDrawer, toggleDrawer }) => {
             textAlign="center"
           >
             {permittedSidebar?.map((item, i) => (
-              <Link to={item.path} key={i}>
-                <IconButton>{getIconElement(item.icon)}</IconButton>
+              <Link to={item.path} key={i} onClick={toggleDrawer}>
+                <Tooltip title={`Open ${item.name}`} placement="right-start">
+                  <IconButton>{getIconElement(item.icon)}</IconButton>
+                </Tooltip>
               </Link>
             ))}
           </Box>
           <Box display="flex" flexDirection="column" height="100%" width="100%">
-            <Box
-              height={`${subNavigationHeight}%`}
-              maxHeight={`${subNavigationHeight}%`}
-              display="flex"
-              alignItems="center"
-              color={theme.palette.secondary.main}
-              px={2}
-            >
-              <Typography sx={{ textDecoration: "underline" }}>
-                Sub Navigation
-              </Typography>
-            </Box>
             <Paper
               elevation={20}
               sx={{
-                height: `${100 - subNavigationHeight}%`,
-                maxHeight: `${100 - subNavigationHeight}%`,
+                height: `${100}%`,
+                maxHeight: `${100}%`,
                 display: "flex",
                 flexDirection: pathname === "/" ? "row" : "",
               }}
@@ -102,7 +92,7 @@ const Layout = ({ isDrawer, closeDrawer, toggleDrawer }) => {
               )}
               <Box
                 bgcolor={theme.palette.common.white}
-                border="1px solid white"
+                // border="1px solid white"
                 width={pathname === "/" ? "70%" : "100%"}
               >
                 <Outlet />
