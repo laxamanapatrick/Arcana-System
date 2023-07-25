@@ -1,15 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Box,
   IconButton,
   Paper,
   Stack,
   Tooltip,
-  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { Header } from "./components/Header";
 import { NavigationMain } from "./components/Navigation-Components";
 import { useSelector } from "react-redux";
@@ -18,7 +17,6 @@ import { getIconElement } from "../components/Get-Icon";
 const Layout = ({ isDrawer, closeDrawer, toggleDrawer }) => {
   const adjustNavButtonsHeight = useMediaQuery("(min-height:735px)");
   const { pathname } = useLocation();
-  const navigate = useNavigate();
   const fullname = useSelector((state) => state.fullname.fullname);
   const theme = useTheme();
   const permissions = useSelector((state) => state.permissions.permissions);
@@ -32,14 +30,6 @@ const Layout = ({ isDrawer, closeDrawer, toggleDrawer }) => {
   const permittedSidebar = sidebarNavigation?.filter((item) =>
     permissions.includes(item.name)
   );
-
-  // console.log(permittedSidebar);
-
-  // useEffect(() => {
-  //   if (permittedSidebar?.some((item) => item.path !== pathname)) {
-  //     navigate("/");
-  //   }
-  // }, [pathname, permittedSidebar]);
 
   return (
     <>

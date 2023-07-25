@@ -25,7 +25,7 @@ import { getIconElement } from "../../components/Get-Icon";
 
 const NavigationHeader = ({ onClose }) => {
   const theme = useTheme();
-  const changeLogo = useMediaQuery("(max-width: 1024px)");
+  // const changeLogo = useMediaQuery("(max-width: 1024px)");
   return (
     <>
       <Box width="auto" height="160px">

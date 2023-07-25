@@ -1,8 +1,6 @@
 import React from "react";
 import Login from "../pages/login/Login";
-import Layout from "../layout";
-import { Navigate, useRoutes } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useRoutes } from "react-router-dom";
 import { useDisclosure } from "../hooks/useDisclosure";
 import UserManagement from "../pages/user-management";
 import { UserAccount } from "../pages/user-management/user-account/User-Account";
@@ -11,21 +9,8 @@ import Setup from "../pages/setup/masterlist";
 import { Products } from "../pages/setup/masterlist/products/Products";
 import Inventory from "../pages/setup/inventory";
 import { MRP } from "../pages/setup/inventory/mrp/MRP";
-
-const AuthenticatedRoutes = ({ isDrawer, closeDrawer, toggleDrawer }) => {
-  const fullname = useSelector((state) => state.fullname.fullname);
-  const permissions = useSelector((state) => state.permissions.permissions);
-
-  return !fullname || permissions?.length === 0 ? (
-    <Navigate to="/login" />
-  ) : (
-    <Layout
-      isDrawer={isDrawer}
-      closeDrawer={closeDrawer}
-      toggleDrawer={toggleDrawer}
-    />
-  );
-};
+import AuthenticatedRoutes from "./Authenticated-Routes";
+import { PageNotFound } from "../components/Lottie-Components";
 
 const Routing = () => {
   const {
@@ -37,6 +22,10 @@ const Routing = () => {
     {
       path: "/login",
       element: <Login />,
+    },
+    {
+      path: "*",
+      element: <PageNotFound text={''} />,
     },
     {
       path: "/",

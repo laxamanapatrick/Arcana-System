@@ -44,7 +44,7 @@ export const useDefaultStyles = () => {
       },
     },
     ".addRowButtons": {
-      fontSize: '11px',
+      fontSize: "11px",
       color: theme.palette.common.white,
       bgcolor: theme.palette.secondary.main,
       borderWidth: "1px white",
@@ -94,5 +94,62 @@ export const useDefaultStyles = () => {
     },
   };
 
-  return { defaultButtonStyle, defaultTextFieldStyle, mobileTextFieldStyle };
+  const subNavigationHeaderHeight = 8;
+
+  const defaultPaperHeaderStyle = {
+    height: `${subNavigationHeaderHeight}%`,
+    maxHeight: `${subNavigationHeaderHeight}%`,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    background: "none",
+    // background: theme.palette.primary.main,
+    color: theme.palette.secondary.main,
+    px: 2,
+    mx: 1,
+    mt: 1,
+  };
+
+  const defaultPaperContentStyle = {
+    color: theme.palette.secondary.main,
+    background: "none",
+    // background: theme.palette.primary.main,
+    p: 2,
+    m: 1,
+    height: "95%",
+    maxHeight: "95%",
+  };
+
+  const defaultTableStyle = {
+    maxHeight: "45%",
+    background: theme.palette.common.white,
+    ".table": {
+      minWidth: 500,
+    },
+    ".tableHead": {
+      background: theme.palette.primary.main,
+    },
+    ".tableHeadCell": {
+      color: theme.palette.common.white,
+    },
+    ".tableBodyCell": {
+      color: theme.palette.secondary.main,
+    },
+    ".actionButton": {
+      color: theme.palette.secondary.main,
+      padding: 0,
+    },
+    ".tablePagination": {
+      color: theme.palette.secondary.main,
+    },
+  };
+
+  return {
+    defaultButtonStyle,
+    defaultTextFieldStyle,
+    mobileTextFieldStyle,
+    defaultPaperHeaderStyle,
+    defaultPaperContentStyle,
+    defaultTableStyle,
+  };
 };

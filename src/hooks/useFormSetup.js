@@ -24,17 +24,9 @@ const useFormSetup = ({ schema, defaultValues }) => {
   };
 };
 
-export default useFormSetup
+export default useFormSetup;
 
-
-
-
-
-
-
-
-
-{/* <>
+/* <>
 <Stack height="100%" maxHeight="100%" width="100%">
   <Box
     height={`${subNavigationHeight}%`}
@@ -76,4 +68,4 @@ export default useFormSetup
     Content
   </Box>
 </Stack>
-</> */}
+</> */

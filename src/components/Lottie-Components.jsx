@@ -9,6 +9,8 @@ import submittingData from "../assets/submitting-data.json";
 import successResponse from "../assets/success-response.json";
 import errorResponse from "../assets/error-response.json";
 import warningResponse from "../assets/warning-response.json";
+import pageNotFound from "../assets/page-not-found.json";
+import accessDenied from "../assets/access-denied.json";
 
 const StyledBox = styled(Box)(() => ({
   position: "fixed",
@@ -63,7 +65,7 @@ export const NoDataFound = ({ text }) => {
         style={{ height: "40%", width: "40%" }}
       />
       {text && (
-        <Typography variant="h5" color="gray" fontSize='20px'>
+        <Typography variant="h5" color="gray" fontSize="20px">
           {text}
         </Typography>
       )}
@@ -91,7 +93,7 @@ export const ZeroRecordsFound = ({ text }) => {
         style={{ maxHeight: "35%", maxWidth: "35%" }}
       />
       {text && (
-        <Typography variant="h5" color="gray" fontSize='20px'>
+        <Typography variant="h5" color="gray" fontSize="20px">
           {text}
         </Typography>
       )}
@@ -166,7 +168,7 @@ export const ResponseToast = ({ text, status }) => {
   const getColorScheme = () => {
     let backgroundColor;
     let textColor;
-    
+
     switch (status) {
       case "success":
         backgroundColor = "green";
@@ -185,10 +187,10 @@ export const ResponseToast = ({ text, status }) => {
         textColor = "white";
         break;
     }
-    
+
     return { backgroundColor, textColor };
   };
-  
+
   const { backgroundColor, textColor } = getColorScheme();
 
   return (
@@ -213,3 +215,28 @@ export const ResponseToast = ({ text, status }) => {
   );
 };
 
+export const PageNotFound = ({ text }) => {
+  return (
+    <StyledBox sx={{ background: "#b1b3b5" }}>
+      <Lottie animationData={pageNotFound} style={{ padding: 0, margin: 0 }} />
+      {text && (
+        <Typography fontSize="lg" color="white" mt={2}>
+          {text ? text : ""}
+        </Typography>
+      )}
+    </StyledBox>
+  );
+};
+
+export const AccessDeniedDisplay = ({ text }) => {
+  return (
+    <StyledBox sx={{ background: "#b1b3b5" }}>
+      <Lottie animationData={accessDenied} style={{ padding: 0, margin: 0 }} />
+      {text && (
+        <Typography fontSize="lg" color="gray.300" mt={2}>
+          {text ? text : ""}
+        </Typography>
+      )}
+    </StyledBox>
+  );
+};

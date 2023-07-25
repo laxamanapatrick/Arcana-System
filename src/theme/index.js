@@ -9,8 +9,8 @@ const colorSchemes = {
   },
   dark: {
     // primary: "#23024a",
-    // secondary: "#7e00d4",
-    primary: "#766bb9",
+    // secondary: "#544d91",
+    primary: "#544d91",
     secondary: "#243448",
     accent: "#766bb9",
     error: "#F30737",

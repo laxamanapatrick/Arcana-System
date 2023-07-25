@@ -17,7 +17,15 @@ export const jsonServerApi = createApi({
       }),
       invalidatesTags: ["Login User"],
     }),
+    getUserAccounts: builder.query({
+      query: (params) => ({
+        url: `User/GetUser`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["User Accounts"]
+    }),
   }),
 });
 
-export const { useCreateLoginMutation } = jsonServerApi;
+export const { useCreateLoginMutation, useGetUserAccountsQuery } = jsonServerApi;
