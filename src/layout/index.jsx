@@ -11,10 +11,14 @@ import {
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { Header } from "./components/Header";
 import { NavigationMain } from "./components/Navigation-Components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getIconElement } from "../components/Get-Icon";
+import {toggleDrawer} from "../services/store/disclosureSlice"
 
-const Layout = ({ isDrawer, closeDrawer, toggleDrawer }) => {
+const Layout = () => {
+
+  const dispatch = useDispatch();
+
   const adjustNavButtonsHeight = useMediaQuery("(min-height:735px)");
   const { pathname } = useLocation();
   const fullname = useSelector((state) => state.fullname.fullname);
@@ -39,7 +43,7 @@ const Layout = ({ isDrawer, closeDrawer, toggleDrawer }) => {
             maxHeight: `${headerHeight}%`,
           }}
         >
-          <Header toggleDrawer={toggleDrawer} />
+          <Header />
         </Box>
         <Box
           display="flex"
@@ -53,7 +57,7 @@ const Layout = ({ isDrawer, closeDrawer, toggleDrawer }) => {
             textAlign="center"
           >
             {permittedSidebar?.map((item, i) => (
-              <Link to={item.path} key={i} onClick={toggleDrawer}>
+              <Link to={item.path} key={i} onClick={() => dispatch(toggleDrawer("isSidebar"))}>
                 <Tooltip title={`Open ${item.name}`} placement="right-start">
                   <IconButton>{getIconElement(item.icon)}</IconButton>
                 </Tooltip>
@@ -91,7 +95,7 @@ const Layout = ({ isDrawer, closeDrawer, toggleDrawer }) => {
           </Box>
         </Box>
       </Stack>
-      <NavigationMain isOpen={isDrawer} onClose={closeDrawer} />
+      <NavigationMain />
     </>
   );
 };

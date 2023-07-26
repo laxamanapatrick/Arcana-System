@@ -5,7 +5,7 @@ import { sidebarNavigationData } from "./navigationData";
 import { useLocation } from "react-router-dom";
 import { AccessDeniedDisplay } from "../components/Lottie-Components";
 
-const PermittedRoutes = ({ isDrawer, closeDrawer, toggleDrawer }) => {
+const PermittedRoutes = () => {
   const { pathname } = useLocation();
   const permissions = useSelector((state) => state.permissions.permissions);
 
@@ -34,9 +34,9 @@ const PermittedRoutes = ({ isDrawer, closeDrawer, toggleDrawer }) => {
   ) {
     return (
       <Layout
-        isDrawer={isDrawer}
-        closeDrawer={closeDrawer}
-        toggleDrawer={toggleDrawer}
+        // isDrawer={isDrawer}
+        // closeDrawer={closeDrawer}
+        // toggleDrawer={toggleDrawer}
       />
     );
   }

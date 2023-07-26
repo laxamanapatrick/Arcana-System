@@ -22,6 +22,21 @@ export const sidebarNavigationData = [
         name: "User Role",
         path: "/user-management/user-role",
       },
+      {
+        id: 3,
+        name: "Company",
+        path: "/user-management/company",
+      },
+      {
+        id: 4,
+        name: "Department",
+        path: "/user-management/department",
+      },
+      {
+        id: 5,
+        name: "Location",
+        path: "/user-management/location",
+      },
     ],
   },
   {

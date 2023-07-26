@@ -1,10 +1,12 @@
 import React from "react";
 import Login from "../pages/login/Login";
 import { useRoutes } from "react-router-dom";
-import { useDisclosure } from "../hooks/useDisclosure";
 import UserManagement from "../pages/user-management";
 import { UserAccount } from "../pages/user-management/user-account/User-Account";
 import { UserRole } from "../pages/user-management/user-role/User-Role";
+import { Company } from "../pages/user-management/company/Company";
+import { Department } from "../pages/user-management/department/Department";
+import { Location } from "../pages/user-management/location/Location";
 import Setup from "../pages/setup/masterlist";
 import { Products } from "../pages/setup/masterlist/products/Products";
 import Inventory from "../pages/setup/inventory";
@@ -13,11 +15,11 @@ import AuthenticatedRoutes from "./Authenticated-Routes";
 import { PageNotFound } from "../components/Lottie-Components";
 
 const Routing = () => {
-  const {
-    isOpen: isDrawer,
-    onClose: closeDrawer,
-    onToggle: toggleDrawer,
-  } = useDisclosure();
+  // const {
+  //   isOpen: isDrawer,
+  //   onClose: closeDrawer,
+  //   onToggle: toggleDrawer,
+  // } = useDisclosure();
   let routing = useRoutes([
     {
       path: "/login",
@@ -31,15 +33,15 @@ const Routing = () => {
       path: "/",
       element: (
         <AuthenticatedRoutes
-          isDrawer={isDrawer}
-          closeDrawer={closeDrawer}
-          toggleDrawer={toggleDrawer}
+          // isDrawer={isDrawer}
+          // closeDrawer={closeDrawer}
+          // toggleDrawer={toggleDrawer}
         />
       ),
       children: [
         {
           path: "user-management",
-          element: <UserManagement toggleDrawer={toggleDrawer} />,
+          element: <UserManagement  />,
           children: [
             {
               path: "user-account",
@@ -49,11 +51,23 @@ const Routing = () => {
               path: "user-role",
               element: <UserRole />,
             },
+            {
+              path: "company",
+              element: <Company />,
+            },
+            {
+              path: "department",
+              element: <Department />,
+            },
+            {
+              path: "location",
+              element: <Location />,
+            },
           ],
         },
         {
           path: "setup",
-          element: <Setup toggleDrawer={toggleDrawer} />,
+          element: <Setup  />,
           children: [
             {
               path: "products",

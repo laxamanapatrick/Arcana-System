@@ -4,11 +4,13 @@ import { jsonServerApi } from "../api";
 import loginReducer from "../store/loginSlice";
 import permissionsReducer from "../store/permissionSlice";
 import sidebarNavigationReducer from "./navigationSlice";
+import disclosureReducer from "./disclosureSlice";
 
 const rootReducer = combineReducers({
   fullname: loginReducer,
   permissions: permissionsReducer,
   sidebarNavigation: sidebarNavigationReducer,
+  disclosure: disclosureReducer,
   [jsonServerApi.reducerPath]: jsonServerApi.reducer,
 });
 

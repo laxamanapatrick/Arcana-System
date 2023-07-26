@@ -7,6 +7,8 @@ export const useDefaultStyles = () => {
 
   const defaultButtonStyle = {
     ".primaryButtons": {
+      width: "90px",
+      fontSize: "11px",
       color: theme.palette.common.white,
       bgcolor: theme.palette.secondary.main,
       ":hover": {
@@ -25,12 +27,15 @@ export const useDefaultStyles = () => {
       },
     },
     ".cancelButtons": {
-      color: theme.palette.error.main,
-      bgcolor: theme.palette.primary.main,
-      border: `1px solid ${theme.palette.error.main}`,
+      width: "90px",
+      fontSize: "11px",
+      color: 'gray',
+      bgcolor: theme.palette.common.white,
+      border: '1px solid gray',
       ":hover": {
-        color: theme.palette.primary.main,
-        bgcolor: theme.palette.error.main,
+        color: theme.palette.common.white,
+        bgcolor: 'gray',
+        border: `1px solid ${theme.palette.common.white}`,
         variant: "contained",
       },
       ":disabled": {
@@ -135,6 +140,10 @@ export const useDefaultStyles = () => {
     ".tableBodyCell": {
       color: theme.palette.secondary.main,
     },
+    // ".tableFooter": {
+    //   display: "flex",
+    //   justifyContent: "end",
+    // },
     ".actionButton": {
       color: theme.palette.secondary.main,
       padding: 0,
@@ -144,6 +153,10 @@ export const useDefaultStyles = () => {
     },
   };
 
+  const actionMenuStyle = {
+    background: theme.palette.primary.main,
+  };
+
   return {
     defaultButtonStyle,
     defaultTextFieldStyle,
@@ -151,5 +164,6 @@ export const useDefaultStyles = () => {
     defaultPaperHeaderStyle,
     defaultPaperContentStyle,
     defaultTableStyle,
+    actionMenuStyle,
   };
 };

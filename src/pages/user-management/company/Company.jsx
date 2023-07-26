@@ -1,7 +1,10 @@
 import React, { useRef, useState } from "react";
 import {
+  Box,
   Button,
+  ButtonGroup,
   Divider,
+  Drawer,
   IconButton,
   Menu,
   MenuItem,
@@ -21,15 +24,18 @@ import {
 } from "@mui/material";
 import { useDefaultStyles } from "../../../hooks/useDefaultStyles";
 import SearchField from "../../../components/SearchField";
-import { useGetUserAccountsQuery } from "../../../services/api";
+import { useGetCompanyQuery } from "../../../services/api";
 import { Archive, Edit, More, ViewAgenda } from "@mui/icons-material";
 import {
   LoadingData,
   ZeroRecordsFound,
 } from "../../../components/Lottie-Components";
 import { useDisclosure } from "../../../hooks/useDisclosure";
+import moment from "moment/moment";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleDrawer } from "../../../services/store/disclosureSlice";
 
-export const UserAccount = () => {
+export const Company = () => {
   const theme = useTheme();
   const {
     defaultButtonStyle,
@@ -41,26 +47,20 @@ export const UserAccount = () => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
 
-  const { data: userAccounts, isLoading } = useGetUserAccountsQuery({
+  const { data: companies, isLoading } = useGetCompanyQuery({
     Search: "",
     Status: true,
     PageNumber: page + 1,
     PageSize: pageSize,
   });
-  const totalCount = userAccounts?.data?.totalCount || 0;
+  const totalCount = companies?.data?.totalCount || 0;
 
-  const handleChangePage = (event, newPage) => {
-    console.log("Page Change");
+  const handleChangePage = (newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    console.log("Rows per page", event.target.value);
     setPageSize(Number(event.target.value));
-  };
-
-  const handleAddUserAccount = () => {
-    console.log("Add New User Handler");
   };
 
   return (
@@ -71,7 +71,7 @@ export const UserAccount = () => {
             <Typography
               sx={{ fontWeight: "bold", color: theme.palette.secondary.main }}
             >
-              User Accounts
+              Company
             </Typography>
             <Divider
               sx={{
@@ -89,17 +89,12 @@ export const UserAccount = () => {
               flexDirection="row"
               sx={{ ...defaultButtonStyle }}
             >
-              <Button
-                onClick={handleAddUserAccount}
-                sx={{ marginRight: 1 }}
-                size="small"
-                className={`addRowButtons`}
-              >
-                Add
-              </Button>
+              <CompanyForm />
               <SearchField />
             </Stack>
-          ) : ''}
+          ) : (
+            ""
+          )}
         </Paper>
         {isLoading ? (
           <LoadingData />
@@ -109,26 +104,38 @@ export const UserAccount = () => {
               <Table className="table" aria-label="custom pagination table">
                 <TableHead className="tableHead">
                   <TableRow>
-                    <TableCell className="tableHeadCell">Fullname</TableCell>
-                    <TableCell className="tableHeadCell">Username</TableCell>
+                    <TableCell className="tableHeadCell">
+                      Company Name
+                    </TableCell>
+                    <TableCell className="tableHeadCell">
+                      Created Date
+                    </TableCell>
+                    <TableCell className="tableHeadCell">
+                      Updated Date
+                    </TableCell>
                     <TableCell className="tableHeadCell">Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {userAccounts?.data?.users?.map((row) => (
-                    <TableRow key={row.username}>
+                  {companies?.data?.companies?.map((row) => (
+                    <TableRow key={row.companyName}>
                       <TableCell
                         component="th"
                         scope="row"
                         className="tableBodyCell"
                       >
-                        {row.fullname}
+                        {row.companyName}
                       </TableCell>
                       <TableCell className="tableBodyCell">
-                        {row.username}
+                        {moment(row?.createdAt).format("yyyy-MM-DD")}
                       </TableCell>
                       <TableCell className="tableBodyCell">
-                        <UserAccountActions row={row} />
+                        {row?.updatedAt
+                          ? moment(row?.updatedAt).format("yyyy-MM-DD")
+                          : "No updates yet"}
+                      </TableCell>
+                      <TableCell className="tableBodyCell">
+                        <CompanyActions row={row} />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -162,19 +169,20 @@ export const UserAccount = () => {
             </TableContainer>
           </Paper>
         ) : (
-          <ZeroRecordsFound text={'Current have no records'} />
+          <ZeroRecordsFound text={"Current have no records"} />
         )}
       </Stack>
     </>
   );
 };
 
-export default UserAccount;
+export default Company;
 
-const UserAccountActions = ({ row }) => {
+const CompanyActions = ({ row }) => {
   const { isOpen: isMenu, onToggle: toggleMenu } = useDisclosure();
   const { actionMenuStyle } = useDefaultStyles();
   const anchorRef = useRef();
+  const dispatch = useDispatch()
 
   const menuItems = [
     {
@@ -199,7 +207,7 @@ const UserAccountActions = ({ row }) => {
   };
 
   const handleEdit = () => {
-    console.log("Edit User", row);
+    dispatch(toggleDrawer("isCompanyForm"))
   };
 
   const handleArchive = () => {
@@ -214,7 +222,7 @@ const UserAccountActions = ({ row }) => {
     } else if (items.type === "archive") {
       handleArchive();
     }
-    toggleMenu()
+    toggleMenu();
   };
 
   return (
@@ -246,5 +254,87 @@ const UserAccountActions = ({ row }) => {
         ))}
       </Menu>
     </>
+  );
+};
+
+const CompanyForm = () => {
+  const dispatch = useDispatch();
+  const theme = useTheme();
+  const { isCompanyForm } = useSelector((state) => state.disclosure.drawers);
+  const { defaultButtonStyle } = useDefaultStyles();
+
+  return (
+    <Stack width="auto" flexDirection="row" sx={{ ...defaultButtonStyle }}>
+      <Button
+        onClick={() => dispatch(toggleDrawer("isCompanyForm"))}
+        sx={{ marginRight: 1 }}
+        size="small"
+        className="addRowButtons"
+      >
+        Add
+      </Button>
+      <Drawer
+        open={isCompanyForm}
+        onClose={() => {}}
+        sx={{
+          "& .MuiDrawer-paper": {
+            width: 300,
+            height: "100%",
+            background: "none",
+            bgcolor: "white",
+            ...defaultButtonStyle,
+          },
+        }}
+        anchor="right"
+      >
+        <Stack sx={{ height: "100%" }}>
+          <Box
+            sx={{
+              height: "6%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: theme.palette.primary.main,
+              fontWeight: "bold",
+            }}
+          >
+            New Company Form
+          </Box>
+          <Divider
+            sx={{
+              height: "1.5px",
+              color: theme.palette.secondary.main,
+              bgcolor: theme.palette.secondary.main,
+            }}
+          />
+          <Box sx={{ height: "100%", p: 2 }}>Form Here</Box>
+
+          <Divider
+            sx={{
+              height: "1.5px",
+              color: theme.palette.secondary.main,
+              bgcolor: theme.palette.secondary.main,
+            }}
+          />
+          <ButtonGroup sx={{ gap: 1, m: 1, justifyContent: "end" }}>
+            <Button
+              className="primaryButtons"
+              onClick={() => dispatch(toggleDrawer("isCompanyForm"))}
+              tabIndex={0}
+            >
+              Add
+            </Button>
+            <Button
+              className="cancelButtons"
+              // sx={{ color: "black" }}
+              onClick={() => dispatch(toggleDrawer("isCompanyForm"))}
+              tabIndex={0}
+            >
+              Close
+            </Button>
+          </ButtonGroup>
+        </Stack>
+      </Drawer>
+    </Stack>
   );
 };

@@ -13,6 +13,9 @@ import { BasicToast } from "../../components/SweetAlert-Components";
 import { SetSidebarNavigation } from "../../services/store/navigationSlice";
 import { sidebarNavigationData } from "../../routes/navigationData";
 import { setPermissions } from "../../services/store/permissionSlice";
+import systemLogo from "../../assets/images/SystemLogo.png";
+import systemLogoName from "../../assets/images/SystemLogoName.png";
+import misLogo from "../../assets/images/MIS-logo.png";
 
 const Login = () => {
   const [createLogin, { isLoading }] = useCreateLoginMutation();
@@ -91,7 +94,7 @@ const Login = () => {
           {showLogo ? (
             <Box sx={boxLogoStyle} borderRadius="10px 0 0 10px">
               <img
-                src={"./images/SystemLogoName.png"}
+                src={systemLogoName}
                 alt="logo"
                 loading="lazy"
                 style={{ width: "auto", height: "70%" }}
@@ -114,7 +117,7 @@ const Login = () => {
                 flexDirection="column"
               >
                 <img
-                  src={"./images/SystemLogo.png"}
+                  src={systemLogo}
                   alt="logo"
                   loading="lazy"
                   style={{ width: "20%", height: "100%" }}
@@ -172,7 +175,7 @@ const Login = () => {
           flexDirection="column"
         >
           <img
-            src={"./images/MIS-logo.png"}
+            src={misLogo}
             alt="logo"
             loading="lazy"
             style={{ width: "4%", height: "100%" }}

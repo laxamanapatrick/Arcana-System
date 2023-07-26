@@ -20,10 +20,13 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Close, ExpandMore, Logout } from "@mui/icons-material";
 import { useDefaultStyles } from "../../hooks/useDefaultStyles";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getIconElement } from "../../components/Get-Icon";
+import {toggleDrawer} from "../../services/store/disclosureSlice"
+import systemLogo from "../../assets/images/SystemLogo.png";
 
-const NavigationHeader = ({ onClose }) => {
+const NavigationHeader = () => {
+  const dispatch = useDispatch()
   const theme = useTheme();
   // const changeLogo = useMediaQuery("(max-width: 1024px)");
   return (
@@ -45,12 +48,7 @@ const NavigationHeader = ({ onClose }) => {
             }}
           >
             <img
-              src={
-                // changeLogo
-                //   ? "./images/SystemLogo.png"
-                //   : 
-                  "./images/SystemLogo.png"
-              }
+              src={systemLogo}
               alt="logo"
               loading="lazy"
               style={{
@@ -69,7 +67,7 @@ const NavigationHeader = ({ onClose }) => {
               right: 0,
             }}
           >
-            <IconButton onClick={onClose}>
+            <IconButton onClick={() => dispatch(toggleDrawer("isSidebar"))}>
               <Close sx={{ color: theme.palette.primary.main }} />
             </IconButton>
           </div>
@@ -102,14 +100,16 @@ const NavigationFooter = () => {
   );
 };
 
-const NavigationContent = ({onClose}) => {
+const NavigationContent = () => {
+  const dispatch = useDispatch()
   const theme = useTheme();
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
-  const sidebarNavigation = useSelector(
-    (state) => state.sidebarNavigation.sidebarNavigation
+  const {sidebarNavigation} = useSelector(
+    (state) => state.sidebarNavigation
   );
-  const permissions = useSelector((state) => state.permissions.permissions);
+  const {permissions} = useSelector((state) => state.permissions);
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+
   const [subNav, setSubNav] = useState([]);
 
   const allowedNavigationData = sidebarNavigation.filter((item) => {
@@ -124,11 +124,10 @@ const NavigationContent = ({onClose}) => {
       permissions.includes(subItem.name)
     );
     setSubNav(currentSubNav);
-
   }, []);
 
   const handleAccordionExpand = (data) => {
-    navigate(data?.path)
+    navigate(data?.path);
     const permittedSubNav = data?.sub?.filter((subItem) =>
       permissions.includes(subItem.name)
     );
@@ -202,7 +201,7 @@ const NavigationContent = ({onClose}) => {
                   {subNav?.map((item2, i) => (
                     <Link
                       to={item2.path}
-                      onClick={onClose}
+                      onClick={() => dispatch(toggleDrawer("isSidebar"))}
                       style={{ textDecoration: "none" }}
                       key={i}
                     >
@@ -241,15 +240,17 @@ const NavigationContent = ({onClose}) => {
   );
 };
 
-export const NavigationMain = ({ isOpen, onClose }) => {
+export const NavigationMain = () => {
+  const dispatch = useDispatch()
+  const { isSidebar } = useSelector((state) => state.disclosure.drawers);
   const adjustHeightonDesktop = useMediaQuery("(min-height:930px)");
   const theme = useTheme();
 
   return (
     <>
       <Drawer
-        open={isOpen}
-        onClose={onClose}
+        open={isSidebar}
+        onClose={() => dispatch(toggleDrawer("isSidebar"))}
         sx={{
           "& .MuiDrawer-paper": {
             width: 370,
@@ -266,8 +267,8 @@ export const NavigationMain = ({ isOpen, onClose }) => {
           }}
         >
           <Stack height="100%">
-            <NavigationHeader onClose={onClose} />
-            <NavigationContent onClose={onClose} />
+            <NavigationHeader />
+            <NavigationContent />
           </Stack>
           <NavigationFooter />
         </Box>
