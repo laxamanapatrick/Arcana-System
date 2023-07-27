@@ -1,10 +1,9 @@
 import React from "react";
-import useFormSetup from "../../hooks/useFormSetup";
 import { Textfield } from "../../components/Fields";
-import { Box, Paper, Typography, useMediaQuery } from "@mui/material";
+import { Box, Paper, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useDefaultStyles } from "../../hooks/useDefaultStyles";
-import { loginSchema, loginValues } from "../../schema";
+import { loginSchema } from "../../schema";
 import { useCreateLoginMutation } from "../../services/api";
 import { useDispatch } from "react-redux";
 import { setToken, setFullname } from "../../services/store/loginSlice";
@@ -16,15 +15,27 @@ import { setPermissions } from "../../services/store/permissionSlice";
 import systemLogo from "../../assets/images/SystemLogo.png";
 import systemLogoName from "../../assets/images/SystemLogoName.png";
 import misLogo from "../../assets/images/MIS-logo.png";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 
 const Login = () => {
+  const theme = useTheme();
   const [createLogin, { isLoading }] = useCreateLoginMutation();
 
   const showLogo = useMediaQuery("(min-width:1021px)");
 
-  const { handleSubmit, control, errors, isValid } = useFormSetup({
-    schema: loginSchema,
-    defaultValues: loginValues,
+  const {
+    handleSubmit,
+    control,
+    formState: { errors, isValid },
+    reset,
+  } = useForm({
+    resolver: yupResolver(loginSchema),
+    mode: "onChange",
+    defaultValues: {
+      username: "",
+      password: "",
+    },
   });
 
   const dispatch = useDispatch();
@@ -35,9 +46,10 @@ const Login = () => {
       const res = await createLogin(data).unwrap();
       dispatch(setFullname(res?.data?.fullname));
       dispatch(setToken(res?.data?.token));
-      dispatch(setPermissions(res?.data?.permission))
-      dispatch(SetSidebarNavigation(sidebarNavigationData))
+      dispatch(setPermissions(res?.data?.permission));
+      dispatch(SetSidebarNavigation(sidebarNavigationData));
       BasicToast("success", `Welcome ${res?.data?.fullname}`, 700);
+      reset()
       window.setTimeout(() => {
         navigate("/");
       }, 400);
@@ -46,7 +58,7 @@ const Login = () => {
     }
   };
 
-  const { defaultTextFieldStyle, defaultButtonStyle } = useDefaultStyles();
+  const { defaultButtonStyle } = useDefaultStyles();
   const pageBackground = {
     background: "#6c5982",
     position: "fixed",
@@ -85,6 +97,32 @@ const Login = () => {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+  };
+
+  const loginFields = {
+    "& .MuiInputBase": {
+      color: `${theme.palette.common.white} !important`,
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: `${theme.palette.primary.main} !important`,
+    },
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+      borderColor: `${theme.palette.common.white} !important`,
+    },
+    "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
+      color: `${theme.palette.common.white} !important`,
+      borderColor: `${theme.palette.common.white} !important`,
+    },
+    "&.Mui-active .MuiOutlinedInput-notchedOutline": {
+      color: `${theme.palette.common.white} !important`,
+      borderColor: `${theme.palette.common.white} !important`,
+    },
+    "& .MuiInputLabel": {
+      color: `${theme.palette.common.black} !important`,
+    },
+    "& .MuiOutlinedInput-notchedOutline .Mui-focused::placeholder": {
+      color: `${theme.palette.common.black} !important`,
+    },
   };
 
   return (
@@ -133,7 +171,7 @@ const Login = () => {
               <Box sx={boxStyle} gap={2} flexDirection="column">
                 <>
                   <Textfield
-                    sx={defaultTextFieldStyle}
+                    sx={loginFields}
                     name="username"
                     control={control}
                     label="Username"
@@ -143,7 +181,7 @@ const Login = () => {
                     helperText={errors?.username?.message}
                   />
                   <Textfield
-                    sx={defaultTextFieldStyle}
+                    sx={loginFields}
                     name="password"
                     control={control}
                     label="Password"
@@ -162,7 +200,7 @@ const Login = () => {
                   type="submit"
                   loading={isLoading}
                 >
-                  Submit
+                  Sign In
                 </LoadingButton>
               </Box>
             </form>

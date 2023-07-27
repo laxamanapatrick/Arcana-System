@@ -1,8 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Button,
   ButtonGroup,
+  Checkbox,
   Divider,
   Drawer,
   IconButton,
@@ -22,85 +23,117 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { useDefaultStyles } from "../../../hooks/useDefaultStyles";
-import SearchField from "../../../components/SearchField";
-import { useGetCompanyQuery } from "../../../services/api";
 import { Archive, Edit, More, ViewAgenda } from "@mui/icons-material";
+import SearchField from "../../../components/SearchField";
 import {
   LoadingData,
   ZeroRecordsFound,
 } from "../../../components/Lottie-Components";
+import {
+  BasicToast,
+  ModalToast,
+} from "../../../components/SweetAlert-Components";
+
+import { useDefaultStyles } from "../../../hooks/useDefaultStyles";
+
+import {
+  useGetCompanyQuery,
+  useCreateCompanyMutation,
+  useUpdateCompanyMutation,
+  useUpdateCompanyStatusMutation,
+} from "../../../services/api";
 import { useDisclosure } from "../../../hooks/useDisclosure";
-import moment from "moment/moment";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleDrawer } from "../../../services/store/disclosureSlice";
+import { companySchema } from "../../../schema";
+import { Textfield } from "../../../components/Fields";
+import { setSelectedRow } from "../../../services/store/selectedRowSlice";
+
+import moment from "moment/moment";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 export const Company = () => {
   const theme = useTheme();
-  const {
-    defaultButtonStyle,
-    defaultPaperHeaderStyle,
-    defaultPaperContentStyle,
-    defaultTableStyle,
-  } = useDefaultStyles();
+  const { defaultPaperHeaderStyle, defaultPaperContentStyle } =
+    useDefaultStyles();
 
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(25);
+  const [status, setStatus] = useState(true);
 
   const { data: companies, isLoading } = useGetCompanyQuery({
     Search: "",
-    Status: true,
+    Status: status,
     PageNumber: page + 1,
     PageSize: pageSize,
   });
   const totalCount = companies?.data?.totalCount || 0;
 
-  const handleChangePage = (newPage) => {
-    setPage(newPage);
+  const handleChangePage = (event, newPage) => {
+    setPage(Number(newPage));
   };
 
   const handleChangeRowsPerPage = (event) => {
     setPageSize(Number(event.target.value));
   };
 
+  const handleViewArchived = () => {
+    setPage(0);
+    setPageSize(25);
+    setStatus((prev) => !prev);
+  };
+
   return (
     <>
       <Stack height="100%" maxHeight="100%" width="100%">
         <Paper elevation={1} sx={defaultPaperHeaderStyle}>
-          <Stack>
-            <Typography
-              sx={{ fontWeight: "bold", color: theme.palette.secondary.main }}
-            >
-              Company
-            </Typography>
-            <Divider
-              sx={{
-                height: "1.5px",
-                color: theme.palette.secondary.main,
-                bgcolor: theme.palette.secondary.main,
-              }}
-            />
-          </Stack>
-          {isLoading ? (
-            <Skeleton variant="rectangular" />
-          ) : totalCount > 0 ? (
-            <Stack
-              width="auto"
-              flexDirection="row"
-              sx={{ ...defaultButtonStyle }}
-            >
+          <Stack flexDirection="row" alignItems="center" gap={0.5}>
+            <>
+              <Typography
+                sx={{ fontWeight: "bold", color: theme.palette.secondary.main }}
+              >
+                Company
+              </Typography>
+            </>
+            {isLoading ? (
+              <Skeleton variant="rectangular" />
+            ) : totalCount > 0 ? (
               <CompanyForm />
+            ) : (
+              ""
+            )}
+          </Stack>
+          <Stack
+            width="auto"
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Checkbox
+              size="small"
+              checked={status === false}
+              onClick={handleViewArchived}
+              inputProps={{ "aria-label": "controlled" }}
+              sx={{ color: theme.palette.secondary.main, mb: "2px", p: 0 }}
+            />
+            <Typography fontSize="small" mr={1}>
+              Archived
+            </Typography>
+            {isLoading ? (
+              <Skeleton variant="rectangular" />
+            ) : totalCount > 0 ? (
               <SearchField />
-            </Stack>
-          ) : (
-            ""
-          )}
+            ) : (
+              ""
+            )}
+          </Stack>
         </Paper>
         {isLoading ? (
           <LoadingData />
         ) : totalCount > 0 ? (
           <Paper elevation={20} sx={defaultPaperContentStyle}>
-            <TableContainer component={Paper} sx={defaultTableStyle}>
+            <TableContainer component={Paper}>
               <Table className="table" aria-label="custom pagination table">
                 <TableHead className="tableHead">
                   <TableRow>
@@ -118,7 +151,7 @@ export const Company = () => {
                 </TableHead>
                 <TableBody>
                   {companies?.data?.companies?.map((row) => (
-                    <TableRow key={row.companyName}>
+                    <TableRow key={row.id}>
                       <TableCell
                         component="th"
                         scope="row"
@@ -148,9 +181,9 @@ export const Company = () => {
                         5,
                         10,
                         25,
-                        { label: "All", value: 2000 },
+                        { label: "All", value: totalCount },
                       ]}
-                      colSpan={3}
+                      colSpan={4}
                       count={totalCount}
                       page={page}
                       rowsPerPage={pageSize}
@@ -169,7 +202,11 @@ export const Company = () => {
             </TableContainer>
           </Paper>
         ) : (
-          <ZeroRecordsFound text={"Current have no records"} />
+          <ZeroRecordsFound
+            text={`${
+              status ? "No active records" : "No archived records"
+            } for Company`}
+          />
         )}
       </Stack>
     </>
@@ -182,7 +219,7 @@ const CompanyActions = ({ row }) => {
   const { isOpen: isMenu, onToggle: toggleMenu } = useDisclosure();
   const { actionMenuStyle } = useDefaultStyles();
   const anchorRef = useRef();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const menuItems = [
     {
@@ -207,11 +244,33 @@ const CompanyActions = ({ row }) => {
   };
 
   const handleEdit = () => {
-    dispatch(toggleDrawer("isCompanyForm"))
+    dispatch(setSelectedRow(row));
+    dispatch(toggleDrawer("isCompanyForm"));
   };
 
+  const [updateCompanyStatus] = useUpdateCompanyStatusMutation();
   const handleArchive = () => {
-    console.log("Archive or Restore", row);
+    ModalToast(
+      `You are about to set ${row?.companyName} as ${
+        row?.isActive ? "inactive" : "active"
+      }`,
+      "Are you sure you want to proceed?",
+      "question"
+    ).then((res) => {
+      if (res.isConfirmed) {
+        updateCompanyStatus({
+          companyId: row.id,
+          isActive: !row.isActive,
+        });
+        BasicToast(
+          "success",
+          `Company ${row?.companyName} was ${
+            row?.isActive ? "archived" : "set active"
+          }`,
+          3500
+        );
+      }
+    });
   };
 
   const handleOnClick = (items) => {
@@ -227,7 +286,7 @@ const CompanyActions = ({ row }) => {
 
   return (
     <>
-      <IconButton className="actionButton" ref={anchorRef} onClick={toggleMenu}>
+      <IconButton ref={anchorRef} onClick={toggleMenu}>
         <More />
       </IconButton>
       <Menu
@@ -259,14 +318,83 @@ const CompanyActions = ({ row }) => {
 
 const CompanyForm = () => {
   const dispatch = useDispatch();
-  const theme = useTheme();
   const { isCompanyForm } = useSelector((state) => state.disclosure.drawers);
+  const { selectedRowData } = useSelector((state) => state.selectedRowData);
+
+  const theme = useTheme();
   const { defaultButtonStyle } = useDefaultStyles();
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    resolver: yupResolver(companySchema),
+    mode: "onChange",
+    defaultValues: {
+      companyId: "",
+      companyName: "",
+    },
+  });
+
+  useEffect(
+    () => {
+      if (selectedRowData !== null) {
+        setValue("companyId", Number(selectedRowData?.id));
+        setValue("companyName", selectedRowData?.companyName);
+      }
+
+      return () => {
+        setValue("companyId", "");
+        setValue("companyName", "");
+      };
+    },
+    [selectedRowData, dispatch],
+    setValue
+  );
+
+  const [createCompany] = useCreateCompanyMutation();
+  const [updateCompany] = useUpdateCompanyMutation();
+  const submitAddOrEditHandler = async (data) => {
+    try {
+      if (selectedRowData === null) {
+        await createCompany({
+          companyName: data?.companyName,
+        });
+        BasicToast("success", `Company ${data?.companyName} was created`, 1500);
+      } else {
+        if (selectedRowData?.companyName === data?.companyName) {
+          BasicToast(
+            "warning",
+            `Changes not saved.
+            \nYou're trying to change ${selectedRowData?.companyName} into ${data?.companyName} which is the same.`,
+            3500
+          );
+        } else {
+          await updateCompany(data);
+          BasicToast(
+            "success",
+            `Company ${selectedRowData?.companyName}
+            was changed to ${data?.companyName}`,
+            1500
+          );
+        }
+      }
+    } catch (error) {
+      BasicToast("error", `Action Failed`, 1500);
+      console.log(error);
+    }
+    dispatch(toggleDrawer("isCompanyForm"));
+  };
 
   return (
     <Stack width="auto" flexDirection="row" sx={{ ...defaultButtonStyle }}>
       <Button
-        onClick={() => dispatch(toggleDrawer("isCompanyForm"))}
+        onClick={() => {
+          dispatch(setSelectedRow(null));
+          dispatch(toggleDrawer("isCompanyForm"));
+        }}
         sx={{ marginRight: 1 }}
         size="small"
         className="addRowButtons"
@@ -287,53 +415,70 @@ const CompanyForm = () => {
         }}
         anchor="right"
       >
-        <Stack sx={{ height: "100%" }}>
-          <Box
-            sx={{
-              height: "6%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: theme.palette.primary.main,
-              fontWeight: "bold",
-            }}
-          >
-            New Company Form
-          </Box>
-          <Divider
-            sx={{
-              height: "1.5px",
-              color: theme.palette.secondary.main,
-              bgcolor: theme.palette.secondary.main,
-            }}
-          />
-          <Box sx={{ height: "100%", p: 2 }}>Form Here</Box>
+        <form
+          style={{ height: "100%" }}
+          onSubmit={handleSubmit(submitAddOrEditHandler)}
+        >
+          <Stack sx={{ height: "100%" }}>
+            <Box
+              sx={{
+                height: "6%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: theme.palette.primary.main,
+                fontWeight: "bold",
+              }}
+            >
+              {`${selectedRowData?.id ? "Edit" : "New"} Company Form`}
+            </Box>
+            <Divider
+              sx={{
+                height: "1.5px",
+                color: theme.palette.secondary.main,
+                bgcolor: theme.palette.secondary.main,
+              }}
+            />
+            <Box
+              sx={{
+                height: "100%",
+                p: 2,
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Textfield
+                name="companyName"
+                control={control}
+                label="Company Name"
+                size="small"
+                autoComplete="off"
+                error={!!errors?.companyName}
+                helperText={errors?.companyName?.message}
+              />
+            </Box>
 
-          <Divider
-            sx={{
-              height: "1.5px",
-              color: theme.palette.secondary.main,
-              bgcolor: theme.palette.secondary.main,
-            }}
-          />
-          <ButtonGroup sx={{ gap: 1, m: 1, justifyContent: "end" }}>
-            <Button
-              className="primaryButtons"
-              onClick={() => dispatch(toggleDrawer("isCompanyForm"))}
-              tabIndex={0}
-            >
-              Add
-            </Button>
-            <Button
-              className="cancelButtons"
-              // sx={{ color: "black" }}
-              onClick={() => dispatch(toggleDrawer("isCompanyForm"))}
-              tabIndex={0}
-            >
-              Close
-            </Button>
-          </ButtonGroup>
-        </Stack>
+            <Divider
+              sx={{
+                height: "1.5px",
+                color: theme.palette.secondary.main,
+                bgcolor: theme.palette.secondary.main,
+              }}
+            />
+            <ButtonGroup sx={{ gap: 1, m: 1, justifyContent: "end" }}>
+              <Button className="primaryButtons" type="submit" tabIndex={0}>
+                Add
+              </Button>
+              <Button
+                className="cancelButtons"
+                onClick={() => dispatch(toggleDrawer("isCompanyForm"))}
+                tabIndex={0}
+              >
+                Close
+              </Button>
+            </ButtonGroup>
+          </Stack>
+        </form>
       </Drawer>
     </Stack>
   );

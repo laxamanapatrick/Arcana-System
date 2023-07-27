@@ -25,7 +25,7 @@ export const ModalToast = (
 ) => {
   return Swal.fire({
     title: title ? title : "Are you sure you want to do this action?",
-    text: text ? text : "Click yes to proceed",
+    text: text ? text : "",
     icon: icon ? icon : "question",
     showCancelButton: true,
     confirmButtonColor: confirmColor ? confirmColor : "#3085d6",

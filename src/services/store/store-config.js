@@ -5,12 +5,14 @@ import loginReducer from "../store/loginSlice";
 import permissionsReducer from "../store/permissionSlice";
 import sidebarNavigationReducer from "./navigationSlice";
 import disclosureReducer from "./disclosureSlice";
+import selectedRowReducer from "./selectedRowSlice";
 
 const rootReducer = combineReducers({
   fullname: loginReducer,
   permissions: permissionsReducer,
   sidebarNavigation: sidebarNavigationReducer,
   disclosure: disclosureReducer,
+  selectedRowData: selectedRowReducer,
   [jsonServerApi.reducerPath]: jsonServerApi.reducer,
 });
 

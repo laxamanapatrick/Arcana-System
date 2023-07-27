@@ -11,7 +11,7 @@ export const Header = () => {
 
   return (
     <>
-      <Paper elevation={20} sx={{ background: "transparent", border: "none" }}>
+      <Paper elevation={20} sx={{ background: "transparent", border: "none", pl: 1 }}>
         <Box
           sx={{
             display: "flex",

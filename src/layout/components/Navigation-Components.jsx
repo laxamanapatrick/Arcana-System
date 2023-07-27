@@ -22,11 +22,11 @@ import { Close, ExpandMore, Logout } from "@mui/icons-material";
 import { useDefaultStyles } from "../../hooks/useDefaultStyles";
 import { useDispatch, useSelector } from "react-redux";
 import { getIconElement } from "../../components/Get-Icon";
-import {toggleDrawer} from "../../services/store/disclosureSlice"
+import { toggleDrawer } from "../../services/store/disclosureSlice";
 import systemLogo from "../../assets/images/SystemLogo.png";
 
 const NavigationHeader = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const theme = useTheme();
   // const changeLogo = useMediaQuery("(max-width: 1024px)");
   return (
@@ -86,7 +86,10 @@ const NavigationFooter = () => {
   };
   return (
     <>
-      <Box width="100%" sx={defaultButtonStyle}>
+      <Box
+        width="100%"
+        sx={{ display: "flex", justifyContent: "center", ...defaultButtonStyle }}
+      >
         <Button
           className="primaryButtons"
           fullWidth
@@ -101,12 +104,10 @@ const NavigationFooter = () => {
 };
 
 const NavigationContent = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const theme = useTheme();
-  const {sidebarNavigation} = useSelector(
-    (state) => state.sidebarNavigation
-  );
-  const {permissions} = useSelector((state) => state.permissions);
+  const { sidebarNavigation } = useSelector((state) => state.sidebarNavigation);
+  const { permissions } = useSelector((state) => state.permissions);
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -241,7 +242,7 @@ const NavigationContent = () => {
 };
 
 export const NavigationMain = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const { isSidebar } = useSelector((state) => state.disclosure.drawers);
   const adjustHeightonDesktop = useMediaQuery("(min-height:930px)");
   const theme = useTheme();

@@ -59,7 +59,7 @@ const Layout = () => {
             {permittedSidebar?.map((item, i) => (
               <Link to={item.path} key={i} onClick={() => dispatch(toggleDrawer("isSidebar"))}>
                 <Tooltip title={`Open ${item.name}`} placement="right-start">
-                  <IconButton>{getIconElement(item.icon)}</IconButton>
+                  <IconButton sx={{color: 'white', mt: 1}}>{getIconElement(item.icon)}</IconButton>
                 </Tooltip>
               </Link>
             ))}

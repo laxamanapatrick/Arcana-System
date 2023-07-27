@@ -7,7 +7,23 @@ export const loginSchema = yup
     password: yup.string().required("Password is required"),
   })
   .required();
-export const loginValues =  {
-    username: "",
-    password: "",
-  }
+export const loginValues = {
+  username: "",
+  password: "",
+};
+
+export const companySchema = yup
+  .object()
+  .shape({
+    companyId: yup.string(),
+    companyName: yup.string().required("Company Name is required"),
+  })
+  .required();
+
+export const departmentSchema = yup
+  .object()
+  .shape({
+    companyId: yup.string(),
+    departmentName: yup.string().required("Department Name is required"),
+  })
+  .required();

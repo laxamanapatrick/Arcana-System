@@ -4,6 +4,7 @@ const initialState = {
   drawers: {
     isSidebar: false,
     isCompanyForm: false,
+    isDepartmentForm: false,
   },
   modals: {
   },

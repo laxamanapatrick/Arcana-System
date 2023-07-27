@@ -29,12 +29,12 @@ export const useDefaultStyles = () => {
     ".cancelButtons": {
       width: "90px",
       fontSize: "11px",
-      color: 'gray',
+      color: "gray",
       bgcolor: theme.palette.common.white,
-      border: '1px solid gray',
+      border: "1px solid gray",
       ":hover": {
         color: theme.palette.common.white,
-        bgcolor: 'gray',
+        bgcolor: "gray",
         border: `1px solid ${theme.palette.common.white}`,
         variant: "contained",
       },
@@ -71,34 +71,6 @@ export const useDefaultStyles = () => {
     },
   };
 
-  const defaultTextFieldStyle = {
-    size: "small",
-    "& .Mui-focused.MuiFormLabel-root": {
-      color: `${theme.palette.common.white} !important`,
-    },
-    "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: `${theme.palette.secondary.main} !important`,
-    },
-    "& .MuiOutlinedInput-notchedOutline": {
-      borderRadius: "none",
-    },
-  };
-
-  const mobileTextFieldStyle = {
-    size: "small",
-    color: `${theme.palette.primary.main} !important`,
-    background: `${theme.palette.primary.main} !important`,
-    "& .Mui-focused.MuiFormLabel-root": {
-      color: `${theme.palette.primary.main} !important`,
-    },
-    "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: `${theme.palette.primary.main} !important`,
-    },
-    "& .MuiOutlinedInput-notchedOutline": {
-      borderRadius: "none",
-    },
-  };
-
   const subNavigationHeaderHeight = 8;
 
   const defaultPaperHeaderStyle = {
@@ -125,45 +97,14 @@ export const useDefaultStyles = () => {
     maxHeight: "95%",
   };
 
-  const defaultTableStyle = {
-    maxHeight: "45%",
-    background: theme.palette.common.white,
-    ".table": {
-      minWidth: 500,
-    },
-    ".tableHead": {
-      background: theme.palette.primary.main,
-    },
-    ".tableHeadCell": {
-      color: theme.palette.common.white,
-    },
-    ".tableBodyCell": {
-      color: theme.palette.secondary.main,
-    },
-    // ".tableFooter": {
-    //   display: "flex",
-    //   justifyContent: "end",
-    // },
-    ".actionButton": {
-      color: theme.palette.secondary.main,
-      padding: 0,
-    },
-    ".tablePagination": {
-      color: theme.palette.secondary.main,
-    },
-  };
-
   const actionMenuStyle = {
     background: theme.palette.primary.main,
   };
 
   return {
     defaultButtonStyle,
-    defaultTextFieldStyle,
-    mobileTextFieldStyle,
     defaultPaperHeaderStyle,
     defaultPaperContentStyle,
-    defaultTableStyle,
     actionMenuStyle,
   };
 };
