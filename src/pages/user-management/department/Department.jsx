@@ -58,12 +58,13 @@ export const Department = () => {
   const { defaultPaperHeaderStyle, defaultPaperContentStyle } =
     useDefaultStyles();
 
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState(true);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(25);
-  const [status, setStatus] = useState(true);
 
   const { data: departments, isLoading } = useGetDepartmentQuery({
-    Search: "",
+    Search: search,
     Status: status,
     PageNumber: page + 1,
     PageSize: pageSize,
@@ -98,7 +99,7 @@ export const Department = () => {
             </>
             {isLoading ? (
               <Skeleton variant="rectangular" />
-            ) : totalCount > 0 ? (
+            ) : status === true ? (
               <DepartmentForm />
             ) : (
               ""
@@ -120,13 +121,7 @@ export const Department = () => {
             <Typography fontSize="small" mr={1}>
               Archived
             </Typography>
-            {isLoading ? (
-              <Skeleton variant="rectangular" />
-            ) : totalCount > 0 ? (
-              <SearchField />
-            ) : (
-              ""
-            )}
+            <SearchField onChange={(e) => setSearch(e.target.value)} />
           </Stack>
         </Paper>
         {isLoading ? (
@@ -202,7 +197,11 @@ export const Department = () => {
             </TableContainer>
           </Paper>
         ) : (
-          <ZeroRecordsFound text={`${status ? 'No active records' : 'No archived records'} for Department`} />
+          <ZeroRecordsFound
+            text={`${
+              status ? "No active records" : "No archived records"
+            } for Department`}
+          />
         )}
       </Stack>
     </>
@@ -254,10 +253,7 @@ const DepartmentActions = ({ row }) => {
       "question"
     ).then((res) => {
       if (res.isConfirmed) {
-        updateDepartmentStatus({
-          departmentId: row.id,
-          isActive: !row.isActive,
-        });
+        updateDepartmentStatus(row.id);
         BasicToast(
           "success",
           `Department ${row?.departmentName} was ${
@@ -267,6 +263,7 @@ const DepartmentActions = ({ row }) => {
         );
       }
     });
+    dispatch(setSelectedRow(null))
   };
 
   const handleOnClick = (items) => {
@@ -372,7 +369,7 @@ const DepartmentForm = () => {
             3500
           );
         } else {
-          await updateDepartment(data);
+          await updateDepartment({payload: data, id: selectedRowData?.id});
           BasicToast(
             "success",
             `Department ${selectedRowData?.departmentName}

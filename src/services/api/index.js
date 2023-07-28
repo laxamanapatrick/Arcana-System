@@ -40,18 +40,19 @@ export const jsonServerApi = createApi({
       invalidatesTags: ["Company"],
     }),
     updateCompany: builder.mutation({
-      query: (payload) => ({
-        url: `Company/UpdateCompany`,
+      query: ({ payload, id }) => ({
+        url: `Company/UpdateCompany/id=${encodeURIComponent(id)}`,
         method: "PUT",
         body: payload,
       }),
       invalidatesTags: ["Company"],
     }),
     updateCompanyStatus: builder.mutation({
-      query: (payload) => ({
-        url: `Company/UpdateCompanyStatus`,
+      query: (id) => ({
+        url: `Company/UpdateCompanyStatus/id=${encodeURIComponent(
+          id
+        )}`,
         method: "PATCH",
-        body: payload,
       }),
       invalidatesTags: ["Company"],
     }),
@@ -75,18 +76,17 @@ export const jsonServerApi = createApi({
       invalidatesTags: ["Department"],
     }),
     updateDepartment: builder.mutation({
-      query: (payload) => ({
-        url: `Department/UpdateDepartment`,
+      query: ({ payload, id }) => ({
+        url: `Department/UpdateDepartment/id=${encodeURIComponent(id)}`,
         method: "PUT",
         body: payload,
       }),
       invalidatesTags: ["Department"],
     }),
     updateDepartmentStatus: builder.mutation({
-      query: (payload) => ({
-        url: `Department/UpdateDepartmentStatus`,
+      query: (id) => ({
+        url: `Department/UpdateDepartmentStatus/id=${encodeURIComponent(id)}`,
         method: "PATCH",
-        body: payload,
       }),
       invalidatesTags: ["Department"],
     }),
@@ -110,18 +110,17 @@ export const jsonServerApi = createApi({
       invalidatesTags: ["Location"],
     }),
     updateLocation: builder.mutation({
-      query: (payload) => ({
-        url: `Location/UpdateLocation`,
+      query: ({ payload, id }) => ({
+        url: `Location/UpdateLocation/id=${encodeURIComponent(id)}`,
         method: "PUT",
         body: payload,
       }),
       invalidatesTags: ["Location"],
     }),
     updateLocationStatus: builder.mutation({
-      query: (payload) => ({
-        url: `Location/UpdateLocationStatus`,
+      query: (id) => ({
+        url: `Location/UpdateLocationStatus/id=${encodeURIComponent(id)}`,
         method: "PATCH",
-        body: payload,
       }),
       invalidatesTags: ["Location"],
     }),
@@ -145,25 +144,26 @@ export const jsonServerApi = createApi({
       invalidatesTags: ["User Roles"],
     }),
     updateUserRole: builder.mutation({
-      query: (payload, id) => ({
-        url: `UserRole/UpdateUserRole${id}`,
-        method: "PUT",
-        body: payload,
-      }),
-      invalidatesTags: ["User Roles"],
-    }),
-    untagUserRole: builder.mutation({
-      query: (payload, id) => ({
-        url: `UserRole/UntagUserRole${id}`,
+      query: ({ payload, id }) => ({
+        url: `UserRole/UpdateUserRole/id=${encodeURIComponent(id)}`,
         method: "PUT",
         body: payload,
       }),
       invalidatesTags: ["User Roles"],
     }),
     updateUserRoleStatus: builder.mutation({
-      query: (payload, id) => ({
-        url: `UserRole/UpdateUserRoleStatus${id}`,
+      query: (id) => ({
+        url: `UserRole/UpdateUserRoleStatus/id=${encodeURIComponent(id)}`,
         method: "PATCH",
+        params: { id: id },
+      }),
+      invalidatesTags: ["User Roles"],
+    }),
+    untagUserRole: builder.mutation({
+      query: (payload, id) => ({
+        url: `UserRole/UntagUserRole`,
+        method: "PUT",
+        params: { id: id },
         body: payload,
       }),
       invalidatesTags: ["User Roles"],
@@ -201,19 +201,19 @@ export const {
   useUpdateCompanyStatusMutation,
 
   //Department
-  useGetDepartmentQuery,             
+  useGetDepartmentQuery,
   useCreateDepartmentMutation,
   useUpdateDepartmentMutation,
   useUpdateDepartmentStatusMutation,
 
   //Location
-  useGetLocationQuery,                 
+  useGetLocationQuery,
   useCreateLocationMutation,
   useUpdateLocationMutation,
   useUpdateLocationStatusMutation,
 
   //User Role
-  useGetUserRoleQuery,                 
+  useGetUserRoleQuery,
   useCreateUserRoleMutation,
   useUpdateUserRoleMutation,
   useUntagUserRoleMutation,

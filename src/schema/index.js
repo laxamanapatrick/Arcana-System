@@ -27,3 +27,19 @@ export const departmentSchema = yup
     departmentName: yup.string().required("Department Name is required"),
   })
   .required();
+
+export const locationSchema = yup
+  .object()
+  .shape({
+    locationId: yup.string(),
+    locationName: yup.string().required("Location Name is required"),
+  })
+  .required();
+
+export const userRoleSchema = yup
+  .object()
+  .shape({
+    useRoleId: yup.string(),
+    roleName: yup.string().required("User Role Name is required"),
+  })
+  .required();

@@ -5,6 +5,8 @@ const initialState = {
     isSidebar: false,
     isCompanyForm: false,
     isDepartmentForm: false,
+    isLocationForm: false,
+    isUserRoleForm: false,
   },
   modals: {
   },

@@ -66,7 +66,7 @@ const Routing = () => {
           ],
         },
         {
-          path: "setup",
+          path: "masterlist",
           element: <Setup  />,
           children: [
             {

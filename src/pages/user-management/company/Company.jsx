@@ -58,12 +58,13 @@ export const Company = () => {
   const { defaultPaperHeaderStyle, defaultPaperContentStyle } =
     useDefaultStyles();
 
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState(true);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(25);
-  const [status, setStatus] = useState(true);
 
   const { data: companies, isLoading } = useGetCompanyQuery({
-    Search: "",
+    Search: search,
     Status: status,
     PageNumber: page + 1,
     PageSize: pageSize,
@@ -98,7 +99,7 @@ export const Company = () => {
             </>
             {isLoading ? (
               <Skeleton variant="rectangular" />
-            ) : totalCount > 0 ? (
+            ) : status === true ? (
               <CompanyForm />
             ) : (
               ""
@@ -120,13 +121,7 @@ export const Company = () => {
             <Typography fontSize="small" mr={1}>
               Archived
             </Typography>
-            {isLoading ? (
-              <Skeleton variant="rectangular" />
-            ) : totalCount > 0 ? (
-              <SearchField />
-            ) : (
-              ""
-            )}
+            <SearchField onChange={(e) => setSearch(e.target.value)} />
           </Stack>
         </Paper>
         {isLoading ? (
@@ -258,10 +253,7 @@ const CompanyActions = ({ row }) => {
       "question"
     ).then((res) => {
       if (res.isConfirmed) {
-        updateCompanyStatus({
-          companyId: row.id,
-          isActive: !row.isActive,
-        });
+        updateCompanyStatus(row.id);
         BasicToast(
           "success",
           `Company ${row?.companyName} was ${
@@ -271,6 +263,7 @@ const CompanyActions = ({ row }) => {
         );
       }
     });
+    dispatch(setSelectedRow(null));
   };
 
   const handleOnClick = (items) => {
@@ -357,6 +350,7 @@ const CompanyForm = () => {
   const [createCompany] = useCreateCompanyMutation();
   const [updateCompany] = useUpdateCompanyMutation();
   const submitAddOrEditHandler = async (data) => {
+    // console.log(data, selectedRowData?.id);
     try {
       if (selectedRowData === null) {
         await createCompany({
@@ -372,7 +366,7 @@ const CompanyForm = () => {
             3500
           );
         } else {
-          await updateCompany(data);
+          await updateCompany({payload: data, id: selectedRowData?.id});
           BasicToast(
             "success",
             `Company ${selectedRowData?.companyName}

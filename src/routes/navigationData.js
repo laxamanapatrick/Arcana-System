@@ -41,19 +41,24 @@ export const sidebarNavigationData = [
   },
   {
     id: 3,
-    path: "/setup",
-    name: "Setup",
+    path: "/masterlist",
+    name: "Masterlist",
     icon: "Dataset",
     sub: [
       {
         id: 1,
         name: "Products",
-        path: "/setup/products",
+        path: "/masterlist/products",
       },
       {
         id: 2,
         name: "Groups",
-        path: "/setup/groups",
+        path: "/masterlist/groups",
+      },
+      {
+        id: 3,
+        name: "Discount Type",
+        path: "/masterlist/discount-type",
       },
     ],
   },
@@ -71,15 +76,3 @@ export const sidebarNavigationData = [
     ],
   },
 ];
-
-// const subNavigationHeight = 8;
-// <Box
-//   height={`${subNavigationHeight}%`}
-//   maxHeight={`${subNavigationHeight}%`}
-//   display="flex"
-//   alignItems="center"
-//   color={theme.palette.secondary.main}
-//   px={2}
-// >
-//   <Typography sx={{ textDecoration: "underline" }}>Sub Navigation</Typography>
-// </Box>;
