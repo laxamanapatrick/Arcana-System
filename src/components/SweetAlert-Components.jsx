@@ -28,8 +28,8 @@ export const ModalToast = (
     text: text ? text : "",
     icon: icon ? icon : "question",
     showCancelButton: true,
-    confirmButtonColor: confirmColor ? confirmColor : "#3085d6",
-    cancelButtonColor: cancelColor ? cancelColor : "#d33",
+    confirmButtonColor: confirmColor ? confirmColor : "#243448",
+    cancelButtonColor: cancelColor ? cancelColor : "#F30737",
     confirmButtonText: confirmButtonText ? confirmButtonText : "Yes",
   });
 };

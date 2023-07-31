@@ -216,8 +216,6 @@ const LocationActions = ({ row }) => {
   const anchorRef = useRef();
   const dispatch = useDispatch();
 
-  console.log(row)
-
   const menuItems = [
     {
       type: "view",
@@ -324,6 +322,7 @@ const LocationForm = () => {
     control,
     formState: { errors },
     setValue,
+    reset,
   } = useForm({
     resolver: yupResolver(locationSchema),
     mode: "onChange",
@@ -384,6 +383,8 @@ const LocationForm = () => {
       BasicToast("error", `Action Failed`, 1500);
       console.log(error);
     }
+    reset()
+    dispatch(setSelectedRow(null));
     dispatch(toggleDrawer("isLocationForm"));
   };
 
@@ -391,6 +392,7 @@ const LocationForm = () => {
     <Stack width="auto" flexDirection="row" sx={{ ...defaultButtonStyle }}>
       <Button
         onClick={() => {
+          reset()
           dispatch(setSelectedRow(null));
           dispatch(toggleDrawer("isLocationForm"));
         }}

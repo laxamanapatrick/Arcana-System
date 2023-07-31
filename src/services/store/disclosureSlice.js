@@ -9,10 +9,8 @@ const initialState = {
     isUserRoleForm: false,
   },
   modals: {
-  },
-  // menus: {
-  //   isUserAccountMenu: false
-  // },
+    isTagging: false,
+  }
 };
 
 const disclosureSlice = createSlice({
@@ -36,19 +34,7 @@ const disclosureSlice = createSlice({
     },
     toggleModal: (state, action) => {
       state.modals[action.payload] = !state.modals[action.payload];
-    },
-    // openMenu: (state, action) => {
-    //   state.menus[action.payload] = true;
-    //   state.anchorRef = action.payload.anchorRef; 
-    // },
-    // closeMenu: (state, action) => {
-    //   state.menus[action.payload] = false;
-    //   state.anchorRef = null; 
-    // },
-    // toggleMenu: (state, action) => {
-    //   state.menus[action.payload] = !state.menus[action.payload];
-    //   state.anchorRef = action.payload.anchorRef;
-    // },
+    }
   },
 });
 
@@ -58,10 +44,7 @@ export const {
   toggleDrawer,
   openModal,
   closeModal,
-  toggleModal,
-  // openMenu,
-  // closeMenu,
-  // toggleMenu,
+  toggleModal
 } = disclosureSlice.actions;
 
 export default disclosureSlice.reducer;

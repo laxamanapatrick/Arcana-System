@@ -1,13 +1,33 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import CryptoJS from "crypto-js";
+import { saltkey } from "../saltkey";
 
 const baseURL = process.env.REACT_APP_BASEURL;
 
+const getBearerToken = () => {
+  let userDatadecrypted;
+  if (sessionStorage.getItem("Token")) {
+    const token = sessionStorage.getItem("Token");
+    const deciphertext = CryptoJS.AES.decrypt(token, saltkey);
+    userDatadecrypted = JSON.parse(deciphertext.toString(CryptoJS.enc.Utf8));
+  }
+  return userDatadecrypted;
+};
+
+const baseQueryWithBearer = fetchBaseQuery({
+  baseUrl: baseURL,
+  mode: "cors",
+  prepareHeaders(headers) {
+    // Set the Authorization header with the bearer token
+    const token = getBearerToken();
+    headers.set("Authorization", `Bearer ${token}`);
+    return headers;
+  },
+});
+
 export const jsonServerApi = createApi({
   reducerPath: "jsonServerApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: baseURL,
-    mode: "cors",
-  }),
+  baseQuery: baseQueryWithBearer,
 
   // Login
 
@@ -41,7 +61,7 @@ export const jsonServerApi = createApi({
     }),
     updateCompany: builder.mutation({
       query: ({ payload, id }) => ({
-        url: `Company/UpdateCompany/id=${encodeURIComponent(id)}`,
+        url: `Company/UpdateCompany/${encodeURIComponent(id)}`,
         method: "PUT",
         body: payload,
       }),
@@ -49,9 +69,7 @@ export const jsonServerApi = createApi({
     }),
     updateCompanyStatus: builder.mutation({
       query: (id) => ({
-        url: `Company/UpdateCompanyStatus/id=${encodeURIComponent(
-          id
-        )}`,
+        url: `Company/UpdateCompanyStatus/${encodeURIComponent(id)}`,
         method: "PATCH",
       }),
       invalidatesTags: ["Company"],
@@ -77,7 +95,7 @@ export const jsonServerApi = createApi({
     }),
     updateDepartment: builder.mutation({
       query: ({ payload, id }) => ({
-        url: `Department/UpdateDepartment/id=${encodeURIComponent(id)}`,
+        url: `Department/UpdateDepartment/${encodeURIComponent(id)}`,
         method: "PUT",
         body: payload,
       }),
@@ -85,7 +103,7 @@ export const jsonServerApi = createApi({
     }),
     updateDepartmentStatus: builder.mutation({
       query: (id) => ({
-        url: `Department/UpdateDepartmentStatus/id=${encodeURIComponent(id)}`,
+        url: `Department/UpdateDepartmentStatus/${encodeURIComponent(id)}`,
         method: "PATCH",
       }),
       invalidatesTags: ["Department"],
@@ -111,7 +129,7 @@ export const jsonServerApi = createApi({
     }),
     updateLocation: builder.mutation({
       query: ({ payload, id }) => ({
-        url: `Location/UpdateLocation/id=${encodeURIComponent(id)}`,
+        url: `Location/UpdateLocation/${encodeURIComponent(id)}`,
         method: "PUT",
         body: payload,
       }),
@@ -119,7 +137,7 @@ export const jsonServerApi = createApi({
     }),
     updateLocationStatus: builder.mutation({
       query: (id) => ({
-        url: `Location/UpdateLocationStatus/id=${encodeURIComponent(id)}`,
+        url: `Location/UpdateLocationStatus/${encodeURIComponent(id)}`,
         method: "PATCH",
       }),
       invalidatesTags: ["Location"],
@@ -145,7 +163,7 @@ export const jsonServerApi = createApi({
     }),
     updateUserRole: builder.mutation({
       query: ({ payload, id }) => ({
-        url: `UserRole/UpdateUserRole/id=${encodeURIComponent(id)}`,
+        url: `UserRole/UpdateUserRole/${encodeURIComponent(id)}`,
         method: "PUT",
         body: payload,
       }),
@@ -153,17 +171,15 @@ export const jsonServerApi = createApi({
     }),
     updateUserRoleStatus: builder.mutation({
       query: (id) => ({
-        url: `UserRole/UpdateUserRoleStatus/id=${encodeURIComponent(id)}`,
+        url: `UserRole/UpdateUserRoleStatus/${encodeURIComponent(id)}`,
         method: "PATCH",
-        params: { id: id },
       }),
       invalidatesTags: ["User Roles"],
     }),
-    untagUserRole: builder.mutation({
-      query: (payload, id) => ({
-        url: `UserRole/UntagUserRole`,
+    updateTaggedUserRole: builder.mutation({
+      query: ({payload, id}) => ({
+        url: `UserRole/UntagAndTagUserRole/${encodeURIComponent(id)}`,
         method: "PUT",
-        params: { id: id },
         body: payload,
       }),
       invalidatesTags: ["User Roles"],
@@ -216,7 +232,7 @@ export const {
   useGetUserRoleQuery,
   useCreateUserRoleMutation,
   useUpdateUserRoleMutation,
-  useUntagUserRoleMutation,
+  useUpdateTaggedUserRoleMutation,
   useUpdateUserRoleStatusMutation,
 
   //User Account

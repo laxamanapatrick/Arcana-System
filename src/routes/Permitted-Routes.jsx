@@ -10,13 +10,13 @@ const PermittedRoutes = () => {
   const permissions = useSelector((state) => state.permissions.permissions);
 
   const allowedNavigationData = sidebarNavigationData.filter((item) => {
-    return permissions.includes(item.name);
+    return permissions?.includes(item.name);
   });
   const currentNavItem = allowedNavigationData.find((item) =>
-    pathname.includes(item.path)
+    pathname?.includes(item.path)
   );
   const currentSubNav = currentNavItem?.sub?.filter((subItem) =>
-    permissions.includes(subItem.name)
+    permissions?.includes(subItem.name)
   );
 
   const permittedParentPath = allowedNavigationData?.map((item) => {
@@ -34,9 +34,6 @@ const PermittedRoutes = () => {
   ) {
     return (
       <Layout
-        // isDrawer={isDrawer}
-        // closeDrawer={closeDrawer}
-        // toggleDrawer={toggleDrawer}
       />
     );
   }

@@ -15,11 +15,6 @@ import AuthenticatedRoutes from "./Authenticated-Routes";
 import { PageNotFound } from "../components/Lottie-Components";
 
 const Routing = () => {
-  // const {
-  //   isOpen: isDrawer,
-  //   onClose: closeDrawer,
-  //   onToggle: toggleDrawer,
-  // } = useDisclosure();
   let routing = useRoutes([
     {
       path: "/login",
@@ -33,9 +28,6 @@ const Routing = () => {
       path: "/",
       element: (
         <AuthenticatedRoutes
-          // isDrawer={isDrawer}
-          // closeDrawer={closeDrawer}
-          // toggleDrawer={toggleDrawer}
         />
       ),
       children: [
@@ -81,6 +73,10 @@ const Routing = () => {
           children: [
             {
               path: "mrp",
+              element: <MRP />,
+            },
+            {
+              path: "other",
               element: <MRP />,
             },
           ],

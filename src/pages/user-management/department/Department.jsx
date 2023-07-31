@@ -322,6 +322,7 @@ const DepartmentForm = () => {
     control,
     formState: { errors },
     setValue,
+    reset,
   } = useForm({
     resolver: yupResolver(departmentSchema),
     mode: "onChange",
@@ -382,6 +383,8 @@ const DepartmentForm = () => {
       BasicToast("error", `Action Failed`, 1500);
       console.log(error);
     }
+    reset()
+    dispatch(setSelectedRow(null));
     dispatch(toggleDrawer("isDepartmentForm"));
   };
 
@@ -389,6 +392,7 @@ const DepartmentForm = () => {
     <Stack width="auto" flexDirection="row" sx={{ ...defaultButtonStyle }}>
       <Button
         onClick={() => {
+          reset()
           dispatch(setSelectedRow(null));
           dispatch(toggleDrawer("isDepartmentForm"));
         }}

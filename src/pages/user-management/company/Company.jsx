@@ -322,6 +322,7 @@ const CompanyForm = () => {
     control,
     formState: { errors },
     setValue,
+    reset,
   } = useForm({
     resolver: yupResolver(companySchema),
     mode: "onChange",
@@ -350,7 +351,6 @@ const CompanyForm = () => {
   const [createCompany] = useCreateCompanyMutation();
   const [updateCompany] = useUpdateCompanyMutation();
   const submitAddOrEditHandler = async (data) => {
-    // console.log(data, selectedRowData?.id);
     try {
       if (selectedRowData === null) {
         await createCompany({
@@ -379,6 +379,8 @@ const CompanyForm = () => {
       BasicToast("error", `Action Failed`, 1500);
       console.log(error);
     }
+    reset()
+    dispatch(setSelectedRow(null));
     dispatch(toggleDrawer("isCompanyForm"));
   };
 
@@ -386,6 +388,7 @@ const CompanyForm = () => {
     <Stack width="auto" flexDirection="row" sx={{ ...defaultButtonStyle }}>
       <Button
         onClick={() => {
+          reset()
           dispatch(setSelectedRow(null));
           dispatch(toggleDrawer("isCompanyForm"));
         }}

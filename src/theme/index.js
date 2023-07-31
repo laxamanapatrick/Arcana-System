@@ -80,7 +80,7 @@ const darkTheme = createTheme({
           maxHeight: "700px",
           background: "white",
           padding: 0,
-          margin: 0
+          margin: 0,
         },
       },
     },
@@ -118,7 +118,7 @@ const darkTheme = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: colorSchemes.dark.primary,
-          border: '2px',
+          border: "2px",
           position: "sticky",
           bottom: 0,
           zIndex: 1,
@@ -126,6 +126,14 @@ const darkTheme = createTheme({
       },
     },
     MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: colorSchemes.dark.secondary,
+          padding: 0,
+        },
+      },
+    },
+    MuiCheckbox: {
       styleOverrides: {
         root: {
           color: colorSchemes.dark.secondary,

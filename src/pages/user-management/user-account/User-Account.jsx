@@ -38,12 +38,14 @@ export const UserAccount = () => {
     defaultTableStyle,
   } = useDefaultStyles();
 
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState(true);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(5);
 
   const { data: userAccounts, isLoading } = useGetUserAccountsQuery({
-    Search: "",
-    Status: true,
+    Search: search,
+    Status: status,
     PageNumber: page + 1,
     PageSize: pageSize,
   });

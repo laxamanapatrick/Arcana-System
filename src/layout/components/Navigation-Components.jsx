@@ -114,15 +114,15 @@ const NavigationContent = () => {
   const [subNav, setSubNav] = useState([]);
 
   const allowedNavigationData = sidebarNavigation.filter((item) => {
-    return permissions.includes(item.name);
+    return permissions?.includes(item.name);
   });
 
   useEffect(() => {
     const currentNavItem = allowedNavigationData.find((item) =>
-      pathname.includes(item.path)
+      pathname?.includes(item.path)
     );
     const currentSubNav = currentNavItem?.sub?.filter((subItem) =>
-      permissions.includes(subItem.name)
+      permissions?.includes(subItem.name)
     );
     setSubNav(currentSubNav);
   }, []);
@@ -130,7 +130,7 @@ const NavigationContent = () => {
   const handleAccordionExpand = (data) => {
     navigate(data?.path);
     const permittedSubNav = data?.sub?.filter((subItem) =>
-      permissions.includes(subItem.name)
+      permissions?.includes(subItem.name)
     );
     setSubNav(permittedSubNav);
   };

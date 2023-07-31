@@ -23,7 +23,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { Archive, Edit, More, ViewAgenda } from "@mui/icons-material";
+import { Archive, Edit, More, TurnedInNot } from "@mui/icons-material";
 import SearchField from "../../../components/SearchField";
 import {
   LoadingData,
@@ -44,7 +44,10 @@ import {
 } from "../../../services/api";
 import { useDisclosure } from "../../../hooks/useDisclosure";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleDrawer } from "../../../services/store/disclosureSlice";
+import {
+  toggleDrawer,
+  toggleModal,
+} from "../../../services/store/disclosureSlice";
 import { userRoleSchema } from "../../../schema";
 import { Textfield } from "../../../components/Fields";
 import { setSelectedRow } from "../../../services/store/selectedRowSlice";
@@ -52,6 +55,7 @@ import { setSelectedRow } from "../../../services/store/selectedRowSlice";
 import moment from "moment/moment";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Tagging from "./Tagging";
 
 export const UserRole = () => {
   const theme = useTheme();
@@ -215,12 +219,13 @@ const UserRoleActions = ({ row }) => {
   const { actionMenuStyle } = useDefaultStyles();
   const anchorRef = useRef();
   const dispatch = useDispatch();
+  const { isTagging } = useSelector((state) => state.disclosure.modals);
 
   const menuItems = [
     {
-      type: "view",
-      name: "View More",
-      icon: <ViewAgenda />,
+      type: "tagging",
+      name: "Tagging",
+      icon: <TurnedInNot />,
     },
     {
       type: "edit",
@@ -234,8 +239,9 @@ const UserRoleActions = ({ row }) => {
     },
   ];
 
-  const handleView = () => {
-    console.log("View More", row);
+  const handleTagging = () => {
+    dispatch(setSelectedRow(row));
+    dispatch(toggleModal("isTagging"));
   };
 
   const handleEdit = () => {
@@ -263,12 +269,12 @@ const UserRoleActions = ({ row }) => {
         );
       }
     });
-    dispatch(setSelectedRow(null))
+    dispatch(setSelectedRow(null));
   };
 
   const handleOnClick = (items) => {
-    if (items.type === "view") {
-      handleView();
+    if (items.type === "tagging") {
+      handleTagging();
     } else if (items.type === "edit") {
       handleEdit();
     } else if (items.type === "archive") {
@@ -305,6 +311,7 @@ const UserRoleActions = ({ row }) => {
           </MenuItem>
         ))}
       </Menu>
+      {isTagging && <Tagging />}
     </>
   );
 };
@@ -322,6 +329,7 @@ const UserRoleForm = () => {
     control,
     formState: { errors },
     setValue,
+    reset,
   } = useForm({
     resolver: yupResolver(userRoleSchema),
     mode: "onChange",
@@ -355,11 +363,7 @@ const UserRoleForm = () => {
         await createUserRole({
           roleName: data?.roleName,
         });
-        BasicToast(
-          "success",
-          `User Role ${data?.roleName} was created`,
-          1500
-        );
+        BasicToast("success", `User Role ${data?.roleName} was created`, 1500);
       } else {
         if (selectedRowData?.roleName === data?.roleName) {
           BasicToast(
@@ -369,7 +373,7 @@ const UserRoleForm = () => {
             3500
           );
         } else {
-          await updateUserRole({payload: data, id: selectedRowData?.id});
+          await updateUserRole({ payload: data, id: selectedRowData?.id });
           BasicToast(
             "success",
             `User Role ${selectedRowData?.roleName}
@@ -382,6 +386,8 @@ const UserRoleForm = () => {
       BasicToast("error", `Action Failed`, 1500);
       console.log(error);
     }
+    reset()
+    dispatch(setSelectedRow(null));
     dispatch(toggleDrawer("isUserRoleForm"));
   };
 
@@ -389,6 +395,7 @@ const UserRoleForm = () => {
     <Stack width="auto" flexDirection="row" sx={{ ...defaultButtonStyle }}>
       <Button
         onClick={() => {
+          reset()
           dispatch(setSelectedRow(null));
           dispatch(toggleDrawer("isUserRoleForm"));
         }}

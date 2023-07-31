@@ -32,7 +32,7 @@ const Layout = () => {
   );
 
   const permittedSidebar = sidebarNavigation?.filter((item) =>
-    permissions.includes(item.name)
+    permissions?.includes(item.name)
   );
 
   return (
@@ -71,7 +71,7 @@ const Layout = () => {
                 height: `${100}%`,
                 maxHeight: `${100}%`,
                 display: "flex",
-                flexDirection: pathname === "/" ? "row" : "",
+                flexDirection: pathname === "/admin-dashboard" || "/user-dashboard" ? "row" : "",
               }}
             >
               {pathname === "/" && (

@@ -44,15 +44,22 @@ const Login = () => {
   const submitHandler = async (data) => {
     try {
       const res = await createLogin(data).unwrap();
+      if (res?.data?.permission?.includes("Admin Dashboard")) {
+        navigate("/admin-dashboard");
+        return;
+      }
+      if (res?.data?.permission?.includes("Dashboard")) {
+        navigate("/user-dashboard");
+        return;
+      } else {
+        navigate("/");
+      }
+      BasicToast("success", `Welcome ${res?.data?.fullname}`, 700);
       dispatch(setFullname(res?.data?.fullname));
       dispatch(setToken(res?.data?.token));
       dispatch(setPermissions(res?.data?.permission));
       dispatch(SetSidebarNavigation(sidebarNavigationData));
-      BasicToast("success", `Welcome ${res?.data?.fullname}`, 700);
-      reset()
-      window.setTimeout(() => {
-        navigate("/");
-      }, 400);
+      reset();
     } catch (error) {
       BasicToast("error", error?.data?.messages[0], 700);
     }

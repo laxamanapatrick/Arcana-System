@@ -10,9 +10,6 @@ const AuthenticatedRoutes = () => {
     <Navigate to="/login" />
   ) : (
     <PermittedRoutes
-      // isDrawer={isDrawer}
-      // closeDrawer={closeDrawer}
-      // toggleDrawer={toggleDrawer}
     />
   );
 };
