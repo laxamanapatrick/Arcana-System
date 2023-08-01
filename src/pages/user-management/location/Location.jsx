@@ -23,7 +23,9 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { Archive, Edit, More, ViewAgenda } from "@mui/icons-material";
+import { Archive, Edit, More,
+  //  ViewAgenda 
+} from "@mui/icons-material";
 import SearchField from "../../../components/SearchField";
 import {
   LoadingData,
@@ -217,11 +219,11 @@ const LocationActions = ({ row }) => {
   const dispatch = useDispatch();
 
   const menuItems = [
-    {
-      type: "view",
-      name: "View More",
-      icon: <ViewAgenda />,
-    },
+    // {
+    //   type: "view",
+    //   name: "View More",
+    //   icon: <ViewAgenda />,
+    // },
     {
       type: "edit",
       name: "Edit",
@@ -234,9 +236,9 @@ const LocationActions = ({ row }) => {
     },
   ];
 
-  const handleView = () => {
-    console.log("View More", row);
-  };
+  // const handleView = () => {
+  //   console.log("View More", row);
+  // };
 
   const handleEdit = () => {
     dispatch(setSelectedRow(row));
@@ -267,9 +269,10 @@ const LocationActions = ({ row }) => {
   };
 
   const handleOnClick = (items) => {
-    if (items.type === "view") {
-      handleView();
-    } else if (items.type === "edit") {
+    // if (items.type === "view") {
+    //   handleView();
+    // } else 
+    if (items.type === "edit") {
       handleEdit();
     } else if (items.type === "archive") {
       handleArchive();
@@ -355,7 +358,7 @@ const LocationForm = () => {
       if (selectedRowData === null) {
         await createLocation({
           locationName: data?.locationName,
-        });
+        }).unwrap();
         BasicToast(
           "success",
           `Location ${data?.locationName} was created`,
@@ -370,7 +373,7 @@ const LocationForm = () => {
             3500
           );
         } else {
-          await updateLocation({payload: data, id: selectedRowData?.id});
+          await updateLocation({payload: data, id: selectedRowData?.id}).unwrap();
           BasicToast(
             "success",
             `Location ${selectedRowData?.locationName}
@@ -380,7 +383,7 @@ const LocationForm = () => {
         }
       }
     } catch (error) {
-      BasicToast("error", `Action Failed`, 1500);
+      BasicToast("error", `${error?.data?.messages[0]}`, 1500);
       console.log(error);
     }
     reset()

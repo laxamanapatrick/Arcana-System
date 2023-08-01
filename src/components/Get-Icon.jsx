@@ -1,8 +1,10 @@
 import {
   AccountBox,
   AddBusiness,
+  AlignVerticalCenter,
   Dashboard,
   Dataset,
+  Discount,
   IcecreamOutlined,
   Inventory,
   PostAdd,
@@ -16,6 +18,8 @@ export const getIconElement = (iconName) => {
     Inventory: <Inventory />,
     AddBusiness: <AddBusiness />,
     PostAdd: <PostAdd />,
+    Discount: <Discount />,
+    AlignVerticalCenter: <AlignVerticalCenter />,
   };
 
   return iconMap[iconName] || <IcecreamOutlined />;

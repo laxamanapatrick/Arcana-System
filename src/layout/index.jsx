@@ -71,7 +71,7 @@ const Layout = () => {
                 height: `${100}%`,
                 maxHeight: `${100}%`,
                 display: "flex",
-                flexDirection: pathname === "/admin-dashboard" || "/user-dashboard" ? "row" : "",
+                flexDirection: pathname === "/admin-dashboard" || "/user-dashboard" || "/" ? "row" : "",
               }}
             >
               {pathname === "/" && (

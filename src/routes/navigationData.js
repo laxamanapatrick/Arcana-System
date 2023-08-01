@@ -1,16 +1,16 @@
 export const sidebarNavigationData = [
-  {
-    id: 1,
-    path: "/admin-dashboard",
-    name: "Admin Dashboard",
-    icon: "Dashboard",
-  },
-  {
-    id: 2,
-    path: "/user-dashboard",
-    name: "Dashboard",
-    icon: "Dashboard",
-  },
+  // {
+  //   id: 1,
+  //   path: "/",
+  //   name: "Admin Dashboard",
+  //   icon: "Dashboard",
+  // },
+  // {
+  //   id: 2,
+  //   path: "/",
+  //   name: "Dashboard",
+  //   icon: "Dashboard",
+  // },
   {
     id: 3,
     path: "/user-management",
@@ -46,39 +46,65 @@ export const sidebarNavigationData = [
   },
   {
     id: 4,
-    path: "/masterlist",
-    name: "Masterlist",
+    path: "/setup",
+    name: "Setup",
     icon: "Dataset",
     sub: [
       {
         id: 1,
         name: "Products",
-        path: "/masterlist/products",
+        path: "/setup/products",
       },
       {
         id: 2,
-        name: "Meat Type",
-        path: "/masterlist/meat-type",
+        name: "Product Category",
+        path: "/setup/product-category",
       },
       {
         id: 3,
-        name: "UOM",
-        path: "/masterlist/uom",
+        name: "Product Sub Category",
+        path: "/setup/product-sub-category",
       },
       {
         id: 4,
-        name: "Discount Type",
-        path: "/masterlist/discount-type",
+        name: "Meat Type",
+        path: "/setup/meat-type",
       },
       {
         id: 5,
-        name: "Terms",
-        path: "/masterlist/terms",
+        name: "UOM",
+        path: "/setup/uom",
       },
     ],
   },
   {
     id: 5,
+    path: "/discount",
+    name: "Discount",
+    icon: "Discount",
+    sub: [
+      {
+        id: 1,
+        name: "Discount Type",
+        path: "/discount/discount-type",
+      },
+    ],
+  },
+  {
+    id: 6,
+    path: "/terms",
+    name: "Terms",
+    icon: "AlignVerticalCenter",
+    sub: [
+      {
+        id: 1,
+        name: "Terms and Conditions",
+        path: "/terms/terms-conditions",
+      },
+    ],
+  },
+  {
+    id: 7,
     path: "/customer-registration",
     name: "Customer Registration",
     icon: "AddBusiness",
@@ -96,13 +122,13 @@ export const sidebarNavigationData = [
     ],
   },
   {
-    id: 6,
+    id: 8,
     path: "/freebies",
     name: "Freebies",
     icon: "PostAdd",
   },
   {
-    id: 7,
+    id: 9,
     path: "/inventory",
     name: "Inventory",
     icon: "Inventory",

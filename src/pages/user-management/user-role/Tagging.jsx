@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Checkbox,
-  Divider,
   Modal,
   Stack,
   Typography,
@@ -28,10 +27,43 @@ const Tagging = () => {
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: 500,
-    bgcolor: "white",
-    border: `2px solid ${theme.palette.primary.main}`,
-    boxShadow: 24,
-    p: 4,
+    padding: theme.spacing(3),
+    backgroundColor: theme.palette.common.white,
+    outline: "none",
+    borderRadius: theme.shape.borderRadius,
+  };
+
+  const headerStyle = {
+    fontSize: theme.typography.h6.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    marginBottom: theme.spacing(3),
+  };
+
+  const mainContainerStyle = {
+    maxHeight: 400,
+    overflow: "auto",
+  };
+
+  const itemContainerStyle = {
+    marginBottom: theme.spacing(2),
+    padding: theme.spacing(2),
+    borderRadius: theme.shape.borderRadius,
+    border: `1px solid ${theme.palette.secondary.main}`,
+  };
+
+  const itemNameStyle = {
+    fontWeight: theme.typography.fontWeightBold,
+  };
+
+  const subItemContainerStyle = {
+    marginLeft: theme.spacing(3),
+  };
+
+  const buttonContainerStyle = {
+    display: "flex",
+    justifyContent: "flex-end",
+    marginTop: theme.spacing(3),
+    gap: theme.spacing(2),
   };
 
   const [checkedItems, setCheckedItems] = useState([]);
@@ -80,7 +112,7 @@ const Tagging = () => {
   const handleTagging = async () => {
     if (checkedItems?.length > 0) {
       const payload = { permissions: checkedItems };
-      console.log(payload)
+      console.log(payload);
       try {
         await updateTaggedUserRole({
           payload: payload,
@@ -96,26 +128,50 @@ const Tagging = () => {
     }
   };
 
+  const CustomBackdrop = () => {
+    return (
+      <Box
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0, 0, 0, 0.25)", // Change the alpha value for transparency
+        }}
+      />
+    );
+  };
+
   return (
     <Stack width="auto" flexDirection="row">
-      <Modal open={isTagging || false} onClose={() => {}}>
+      <Modal
+        open={isTagging || false}
+        onClose={() => {}}
+        BackdropComponent={CustomBackdrop} // Use the custom backdrop
+        BackdropProps={{
+          timeout: 500, // Set the timeout for the backdrop transition (optional)
+        }}
+      >
         <Box sx={style}>
-          <Typography mb={3}>Tagging of Permissions</Typography>
-          <Box sx={{ maxHeight: "600px", overflow: "auto" }}>
+          <Typography variant="h6" sx={headerStyle}>
+            Tagging of Permissions
+          </Typography>
+          <Box sx={mainContainerStyle}>
             {sidebarNavigationData?.map((item) => (
-              <Stack key={item.id} sx={{ border: "2px solid black" }}>
+              <Box key={item.id} sx={itemContainerStyle}>
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
                   <Checkbox
                     checked={checkedItems?.includes(item.name)}
                     onChange={() => handleCheckboxChange(item.name)}
                   />
-                  <Typography>{item.name}</Typography>
+                  <Typography sx={itemNameStyle}>{item.name}</Typography>
                 </Box>
-                <Box marginLeft={2} mb={2}>
+                <Box sx={subItemContainerStyle}>
                   {item?.sub?.map((subItem) => (
                     <Box
-                      sx={{ display: "flex", flexDirection: "row" }}
                       key={subItem.id}
+                      sx={{ display: "flex", flexDirection: "row" }}
                     >
                       <Checkbox
                         checked={checkedItems?.includes(subItem.name)}
@@ -127,26 +183,16 @@ const Tagging = () => {
                     </Box>
                   ))}
                 </Box>
-              </Stack>
+              </Box>
             ))}
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "end", mt: 3, gap: 1 }}>
-            <Button
-              sx={{
-                bgcolor: theme.palette.secondary.main,
-                color: theme.palette.common.white,
-                ":hover": {
-                  color: theme.palette.common.white,
-                  bgcolor: theme.palette.primary.main,
-                  variant: "contained",
-                },
-              }}
-              onClick={handleTagging}
-            >
+          <Box sx={buttonContainerStyle}>
+            <Button variant="contained" color="primary" onClick={handleTagging}>
               Save
             </Button>
             <Button
-              sx={{ bgcolor: "witesmoke", color: theme.palette.secondary.main }}
+              variant="outlined"
+              color="secondary"
               onClick={() => dispatch(toggleModal("isTagging"))}
             >
               Close

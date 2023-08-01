@@ -7,6 +7,10 @@ const initialState = {
     isDepartmentForm: false,
     isLocationForm: false,
     isUserRoleForm: false,
+    isUserAccountForm: false,
+    isUOMForm: false,
+    isProductForm: false,
+    isProductSubCategoryForm: false,
   },
   modals: {
     isTagging: false,

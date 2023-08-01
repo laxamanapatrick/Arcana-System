@@ -362,7 +362,7 @@ const UserRoleForm = () => {
       if (selectedRowData === null) {
         await createUserRole({
           roleName: data?.roleName,
-        });
+        }).unwrap();
         BasicToast("success", `User Role ${data?.roleName} was created`, 1500);
       } else {
         if (selectedRowData?.roleName === data?.roleName) {
@@ -373,7 +373,7 @@ const UserRoleForm = () => {
             3500
           );
         } else {
-          await updateUserRole({ payload: data, id: selectedRowData?.id });
+          await updateUserRole({ payload: data, id: selectedRowData?.id }).unwrap();
           BasicToast(
             "success",
             `User Role ${selectedRowData?.roleName}
@@ -383,7 +383,7 @@ const UserRoleForm = () => {
         }
       }
     } catch (error) {
-      BasicToast("error", `Action Failed`, 1500);
+      BasicToast("error", `${error?.data?.messages[0]}`, 1500);
       console.log(error);
     }
     reset()

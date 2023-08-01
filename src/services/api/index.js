@@ -177,7 +177,7 @@ export const jsonServerApi = createApi({
       invalidatesTags: ["User Roles"],
     }),
     updateTaggedUserRole: builder.mutation({
-      query: ({payload, id}) => ({
+      query: ({ payload, id }) => ({
         url: `UserRole/UntagAndTagUserRole/${encodeURIComponent(id)}`,
         method: "PUT",
         body: payload,
@@ -203,6 +203,124 @@ export const jsonServerApi = createApi({
       }),
       invalidatesTags: ["User Accounts"],
     }),
+    updateUserAccount: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `User/UpdateUser/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["User Accounts"],
+    }),
+    updateUserAccountStatus: builder.mutation({
+      query: (id) => ({
+        url: `User/UpdateUserStatus/${encodeURIComponent(id)}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["User Accounts"],
+    }),
+
+    // UOM
+
+    getUOM: builder.query({
+      query: (params) => ({
+        url: `GetUomAsync/GetUom`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["UOM"],
+    }),
+    createUOM: builder.mutation({
+      query: (payload) => ({
+        url: `Uom/AddNewUom`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["UOM"],
+    }),
+    updateUOM: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `UpdateUom/UpdateUom/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["UOM"],
+    }),
+    updateUOMStatus: builder.mutation({
+      query: (id) => ({
+        url: `Uom/UpdateUomStatus/${encodeURIComponent(id)}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["UOM"],
+    }),
+
+    // Product Category
+
+    getProductCategory: builder.query({
+      query: (params) => ({
+        url: `ProductCategory/GetProductCategory`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Product Category"],
+    }),
+    createProductCategory: builder.mutation({
+      query: (payload) => ({
+        url: `ProductCategory/AddNewProductCategory`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Product Category"],
+    }),
+    updateProductCategory: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `ProductCategory/UpdateProductCategory/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Product Category"],
+    }),
+    updateProductCategoryStatus: builder.mutation({
+      query: (id) => ({
+        url: `ProductCategory/UpdateProductCategoryStatus/${encodeURIComponent(id)}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Product Category"],
+    }),
+
+     // Product Sub Category
+
+     getProductSubCategory: builder.query({
+      query: (params) => ({
+        url: `ProductSubCategory/GetProductSubCategoryCategory`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Product Sub Category"],
+    }),
+    createProductSubCategory: builder.mutation({
+      query: (payload) => ({
+        url: `ProductSubCategory/AddNewProductSubCategoryCategory`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Product Sub Category"],
+    }),
+    updateProductSubCategory: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `ProductSubCategory/UpdateProductSubCategoryCategory/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Product Sub Category"],
+    }),
+    updateProductSubCategoryStatus: builder.mutation({
+      query: (id) => ({
+        url: `ProductSubCategory/UpdateProductSubCategoryStatus/${encodeURIComponent(id)}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Product Sub Category"],
+    }),
+
   }),
 });
 
@@ -238,4 +356,27 @@ export const {
   //User Account
   useGetUserAccountsQuery,
   useCreateUserAccountMutation,
+  useUpdateUserAccountMutation,
+  useUpdateUserAccountStatusMutation,
+
+  //UOM
+  useGetUOMQuery,
+  useCreateUOMMutation,
+  useUpdateUOMMutation,
+  useUpdateUOMStatusMutation,
+
+  //Product Category
+  useGetProductCategoryQuery,
+  useCreateProductCategoryMutation,
+  useUpdateProductCategoryMutation,
+  useUpdateProductCategoryStatusMutation,
+
+  //Product Sub Category
+  useGetProductSubCategoryQuery,
+  useCreateProductSubCategoryMutation,
+  useUpdateProductSubCategoryMutation,
+  useUpdateProductSubCategoryStatusMutation,
+
+  
+
 } = jsonServerApi;

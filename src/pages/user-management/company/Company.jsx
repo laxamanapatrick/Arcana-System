@@ -23,7 +23,9 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { Archive, Edit, More, ViewAgenda } from "@mui/icons-material";
+import { Archive, Edit, More, 
+  // ViewAgenda 
+} from "@mui/icons-material";
 import SearchField from "../../../components/SearchField";
 import {
   LoadingData,
@@ -217,11 +219,11 @@ const CompanyActions = ({ row }) => {
   const dispatch = useDispatch();
 
   const menuItems = [
-    {
-      type: "view",
-      name: "View More",
-      icon: <ViewAgenda />,
-    },
+    // {
+    //   type: "view",
+    //   name: "View More",
+    //   icon: <ViewAgenda />,
+    // },
     {
       type: "edit",
       name: "Edit",
@@ -234,9 +236,9 @@ const CompanyActions = ({ row }) => {
     },
   ];
 
-  const handleView = () => {
-    console.log("View More", row);
-  };
+  // const handleView = () => {
+  //   console.log("View More", row);
+  // };
 
   const handleEdit = () => {
     dispatch(setSelectedRow(row));
@@ -267,9 +269,10 @@ const CompanyActions = ({ row }) => {
   };
 
   const handleOnClick = (items) => {
-    if (items.type === "view") {
-      handleView();
-    } else if (items.type === "edit") {
+    // if (items.type === "view") {
+    //   handleView();
+    // } else 
+    if (items.type === "edit") {
       handleEdit();
     } else if (items.type === "archive") {
       handleArchive();
@@ -355,7 +358,7 @@ const CompanyForm = () => {
       if (selectedRowData === null) {
         await createCompany({
           companyName: data?.companyName,
-        });
+        }).unwrap();
         BasicToast("success", `Company ${data?.companyName} was created`, 1500);
       } else {
         if (selectedRowData?.companyName === data?.companyName) {
@@ -366,7 +369,7 @@ const CompanyForm = () => {
             3500
           );
         } else {
-          await updateCompany({payload: data, id: selectedRowData?.id});
+          await updateCompany({payload: data, id: selectedRowData?.id}).unwrap();
           BasicToast(
             "success",
             `Company ${selectedRowData?.companyName}
@@ -376,7 +379,7 @@ const CompanyForm = () => {
         }
       }
     } catch (error) {
-      BasicToast("error", `Action Failed`, 1500);
+      BasicToast("error", `${error?.data?.messages[0]}`, 1500);
       console.log(error);
     }
     reset()
