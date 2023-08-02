@@ -12,6 +12,8 @@ const initialState = {
     isProductSubCategoryForm: false,
     isMeatTypeForm: false,
     isItemsForm: false,
+    isDiscountForm: false,
+    isTermDaysForm: false,
   },
   modals: {
     isTagging: false,

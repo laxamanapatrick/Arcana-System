@@ -98,8 +98,8 @@ export const sidebarNavigationData = [
     sub: [
       {
         id: 1,
-        name: "Terms and Conditions",
-        path: "/terms/terms-conditions",
+        name: "TermDays",
+        path: "/terms/term-days",
       },
     ],
   },

@@ -42,23 +42,22 @@ import {
 import { useDefaultStyles } from "../../../../hooks/useDefaultStyles";
 
 import {
-  useGetDiscountQuery,
-  useCreateDiscountMutation,
-  useUpdateDiscountMutation,
-  useUpdateDiscountStatusMutation,
+  useGetTermDaysQuery,
+  useCreateTermDaysMutation,
+  useUpdateTermDaysMutation,
+  useUpdateTermDaysStatusMutation,
 } from "../../../../services/api";
 import { useDisclosure } from "../../../../hooks/useDisclosure";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleDrawer } from "../../../../services/store/disclosureSlice";
-import { discountSchema } from "../../../../schema";
+import { termDaysSchema } from "../../../../schema";
 import { Textfield } from "../../../../components/Fields";
 import { setSelectedRow } from "../../../../services/store/selectedRowSlice";
 
-import moment from "moment/moment";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-export const DiscountType = () => {
+export const TermDays = () => {
   const theme = useTheme();
   const { defaultPaperHeaderStyle, defaultPaperContentStyle } =
     useDefaultStyles();
@@ -68,13 +67,13 @@ export const DiscountType = () => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(25);
 
-  const { data: discounts, isLoading } = useGetDiscountQuery({
+  const { data: termDays, isLoading } = useGetTermDaysQuery({
     Search: search,
     Status: status,
     PageNumber: page + 1,
     PageSize: pageSize,
   });
-  const totalCount = discounts?.data?.totalCount || 0;
+  const totalCount = termDays?.data?.totalCount || 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(Number(newPage));
@@ -99,13 +98,13 @@ export const DiscountType = () => {
               <Typography
                 sx={{ fontWeight: "bold", color: theme.palette.secondary.main }}
               >
-                Discount
+                Term Days
               </Typography>
             </>
             {isLoading ? (
               <Skeleton variant="rectangular" />
             ) : status === true ? (
-              <DiscountTypeForm />
+              <TermDaysForm />
             ) : (
               ""
             )}
@@ -137,38 +136,22 @@ export const DiscountType = () => {
               <Table className="table" aria-label="custom pagination table">
                 <TableHead className="tableHead">
                   <TableRow>
-                    <TableCell className="tableHeadCell">Lower Bound</TableCell>
-                    <TableCell className="tableHeadCell">Upper Bound</TableCell>
-                    <TableCell className="tableHeadCell">
-                      Commission Rate Lower
-                    </TableCell>
-                    <TableCell className="tableHeadCell">
-                      Commission Rate Higher
-                    </TableCell>
+                    <TableCell className="tableHeadCell">Term Days</TableCell>
                     <TableCell className="tableHeadCell">Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {discounts?.data?.discount?.map((row) => (
+                  {termDays?.data?.termDays?.map((row) => (
                     <TableRow key={row.id}>
                       <TableCell
                         component="th"
                         scope="row"
                         className="tableBodyCell"
                       >
-                        {row.lowerBound}
+                        {row.days}
                       </TableCell>
                       <TableCell className="tableBodyCell">
-                        {row.upperBound}
-                      </TableCell>
-                      <TableCell className="tableBodyCell">
-                        {row.commissionRateLower}
-                      </TableCell>
-                      <TableCell className="tableBodyCell">
-                        {row.commissionRateUpper}
-                      </TableCell>
-                      <TableCell className="tableBodyCell">
-                        <DiscountTypeActions row={row} />
+                        <TermDaysActions row={row} />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -183,7 +166,7 @@ export const DiscountType = () => {
                         25,
                         { label: "All", value: totalCount },
                       ]}
-                      colSpan={5}
+                      colSpan={2}
                       count={totalCount}
                       page={page}
                       rowsPerPage={pageSize}
@@ -205,7 +188,7 @@ export const DiscountType = () => {
           <ZeroRecordsFound
             text={`${
               status ? "No active records" : "No archived records"
-            } for DiscountType`}
+            } for TermDays`}
           />
         )}
       </Stack>
@@ -213,9 +196,9 @@ export const DiscountType = () => {
   );
 };
 
-export default DiscountType;
+export default TermDays;
 
-const DiscountTypeActions = ({ row }) => {
+const TermDaysActions = ({ row }) => {
   const { isOpen: isMenu, onToggle: toggleMenu } = useDisclosure();
   const { actionMenuStyle } = useDefaultStyles();
   const anchorRef = useRef();
@@ -245,23 +228,23 @@ const DiscountTypeActions = ({ row }) => {
 
   const handleEdit = () => {
     dispatch(setSelectedRow(row));
-    dispatch(toggleDrawer("isDiscountForm"));
+    dispatch(toggleDrawer("isTermDaysForm"));
   };
 
-  const [updateDiscountStatus] = useUpdateDiscountStatusMutation();
+  const [updateTermDaysStatus] = useUpdateTermDaysStatusMutation();
   const handleArchive = () => {
     ModalToast(
-      `You are about to set this discount type as ${
+      `You are about to set this term days as ${
         row?.isActive ? "inactive" : "active"
       }`,
       "Are you sure you want to proceed?",
       "question"
     ).then((res) => {
       if (res.isConfirmed) {
-        updateDiscountStatus(row.id);
+        updateTermDaysStatus(row.id);
         BasicToast(
           "success",
-          `Discount Type was ${row?.isActive ? "archived" : "set active"}`,
+          `Term Days was ${row?.isActive ? "archived" : "set active"}`,
           3500
         );
       }
@@ -313,9 +296,9 @@ const DiscountTypeActions = ({ row }) => {
   );
 };
 
-const DiscountTypeForm = () => {
+const TermDaysForm = () => {
   const dispatch = useDispatch();
-  const { isDiscountForm } = useSelector((state) => state.disclosure.drawers);
+  const { isTermDaysForm } = useSelector((state) => state.disclosure.drawers);
   const { selectedRowData } = useSelector((state) => state.selectedRowData);
 
   const theme = useTheme();
@@ -328,14 +311,11 @@ const DiscountTypeForm = () => {
     setValue,
     reset,
   } = useForm({
-    resolver: yupResolver(discountSchema),
+    resolver: yupResolver(termDaysSchema),
     mode: "onChange",
     defaultValues: {
       id: "",
-      lowerBound: "",
-      upperBound: "",
-      commissionRateLower: "",
-      commissionRateUpper: "",
+      days: "",
     },
   });
 
@@ -343,43 +323,31 @@ const DiscountTypeForm = () => {
     () => {
       if (selectedRowData !== null) {
         setValue("id", Number(selectedRowData?.id));
-        setValue("lowerBound", Number(selectedRowData?.lowerBound));
-        setValue("upperBound", Number(selectedRowData?.upperBound));
-        setValue(
-          "commissionRateLower",
-          Number(selectedRowData?.commissionRateLower)
-        );
-        setValue(
-          "commissionRateUpper",
-          Number(selectedRowData?.commissionRateUpper)
-        );
+        setValue("days", Number(selectedRowData?.days));
       }
 
       return () => {
         setValue("id", "");
-        setValue("lowerBound", "");
-        setValue("upperBound", "");
-        setValue("commissionRateLower", "");
-        setValue("commissionRateUpper", "");
+        setValue("days", "");
       };
     },
     [selectedRowData, dispatch],
     setValue
   );
 
-  const [createDiscount] = useCreateDiscountMutation();
-  const [updateDiscount] = useUpdateDiscountMutation();
+  const [createTermDays] = useCreateTermDaysMutation();
+  const [updateTermDays] = useUpdateTermDaysMutation();
   const submitAddOrEditHandler = async (data) => {
     try {
       if (selectedRowData === null) {
-        await createDiscount(data).unwrap();
-        BasicToast("success", `Discount type was created!`, 1500);
+        await createTermDays(data).unwrap();
+        BasicToast("success", `Term Days was created!`, 1500);
       } else {
-        await updateDiscount({
+        await updateTermDays({
           payload: data,
           id: selectedRowData?.id,
         }).unwrap();
-        BasicToast("success", `Discount type successfully updated!`, 1500);
+        BasicToast("success", `Term Days successfully updated!`, 1500);
       }
     } catch (error) {
       BasicToast("error", `${error?.data?.messages[0]}`, 1500);
@@ -387,7 +355,7 @@ const DiscountTypeForm = () => {
     }
     reset();
     dispatch(setSelectedRow(null));
-    dispatch(toggleDrawer("isDiscountForm"));
+    dispatch(toggleDrawer("isTermDaysForm"));
   };
 
   return (
@@ -396,7 +364,7 @@ const DiscountTypeForm = () => {
         onClick={() => {
           reset();
           dispatch(setSelectedRow(null));
-          dispatch(toggleDrawer("isDiscountForm"));
+          dispatch(toggleDrawer("isTermDaysForm"));
         }}
         sx={{ marginRight: 1 }}
         size="small"
@@ -405,7 +373,7 @@ const DiscountTypeForm = () => {
         Add
       </Button>
       <Drawer
-        open={isDiscountForm}
+        open={isTermDaysForm}
         onClose={() => {}}
         sx={{
           "& .MuiDrawer-paper": {
@@ -433,7 +401,7 @@ const DiscountTypeForm = () => {
                 fontWeight: "bold",
               }}
             >
-              {`${selectedRowData?.id ? "Edit" : "New"} DiscountType Form`}
+              {`${selectedRowData?.id ? "Edit" : "New"} TermDays Form`}
             </Box>
             <Divider
               sx={{
@@ -453,43 +421,13 @@ const DiscountTypeForm = () => {
               }}
             >
               <Textfield
-                name="lowerBound"
+                name="days"
                 control={control}
-                label="Lower Bound"
+                label="Days"
                 size="small"
                 autoComplete="off"
-                error={!!errors?.lowerBound}
-                helperText={errors?.lowerBound?.message}
-              />
-
-              <Textfield
-                name="upperBound"
-                control={control}
-                label="Upper Bound"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.upperBound}
-                helperText={errors?.upperBound?.message}
-              />
-
-              <Textfield
-                name="commissionRateLower"
-                control={control}
-                label="Comission Rate Lower"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.commissionRateLower}
-                helperText={errors?.commissionRateLower?.message}
-              />
-
-              <Textfield
-                name="commissionRateUpper"
-                control={control}
-                label="Comission Rate Upper"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.commissionRateUpper}
-                helperText={errors?.commissionRateUpper?.message}
+                error={!!errors?.days}
+                helperText={errors?.days?.message}
               />
             </Box>
 
@@ -506,7 +444,7 @@ const DiscountTypeForm = () => {
               </Button>
               <Button
                 className="cancelButtons"
-                onClick={() => dispatch(toggleDrawer("isDiscountForm"))}
+                onClick={() => dispatch(toggleDrawer("isTermDaysForm"))}
                 tabIndex={0}
               >
                 Close

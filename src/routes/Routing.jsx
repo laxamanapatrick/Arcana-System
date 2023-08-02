@@ -18,7 +18,7 @@ import { UOM } from "../pages/setup/masterlist/uom/UOM";
 import Discount from "../pages/setup/discount/index";
 import { DiscountType } from "../pages/setup/discount/discount-type/Discount-Type";
 import Terms from "../pages/setup/terms";
-import { TermsandConditions } from "../pages/setup/terms/terms-and-conditions/Terms-and-Conditions";
+import { TermDays } from "../pages/setup/terms/terms-and-conditions/TermDays";
 import Inventory from "../pages/setup/inventory";
 import { MRP } from "../pages/setup/inventory/mrp/MRP";
 
@@ -103,8 +103,8 @@ const Routing = () => {
           element: <Terms />,
           children: [
             {
-              path: "terms-conditions",
-              element: <TermsandConditions />,
+              path: "term-days",
+              element: <TermDays />,
             },
           ],
         },

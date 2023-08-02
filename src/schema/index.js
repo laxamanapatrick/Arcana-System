@@ -109,3 +109,28 @@ export const itemsSchema = yup
     meatType: yup.object().required("Meat Type is required"),
   })
   .required();
+
+export const discountSchema = yup
+  .object()
+  .shape({
+    id: yup.string(),
+    lowerBound: yup.number().required().typeError("Lower Bound is required"),
+    upperBound: yup.number().required().typeError("Upper Bound is required"),
+    commissionRateLower: yup
+      .number()
+      .required()
+      .typeError("Commission Rate Lower is required"),
+    commissionRateUpper: yup
+      .number()
+      .required()
+      .typeError("Commission Rate Higher is required"),
+  })
+  .required();
+
+export const termDaysSchema = yup
+  .object()
+  .shape({
+    id: yup.string(),
+    days: yup.number().required().typeError("Days is a required field"),
+  })
+  .required();

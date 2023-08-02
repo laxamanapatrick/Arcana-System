@@ -96,7 +96,7 @@ export const ZeroRecordsFound = ({ text }) => {
     >
       <Lottie
         animationData={zeroRecordsFound}
-        style={{ maxHeight: "35%", maxWidth: "35%" }}
+        style={{ maxHeight: "40%", maxWidth: "40%" }}
       />
       {text && (
         <Typography variant="h5" color="gray" fontSize="20px">

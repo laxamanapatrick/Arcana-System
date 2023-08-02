@@ -396,6 +396,74 @@ export const jsonServerApi = createApi({
       }),
       invalidatesTags: ["Items"],
     }),
+
+    // Discount
+
+    getDiscount: builder.query({
+      query: (params) => ({
+        url: `Discount/GetDiscount`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Discount"],
+    }),
+    createDiscount: builder.mutation({
+      query: (payload) => ({
+        url: `Discount/AddNewDiscount`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Discount"],
+    }),
+    updateDiscount: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `Discount/UpdateDiscount/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Discount"],
+    }),
+    updateDiscountStatus: builder.mutation({
+      query: (id) => ({
+        url: `Discount/UpdateDiscountStatus/${encodeURIComponent(id)}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Discount"],
+    }),
+
+    // Term Days
+
+    getTermDays: builder.query({
+      query: (params) => ({
+        url: `TermDays/GetTermDays`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Term Days"],
+    }),
+    createTermDays: builder.mutation({
+      query: (payload) => ({
+        url: `TermDays/AddNewTermDays`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Term Days"],
+    }),
+    updateTermDays: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `TermDays/UpdateTermDays/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Term Days"],
+    }),
+    updateTermDaysStatus: builder.mutation({
+      query: (id) => ({
+        url: `TermDays/UpdateTermDaysStatus/${encodeURIComponent(id)}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Term Days"],
+    }),
   }),
 });
 
@@ -464,5 +532,15 @@ export const {
   useUpdateItemsMutation,
   useUpdateItemsStatusMutation,
 
-  //
+  //Discount
+  useGetDiscountQuery,
+  useCreateDiscountMutation,
+  useUpdateDiscountMutation,
+  useUpdateDiscountStatusMutation,
+
+  // Term Days
+  useGetTermDaysQuery,
+  useCreateTermDaysMutation,
+  useUpdateTermDaysMutation,
+  useUpdateTermDaysStatusMutation,
 } = jsonServerApi;
