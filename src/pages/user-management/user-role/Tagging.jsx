@@ -112,7 +112,6 @@ const Tagging = () => {
   const handleTagging = async () => {
     if (checkedItems?.length > 0) {
       const payload = { permissions: checkedItems };
-      console.log(payload);
       try {
         await updateTaggedUserRole({
           payload: payload,

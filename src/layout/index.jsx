@@ -25,7 +25,7 @@ const Layout = () => {
   const theme = useTheme();
   const permissions = useSelector((state) => state.permissions.permissions);
 
-  const headerHeight = 4;
+  const headerHeight = 4.8;
 
   const sidebarNavigation = useSelector(
     (state) => state.sidebarNavigation.sidebarNavigation
@@ -53,8 +53,10 @@ const Layout = () => {
         >
           <Box
             bgcolor={theme.palette.secondary.main}
-            width="40px"
+            width="60px"
             textAlign="center"
+            display='flex'
+            flexDirection='column'
           >
             {permittedSidebar?.map((item, i) => (
               <Link to={item.path} key={i} onClick={() => dispatch(toggleDrawer("isSidebar"))}>

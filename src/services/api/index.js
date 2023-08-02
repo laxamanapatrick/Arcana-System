@@ -281,17 +281,19 @@ export const jsonServerApi = createApi({
     }),
     updateProductCategoryStatus: builder.mutation({
       query: (id) => ({
-        url: `ProductCategory/UpdateProductCategoryStatus/${encodeURIComponent(id)}`,
+        url: `ProductCategory/UpdateProductCategoryStatus/${encodeURIComponent(
+          id
+        )}`,
         method: "PATCH",
       }),
       invalidatesTags: ["Product Category"],
     }),
 
-     // Product Sub Category
+    // Product Sub Category
 
-     getProductSubCategory: builder.query({
+    getProductSubCategory: builder.query({
       query: (params) => ({
-        url: `ProductSubCategory/GetProductSubCategoryCategory`,
+        url: `ProductSubCategory/GetProductSubCategories`,
         method: "GET",
         params: params,
       }),
@@ -299,7 +301,7 @@ export const jsonServerApi = createApi({
     }),
     createProductSubCategory: builder.mutation({
       query: (payload) => ({
-        url: `ProductSubCategory/AddNewProductSubCategoryCategory`,
+        url: `ProductSubCategory/AddNewProductSubCategory`,
         method: "POST",
         body: payload,
       }),
@@ -307,7 +309,9 @@ export const jsonServerApi = createApi({
     }),
     updateProductSubCategory: builder.mutation({
       query: ({ payload, id }) => ({
-        url: `ProductSubCategory/UpdateProductSubCategoryCategory/${encodeURIComponent(id)}`,
+        url: `ProductSubCategory/UpdateProductSubCategory/${encodeURIComponent(
+          id
+        )}`,
         method: "PUT",
         body: payload,
       }),
@@ -315,12 +319,83 @@ export const jsonServerApi = createApi({
     }),
     updateProductSubCategoryStatus: builder.mutation({
       query: (id) => ({
-        url: `ProductSubCategory/UpdateProductSubCategoryStatus/${encodeURIComponent(id)}`,
+        url: `ProductSubCategory/UpdateProductSubCategoryStatus/${encodeURIComponent(
+          id
+        )}`,
         method: "PATCH",
       }),
       invalidatesTags: ["Product Sub Category"],
     }),
 
+    // Meat Type
+
+    getMeatType: builder.query({
+      query: (params) => ({
+        url: `GetMeatTypesAsync/GetMeatType`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Meat Type"],
+    }),
+    createMeatType: builder.mutation({
+      query: (payload) => ({
+        url: `MeatType/AddNewMeatType`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Meat Type"],
+    }),
+    updateMeatType: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `UpdateMeatType/UpdateMeatType/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Meat Type"],
+    }),
+    updateMeatTypeStatus: builder.mutation({
+      query: (id) => ({
+        url: `UpdateMeatTypeStatus/UpdateMeatTypeStatus/${encodeURIComponent(
+          id
+        )}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Meat Type"],
+    }),
+
+    // Items
+
+    getItems: builder.query({
+      query: (params) => ({
+        url: `Items/GetAllItems`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Items"],
+    }),
+    createItems: builder.mutation({
+      query: (payload) => ({
+        url: `Items/AddNewItem`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Items"],
+    }),
+    updateItems: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `Items/UpdateItem/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Items"],
+    }),
+    updateItemsStatus: builder.mutation({
+      query: (id) => ({
+        url: `Items/UpdateItemStatus/${encodeURIComponent(id)}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Items"],
+    }),
   }),
 });
 
@@ -377,6 +452,17 @@ export const {
   useUpdateProductSubCategoryMutation,
   useUpdateProductSubCategoryStatusMutation,
 
-  
+  //Meat Type
+  useGetMeatTypeQuery,
+  useCreateMeatTypeMutation,
+  useUpdateMeatTypeMutation,
+  useUpdateMeatTypeStatusMutation,
 
+  //Items
+  useGetItemsQuery,
+  useCreateItemsMutation,
+  useUpdateItemsMutation,
+  useUpdateItemsStatusMutation,
+
+  //
 } = jsonServerApi;

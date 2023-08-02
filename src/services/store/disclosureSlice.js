@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   drawers: {
@@ -9,16 +9,17 @@ const initialState = {
     isUserRoleForm: false,
     isUserAccountForm: false,
     isUOMForm: false,
-    isProductForm: false,
     isProductSubCategoryForm: false,
+    isMeatTypeForm: false,
+    isItemsForm: false,
   },
   modals: {
     isTagging: false,
-  }
+  },
 };
 
 const disclosureSlice = createSlice({
-  name: 'disclosure',
+  name: "disclosure",
   initialState,
   reducers: {
     openDrawer: (state, action) => {
@@ -38,7 +39,7 @@ const disclosureSlice = createSlice({
     },
     toggleModal: (state, action) => {
       state.modals[action.payload] = !state.modals[action.payload];
-    }
+    },
   },
 });
 
@@ -48,7 +49,7 @@ export const {
   toggleDrawer,
   openModal,
   closeModal,
-  toggleModal
+  toggleModal,
 } = disclosureSlice.actions;
 
 export default disclosureSlice.reducer;

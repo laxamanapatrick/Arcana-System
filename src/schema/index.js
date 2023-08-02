@@ -81,9 +81,31 @@ export const productSubCategorySchema = yup
   .object()
   .shape({
     productSubCategoryId: yup.string(),
-    productCategoryId: yup.string("Product Category Name is required"),
+    productCategory: yup.object().required("Product Category Name is required"),
     productSubCategoryName: yup
       .string()
       .required("Product Sub Category Name is required"),
+  })
+  .required();
+
+export const meatTypeSchema = yup
+  .object()
+  .shape({
+    meatTypeId: yup.string(),
+    meatTypeName: yup.string().required("Meat Type Name is required"),
+  })
+  .required();
+
+export const itemsSchema = yup
+  .object()
+  .shape({
+    id: yup.string(),
+    itemCode: yup.string().required("Item Code is required"),
+    itemDescription: yup.string().required("Item Description is required"),
+    productSubCategory: yup
+      .object()
+      .required("Product Sub Category Name is required"),
+    uom: yup.object().required("UOM is required"),
+    meatType: yup.object().required("Meat Type is required"),
   })
   .required();

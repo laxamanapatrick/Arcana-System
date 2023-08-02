@@ -22,6 +22,7 @@ import {
   TableRow,
   Typography,
   useTheme,
+  TextField as MuiTextField,
 } from "@mui/material";
 import {
   Archive,
@@ -42,23 +43,26 @@ import {
 import { useDefaultStyles } from "../../../../hooks/useDefaultStyles";
 
 import {
+  useGetItemsQuery,
+  useCreateItemsMutation,
+  useUpdateItemsMutation,
+  useUpdateItemsStatusMutation,
   useGetProductCategoryQuery,
-  useCreateProductCategoryMutation,
-  useUpdateProductCategoryMutation,
-  useUpdateProductCategoryStatusMutation,
+  useGetUOMQuery,
+  useGetMeatTypeQuery,
+  useGetProductSubCategoryQuery,
 } from "../../../../services/api";
 import { useDisclosure } from "../../../../hooks/useDisclosure";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleDrawer } from "../../../../services/store/disclosureSlice";
-import { productCategorySchema, uomSchema } from "../../../../schema";
-import { Textfield } from "../../../../components/Fields";
+import { itemsSchema } from "../../../../schema";
+import { AutoComplete, Textfield } from "../../../../components/Fields";
 import { setSelectedRow } from "../../../../services/store/selectedRowSlice";
 
-import moment from "moment/moment";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-export const ProductCategory = () => {
+export const Items = () => {
   const theme = useTheme();
   const { defaultPaperHeaderStyle, defaultPaperContentStyle } =
     useDefaultStyles();
@@ -68,13 +72,13 @@ export const ProductCategory = () => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(25);
 
-  const { data: productCategories, isLoading } = useGetProductCategoryQuery({
+  const { data: items, isLoading } = useGetItemsQuery({
     Search: search,
-    Status: status,
+    IsActive: status,
     PageNumber: page + 1,
     PageSize: pageSize,
   });
-  const totalCount = productCategories?.data?.totalCount || 0;
+  const totalCount = items?.data?.totalCount || 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(Number(newPage));
@@ -99,13 +103,13 @@ export const ProductCategory = () => {
               <Typography
                 sx={{ fontWeight: "bold", color: theme.palette.secondary.main }}
               >
-                Product Category
+                Items
               </Typography>
             </>
             {isLoading ? (
               <Skeleton variant="rectangular" />
             ) : status === true ? (
-              <ProductCategoryForm />
+              <ItemsForm />
             ) : (
               ""
             )}
@@ -137,24 +141,46 @@ export const ProductCategory = () => {
               <Table className="table" aria-label="custom pagination table">
                 <TableHead className="tableHead">
                   <TableRow>
+                    <TableCell className="tableHeadCell">Item Code</TableCell>
                     <TableCell className="tableHeadCell">
-                      Product Category Name
+                      Items Description
                     </TableCell>
+                    <TableCell className="tableHeadCell">UOM</TableCell>
+                    <TableCell className="tableHeadCell">
+                      Product Category
+                    </TableCell>
+                    <TableCell className="tableHeadCell">
+                      Product Sub Category
+                    </TableCell>
+                    <TableCell className="tableHeadCell">Meat Type</TableCell>
                     <TableCell className="tableHeadCell">Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {productCategories?.data?.result?.map((row) => (
+                  {items?.data?.items?.map((row) => (
                     <TableRow key={row.id}>
                       <TableCell
                         component="th"
                         scope="row"
                         className="tableBodyCell"
                       >
-                        {row.productCategoryName}
+                        {row.itemCode}
                       </TableCell>
                       <TableCell className="tableBodyCell">
-                        <ProductCategoryActions row={row} />
+                        {row.itemDescription}
+                      </TableCell>
+                      <TableCell className="tableBodyCell">{row.uom}</TableCell>
+                      <TableCell className="tableBodyCell">
+                        {row.productCategory}
+                      </TableCell>
+                      <TableCell className="tableBodyCell">
+                        {row.productSubCategoryName}
+                      </TableCell>
+                      <TableCell className="tableBodyCell">
+                        {row.meatType}
+                      </TableCell>
+                      <TableCell className="tableBodyCell">
+                        <ItemsActions row={row} />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -169,7 +195,7 @@ export const ProductCategory = () => {
                         25,
                         { label: "All", value: totalCount },
                       ]}
-                      colSpan={2}
+                      colSpan={7}
                       count={totalCount}
                       page={page}
                       rowsPerPage={pageSize}
@@ -191,7 +217,7 @@ export const ProductCategory = () => {
           <ZeroRecordsFound
             text={`${
               status ? "No active records" : "No archived records"
-            } for Product Category`}
+            } for Items`}
           />
         )}
       </Stack>
@@ -199,9 +225,9 @@ export const ProductCategory = () => {
   );
 };
 
-export default ProductCategory;
+export default Items;
 
-const ProductCategoryActions = ({ row }) => {
+const ItemsActions = ({ row }) => {
   const { isOpen: isMenu, onToggle: toggleMenu } = useDisclosure();
   const { actionMenuStyle } = useDefaultStyles();
   const anchorRef = useRef();
@@ -231,24 +257,23 @@ const ProductCategoryActions = ({ row }) => {
 
   const handleEdit = () => {
     dispatch(setSelectedRow(row));
-    dispatch(toggleDrawer("isProductCategoryForm"));
+    dispatch(toggleDrawer("isItemsForm"));
   };
 
-  const [updateProductCategoryStatus] =
-    useUpdateProductCategoryStatusMutation();
+  const [updateItemsStatus] = useUpdateItemsStatusMutation();
   const handleArchive = () => {
     ModalToast(
-      `You are about to set ${row?.productCategoryName} as ${
+      `You are about to set ${row?.itemCode} as ${
         row?.isActive ? "inactive" : "active"
       }`,
       "Are you sure you want to proceed?",
       "question"
     ).then((res) => {
       if (res.isConfirmed) {
-        updateProductCategoryStatus(row.id);
+        updateItemsStatus(row.id);
         BasicToast(
           "success",
-          `Product Category ${row?.productCategoryName} was ${
+          `Item ${row?.itemCode} was ${
             row?.isActive ? "archived" : "set active"
           }`,
           3500
@@ -302,11 +327,12 @@ const ProductCategoryActions = ({ row }) => {
   );
 };
 
-const ProductCategoryForm = () => {
+const ItemsForm = () => {
   const dispatch = useDispatch();
-  const { isProductCategoryForm } = useSelector(
-    (state) => state.disclosure.drawers
-  );
+  const { data: uoms } = useGetUOMQuery();
+  const { data: productSubCategories } = useGetProductSubCategoryQuery();
+  const { data: meatTypes } = useGetMeatTypeQuery();
+  const { isItemsForm } = useSelector((state) => state.disclosure.drawers);
   const { selectedRowData } = useSelector((state) => state.selectedRowData);
 
   const theme = useTheme();
@@ -318,55 +344,97 @@ const ProductCategoryForm = () => {
     formState: { errors },
     setValue,
     reset,
+    watch,
   } = useForm({
-    resolver: yupResolver(productCategorySchema),
+    resolver: yupResolver(itemsSchema),
     mode: "onChange",
     defaultValues: {
-      productCategoryId: "",
-      productCategoryName: "",
+      id: "",
+      itemCode: "",
+      itemDescription: "",
+      // productCategory: null,
+      productSubCategory: null,
+      uom: null,
+      meatType: null,
     },
   });
 
   useEffect(() => {
     if (selectedRowData !== null) {
-      setValue("productCategoryId", selectedRowData?.id);
-      setValue("productCategoryName", selectedRowData?.productCategoryName);
+      setValue("id", selectedRowData?.id);
+      setValue("itemCode", selectedRowData?.itemCode);
+      setValue("itemDescription", selectedRowData?.itemDescription);
+      setValue(
+        "productSubCategory",
+        productSubCategories?.data?.productSubCategories?.find((item) => {
+          if (
+            item?.productSubCategoryName ===
+            selectedRowData?.productSubCategoryName
+          )
+            return item;
+          return null;
+        })
+      );
+      setValue(
+        "uom",
+        uoms?.data?.uom?.find((item) => {
+          if (item?.uomCode === selectedRowData?.uom) return item;
+          return null;
+        })
+      );
+      setValue(
+        "meatType",
+        meatTypes?.data?.meatTypes?.find((item) => {
+          if (item?.meatTypeName === selectedRowData?.meatType) return item;
+          return null;
+        })
+      );
     }
 
     return () => {
-      setValue("productCategoryId", "");
-      setValue("productCategoryName", "");
+      setValue("id", "");
+      setValue("itemCode", "");
+      setValue("itemDescription", "");
+      setValue("productSubCategory", null);
+      setValue("uom", null);
+      setValue("meatType", null);
     };
   }, [selectedRowData, dispatch]);
 
-  const [createProductCategory] = useCreateProductCategoryMutation();
-  const [updateProductCategory] = useUpdateProductCategoryMutation();
+  const [createItems] = useCreateItemsMutation();
+  const [updateItems] = useUpdateItemsMutation();
   const submitAddOrEditHandler = async (data) => {
+    const addPayload = {
+      itemCode: data?.itemCode,
+      itemDescription: data?.itemDescription,
+      uomId: data?.uom?.id,
+      productSubCategoryId: data?.productSubCategory?.id,
+      meatTypeId: data?.meatType?.id,
+    };
+    const editPayload = {
+      // id: data?.id,
+      // itemCode: data?.itemCode,
+      itemDescription: data?.itemDescription,
+      uomId: data?.uom?.id,
+      productSubCategoryId: data?.productSubCategory?.id,
+      meatTypeId: data?.meatType?.id,
+    };
     try {
       if (selectedRowData === null) {
-        await createProductCategory(data).unwrap();
+        console.log("Add Payload", addPayload);
+        await createItems(addPayload).unwrap();
         BasicToast(
           "success",
-          `Product Category ${data?.productCategoryName} was created`,
+          `Item Code ${data?.itemCode} was created`,
           1500
         );
       } else {
-        if (
-          selectedRowData?.productCategoryName === data?.productCategoryName
-        ) {
-          BasicToast(
-            "warning",
-            `Changes not saved.
-            \nYou're not making any changes.`,
-            3500
-          );
-        } else {
-          await updateProductCategory({
-            payload: data,
-            id: selectedRowData?.id,
-          }).unwrap();
-          BasicToast("success", `Product Category successfully updated!`, 1500);
-        }
+        console.log("Edit Payload", editPayload);
+        await updateItems({
+          payload: editPayload,
+          id: selectedRowData?.id,
+        }).unwrap();
+        BasicToast("success", `Item successfully updated!`, 1500);
       }
     } catch (error) {
       BasicToast("error", `${error?.data?.messages[0]}`, 1500);
@@ -374,7 +442,7 @@ const ProductCategoryForm = () => {
     }
     reset();
     dispatch(setSelectedRow(null));
-    dispatch(toggleDrawer("isProductCategoryForm"));
+    dispatch(toggleDrawer("isItemsForm"));
   };
 
   return (
@@ -383,7 +451,7 @@ const ProductCategoryForm = () => {
         onClick={() => {
           reset();
           dispatch(setSelectedRow(null));
-          dispatch(toggleDrawer("isProductCategoryForm"));
+          dispatch(toggleDrawer("isItemsForm"));
         }}
         sx={{ marginRight: 1 }}
         size="small"
@@ -392,7 +460,7 @@ const ProductCategoryForm = () => {
         Add
       </Button>
       <Drawer
-        open={isProductCategoryForm}
+        open={isItemsForm}
         onClose={() => {}}
         sx={{
           "& .MuiDrawer-paper": {
@@ -420,7 +488,7 @@ const ProductCategoryForm = () => {
                 fontWeight: "bold",
               }}
             >
-              {`${selectedRowData?.id ? "Edit" : "New"} Product Category Form`}
+              {`${selectedRowData?.id ? "Edit" : "New"} Items Form`}
             </Box>
             <Divider
               sx={{
@@ -439,14 +507,69 @@ const ProductCategoryForm = () => {
                 gap: 3,
               }}
             >
+              {selectedRowData === null && (
+                <Textfield
+                  name="itemCode"
+                  control={control}
+                  label="Item Code"
+                  size="small"
+                  autoComplete="off"
+                  error={!!errors?.itemCode}
+                  helperText={errors?.itemCode?.message}
+                />
+              )}
+
               <Textfield
-                name="productCategoryName"
+                name="itemDescription"
                 control={control}
-                label="Product Category Name"
+                label="Item Description"
                 size="small"
                 autoComplete="off"
-                error={!!errors?.productCategoryName}
-                helperText={errors?.productCategoryName?.message}
+                error={!!errors?.itemDescription}
+                helperText={errors?.itemDescription?.message}
+              />
+
+              <AutoComplete
+                name="uom"
+                control={control}
+                options={uoms?.data?.uom}
+                getOptionLabel={(option) => option?.uomCode}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderInput={(params) => (
+                  <MuiTextField {...params} label="UOM" size="small" />
+                )}
+                disablePortal
+                disableClearable
+              />
+
+              <AutoComplete
+                name="productSubCategory"
+                control={control}
+                options={productSubCategories?.data?.productSubCategories}
+                getOptionLabel={(option) => option?.productSubCategoryName}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderInput={(params) => (
+                  <MuiTextField
+                    {...params}
+                    label="Product Sub Category"
+                    size="small"
+                  />
+                )}
+                disablePortal
+                disableClearable
+              />
+
+              <AutoComplete
+                name="meatType"
+                control={control}
+                options={meatTypes?.data?.meatTypes}
+                getOptionLabel={(option) => option?.meatTypeName}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderInput={(params) => (
+                  <MuiTextField {...params} label="Meat Type" size="small" />
+                )}
+                disablePortal
+                disableClearable
               />
             </Box>
 
@@ -463,7 +586,7 @@ const ProductCategoryForm = () => {
               </Button>
               <Button
                 className="cancelButtons"
-                onClick={() => dispatch(toggleDrawer("isProductCategoryForm"))}
+                onClick={() => dispatch(toggleDrawer("isItemsForm"))}
                 tabIndex={0}
               >
                 Close

@@ -11,6 +11,12 @@ import errorResponse from "../assets/error-response.json";
 import warningResponse from "../assets/warning-response.json";
 import pageNotFound from "../assets/page-not-found.json";
 import accessDenied from "../assets/access-denied.json";
+import openUserManagement from "../assets/open-user-management.json";
+import openSetup from "../assets/open-setup.json";
+import openDiscount from "../assets/open-discount.json";
+import openTerms from "../assets/open-terms.json";
+import openCustomerRegistration from "../assets/open-customer-registration.json";
+import openInventory from "../assets/open-inventory.json";
 
 const StyledBox = styled(Box)(() => ({
   position: "fixed",
@@ -238,5 +244,158 @@ export const AccessDeniedDisplay = ({ text }) => {
         </Typography>
       )}
     </StyledBox>
+  );
+};
+
+export const OpenUserManagement = ({ text }) => {
+  return (
+    <Box
+      sx={{
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        opacity: 0.95,
+        flexDirection: "column",
+      }}
+    >
+      <Lottie animationData={openUserManagement} style={{ maxWidth: "50%" }} />
+      {text && (
+        <Typography variant="h5" color="gray" fontSize="20px">
+          {text}
+        </Typography>
+      )}
+    </Box>
+  );
+};
+
+export const OpenSetup = ({ text }) => {
+  return (
+    <Box
+      sx={{
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        opacity: 0.95,
+        flexDirection: "column",
+      }}
+    >
+      <Lottie animationData={openSetup} style={{ maxWidth: "50%" }} />
+      {text && (
+        <Typography variant="h5" color="gray" fontSize="20px">
+          {text}
+        </Typography>
+      )}
+    </Box>
+  );
+};
+
+export const OpenDiscount = ({ text }) => {
+  return (
+    <Box
+      sx={{
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        opacity: 0.95,
+        flexDirection: "column",
+      }}
+    >
+      <Lottie animationData={openDiscount} style={{ maxWidth: "50%" }} />
+      {text && (
+        <Typography variant="h5" color="gray" fontSize="20px">
+          {text}
+        </Typography>
+      )}
+    </Box>
+  );
+};
+
+export const OpenTerms = ({ text }) => {
+  return (
+    <Box
+      sx={{
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        opacity: 0.95,
+        flexDirection: "column",
+      }}
+    >
+      <Lottie animationData={openTerms} style={{ maxWidth: "50%" }} />
+      {text && (
+        <Typography variant="h5" color="gray" fontSize="20px">
+          {text}
+        </Typography>
+      )}
+    </Box>
+  );
+};
+
+export const OpenCustomerRegistration = ({ text }) => {
+  return (
+    <Box
+      sx={{
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        opacity: 0.95,
+        flexDirection: "column",
+      }}
+    >
+      <Lottie
+        animationData={openCustomerRegistration}
+        style={{ maxWidth: "50%" }}
+      />
+      {text && (
+        <Typography variant="h5" color="gray" fontSize="20px">
+          {text}
+        </Typography>
+      )}
+    </Box>
+  );
+};
+
+export const OpenInventory = ({ text }) => {
+  return (
+    <Box
+      sx={{
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        opacity: 0.95,
+        flexDirection: "column",
+      }}
+    >
+      <Lottie animationData={openInventory} style={{ maxWidth: "50%" }} />
+      {text && (
+        <Typography variant="h5" color="gray" fontSize="20px">
+          {text}
+        </Typography>
+      )}
+    </Box>
   );
 };

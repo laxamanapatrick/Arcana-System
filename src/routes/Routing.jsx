@@ -10,7 +10,7 @@ import { Company } from "../pages/user-management/company/Company";
 import { Department } from "../pages/user-management/department/Department";
 import { Location } from "../pages/user-management/location/Location";
 import Setup from "../pages/setup/masterlist";
-import { Products } from "../pages/setup/masterlist/products/Products";
+import { Items } from "../pages/setup/masterlist/products/Items";
 import { ProductCategory } from "../pages/setup/masterlist/products/Product-Category";
 import { ProductSubCategory } from "../pages/setup/masterlist/products/Product-Sub-Category";
 import { MeatType } from "../pages/setup/masterlist/products/Meat-Type";
@@ -67,8 +67,8 @@ const Routing = () => {
           element: <Setup />,
           children: [
             {
-              path: "products",
-              element: <Products />,
+              path: "items",
+              element: <Items />,
             },
             {
               path: "product-category",

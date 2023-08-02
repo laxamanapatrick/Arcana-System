@@ -52,8 +52,8 @@ export const sidebarNavigationData = [
     sub: [
       {
         id: 1,
-        name: "Products",
-        path: "/setup/products",
+        name: "Items",
+        path: "/setup/items",
       },
       {
         id: 2,
