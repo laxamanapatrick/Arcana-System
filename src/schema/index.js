@@ -131,6 +131,6 @@ export const termDaysSchema = yup
   .object()
   .shape({
     id: yup.string(),
-    days: yup.number().required().typeError("Days is a required field"),
+    days: yup.number().required("Days is a required field").typeError("Days must be a number"),
   })
   .required();

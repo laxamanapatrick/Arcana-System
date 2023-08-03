@@ -10,18 +10,23 @@ export const Header = () => {
   const theme = useTheme();
 
   return (
-    <Paper elevation={20} sx={{ background: "transparent", border: "none", pl: 1 }}>
+    <Box
+      // <Paper
+      // elevation={20}
+      sx={{ background: "transparent", border: "none", pl: 1 }}
+    >
       <Box
         sx={{
           display: "flex",
           justifyContent: "start",
           alignItems: "center",
-          padding: "8px", // Add some padding for better spacing
+          padding: "8px",
         }}
       >
         <IconButton
           onClick={() => dispatch(toggleDrawer("isSidebar"))}
-          sx={{ m: 0 }}
+          // sx={{ mr: 0 }}
+          sx={{ mr: 2 }}
         >
           <Menu sx={{ color: theme.palette.secondary.main }} />
         </IconButton>
@@ -33,20 +38,21 @@ export const Header = () => {
             minWidth: "30px",
             maxWidth: "30px",
             padding: 0,
-            marginRight: 8, // Increase the margin for better spacing
+            marginRight: 8,
           }}
         />
         <Typography
-          variant="h6" // Set the variant to 'h6' for a prominent header
-          component="div" // Use 'div' as the component for better alignment
-          color="primary" // Set the font color to the primary color
-          fontFamily="Montserrat, sans-serif" // Use a custom font family
-          fontWeight="bold" // Make the text bold
+          variant="h6"
+          component="div"
+          color="primary"
+          fontFamily="Montserrat, sans-serif"
+          fontWeight="bold"
         >
           Arcana
         </Typography>
       </Box>
-    </Paper>
+      {/* </Paper> */}
+    </Box>
   );
 };
 

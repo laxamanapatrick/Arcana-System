@@ -54,7 +54,6 @@ import { discountSchema } from "../../../../schema";
 import { Textfield } from "../../../../components/Fields";
 import { setSelectedRow } from "../../../../services/store/selectedRowSlice";
 
-import moment from "moment/moment";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -137,13 +136,13 @@ export const DiscountType = () => {
               <Table className="table" aria-label="custom pagination table">
                 <TableHead className="tableHead">
                   <TableRow>
-                    <TableCell className="tableHeadCell">Lower Bound</TableCell>
-                    <TableCell className="tableHeadCell">Upper Bound</TableCell>
+                    <TableCell className="tableHeadCell">Amount Minimum</TableCell>
+                    <TableCell className="tableHeadCell">Amount Maximum</TableCell>
                     <TableCell className="tableHeadCell">
-                      Commission Rate Lower
+                      Discount Minimum
                     </TableCell>
                     <TableCell className="tableHeadCell">
-                      Commission Rate Higher
+                      Discount Maximum
                     </TableCell>
                     <TableCell className="tableHeadCell">Actions</TableCell>
                   </TableRow>
@@ -162,10 +161,10 @@ export const DiscountType = () => {
                         {row.upperBound}
                       </TableCell>
                       <TableCell className="tableBodyCell">
-                        {row.commissionRateLower}
+                        {`${row.commissionRateLower}%`}
                       </TableCell>
                       <TableCell className="tableBodyCell">
-                        {row.commissionRateUpper}
+                        {`${row.commissionRateUpper}%`}
                       </TableCell>
                       <TableCell className="tableBodyCell">
                         <DiscountTypeActions row={row} />
@@ -384,6 +383,7 @@ const DiscountTypeForm = () => {
     } catch (error) {
       BasicToast("error", `${error?.data?.messages[0]}`, 1500);
       console.log(error);
+      return
     }
     reset();
     dispatch(setSelectedRow(null));
@@ -455,41 +455,81 @@ const DiscountTypeForm = () => {
               <Textfield
                 name="lowerBound"
                 control={control}
-                label="Lower Bound"
+                label="Amount Minimum"
                 size="small"
                 autoComplete="off"
                 error={!!errors?.lowerBound}
                 helperText={errors?.lowerBound?.message}
+                type="number"
+                inputProps={{
+                  min: 0,
+                }}
+                onWheel={(e) => e.target.blur()}
+                onKeyDown={(e) =>
+                  ["E", "e", ".", "+", "-"].includes(e.key) &&
+                  e.preventDefault()
+                }
+                onPaste={(e) => e.preventDefault()}
               />
 
               <Textfield
                 name="upperBound"
                 control={control}
-                label="Upper Bound"
+                label="Amount Maximum"
                 size="small"
                 autoComplete="off"
                 error={!!errors?.upperBound}
                 helperText={errors?.upperBound?.message}
+                type="number"
+                inputProps={{
+                  min: 1,
+                }}
+                onWheel={(e) => e.target.blur()}
+                onKeyDown={(e) =>
+                  ["E", "e", ".", "+", "-"].includes(e.key) &&
+                  e.preventDefault()
+                }
+                onPaste={(e) => e.preventDefault()}
               />
 
               <Textfield
                 name="commissionRateLower"
                 control={control}
-                label="Comission Rate Lower"
+                label="Discount Minimum Percentage"
                 size="small"
                 autoComplete="off"
                 error={!!errors?.commissionRateLower}
                 helperText={errors?.commissionRateLower?.message}
+                type="number"
+                inputProps={{
+                  min: 1,
+                }}
+                onWheel={(e) => e.target.blur()}
+                onKeyDown={(e) =>
+                  ["E", "e", ".", "+", "-"].includes(e.key) &&
+                  e.preventDefault()
+                }
+                onPaste={(e) => e.preventDefault()}
               />
 
               <Textfield
                 name="commissionRateUpper"
                 control={control}
-                label="Comission Rate Upper"
+                label="Discount Maximum Percentage"
                 size="small"
                 autoComplete="off"
                 error={!!errors?.commissionRateUpper}
                 helperText={errors?.commissionRateUpper?.message}
+                type="number"
+                inputProps={{
+                  min: 1,
+                }}
+                onWheel={(e) => e.target.blur()}
+                onKeyDown={(e) =>
+                  ["E", "e", ".", "+", "-"].includes(e.key) &&
+                  e.preventDefault()
+                }
+                onPaste={(e) => e.preventDefault()}
               />
             </Box>
 

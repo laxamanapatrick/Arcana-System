@@ -428,6 +428,16 @@ const TermDaysForm = () => {
                 autoComplete="off"
                 error={!!errors?.days}
                 helperText={errors?.days?.message}
+                type="number"
+                inputProps={{
+                  min: 1,
+                }}
+                onWheel={(e) => e.target.blur()}
+                onKeyDown={(e) =>
+                  ["E", "e", ".", "+", "-"].includes(e.key) &&
+                  e.preventDefault()
+                }
+                onPaste={(e) => e.preventDefault()}
               />
             </Box>
 

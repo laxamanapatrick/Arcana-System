@@ -381,6 +381,7 @@ const CompanyForm = () => {
     } catch (error) {
       BasicToast("error", `${error?.data?.messages[0]}`, 1500);
       console.log(error);
+      return
     }
     reset()
     dispatch(setSelectedRow(null));

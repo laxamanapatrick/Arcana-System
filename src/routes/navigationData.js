@@ -52,7 +52,7 @@ export const sidebarNavigationData = [
     sub: [
       {
         id: 1,
-        name: "Items",
+        name: "Products",
         path: "/setup/items",
       },
       {
@@ -72,7 +72,7 @@ export const sidebarNavigationData = [
       },
       {
         id: 5,
-        name: "UOM",
+        name: "Unit of Measurements",
         path: "/setup/uom",
       },
     ],
@@ -111,12 +111,12 @@ export const sidebarNavigationData = [
     sub: [
       {
         id: 1,
-        path: "/prospect",
+        path: "/customer-registration/prospect",
         name: "Prospect",
       },
       {
         id: 2,
-        path: "/direct",
+        path: "/customer-registration/direct",
         name: "Direct",
       },
     ],
@@ -146,3 +146,27 @@ export const sidebarNavigationData = [
     ],
   },
 ];
+
+
+export const prospectNavbar = [
+    {
+      case: 1,
+      name: "Request Prospect",
+    },
+    {
+      case: 2,
+      name: "Approved Prospect",
+    },
+    {
+      case: 3,
+      name: "Request Freebies",
+    },
+    {
+      case: 4,
+      name: "Approved Freebies",
+    },
+    {
+      case: 5,
+      name: "Released",
+    },
+  ];

@@ -11,6 +11,7 @@ export const BasicToast = (icon, title, timer, position) => {
     timerProgressBar: true,
     customClass: {
       popup: "basic-swal-size",
+      container: "custom-zIndex",
     },
   });
 };
@@ -31,5 +32,12 @@ export const ModalToast = (
     confirmButtonColor: confirmColor ? confirmColor : "#243448",
     cancelButtonColor: cancelColor ? cancelColor : "#F30737",
     confirmButtonText: confirmButtonText ? confirmButtonText : "Yes",
+    customClass: {
+      container: "modal-toast-container",
+      popup: "modal-toast-popup",
+      title: "modal-toast-title",
+      content: "modal-toast-content",
+      actions: "modal-toast-actions",
+    },
   });
 };

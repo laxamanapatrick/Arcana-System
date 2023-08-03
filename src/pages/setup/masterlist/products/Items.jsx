@@ -47,7 +47,7 @@ import {
   useCreateItemsMutation,
   useUpdateItemsMutation,
   useUpdateItemsStatusMutation,
-  useGetProductCategoryQuery,
+  // useGetProductCategoryQuery,
   useGetUOMQuery,
   useGetMeatTypeQuery,
   useGetProductSubCategoryQuery,
@@ -103,7 +103,7 @@ export const Items = () => {
               <Typography
                 sx={{ fontWeight: "bold", color: theme.palette.secondary.main }}
               >
-                Items
+                Products
               </Typography>
             </>
             {isLoading ? (
@@ -345,6 +345,7 @@ const ItemsForm = () => {
     setValue,
     reset,
     watch,
+    getValues,
   } = useForm({
     resolver: yupResolver(itemsSchema),
     mode: "onChange",
@@ -423,11 +424,7 @@ const ItemsForm = () => {
       if (selectedRowData === null) {
         console.log("Add Payload", addPayload);
         await createItems(addPayload).unwrap();
-        BasicToast(
-          "success",
-          `Item Code ${data?.itemCode} was created`,
-          1500
-        );
+        BasicToast("success", `Item Code ${data?.itemCode} was created`, 1500);
       } else {
         console.log("Edit Payload", editPayload);
         await updateItems({
@@ -439,11 +436,18 @@ const ItemsForm = () => {
     } catch (error) {
       BasicToast("error", `${error?.data?.messages[0]}`, 1500);
       console.log(error);
+      return
     }
     reset();
     dispatch(setSelectedRow(null));
     dispatch(toggleDrawer("isItemsForm"));
   };
+
+  const getProductSubCategoryObject = getValues("productSubCategory");
+  const productSubCategoryNameDisplay =
+    getProductSubCategoryObject?.productSubCategoryName;
+  const productCategoryNameDisplay =
+    getProductSubCategoryObject?.productCategoryName;
 
   return (
     <Stack width="auto" flexDirection="row" sx={{ ...defaultButtonStyle }}>
@@ -488,7 +492,7 @@ const ItemsForm = () => {
                 fontWeight: "bold",
               }}
             >
-              {`${selectedRowData?.id ? "Edit" : "New"} Items Form`}
+              {`${selectedRowData?.id ? "Edit" : "New"} Products Form`}
             </Box>
             <Divider
               sx={{
@@ -507,17 +511,26 @@ const ItemsForm = () => {
                 gap: 3,
               }}
             >
-              {selectedRowData === null && (
-                <Textfield
-                  name="itemCode"
-                  control={control}
-                  label="Item Code"
-                  size="small"
-                  autoComplete="off"
-                  error={!!errors?.itemCode}
-                  helperText={errors?.itemCode?.message}
-                />
-              )}
+              <Textfield
+                name="itemCode"
+                control={control}
+                label="Item Code"
+                size="small"
+                autoComplete="off"
+                error={!!errors?.itemCode}
+                helperText={errors?.itemCode?.message}
+                title={
+                  selectedRowData !== null
+                    ? "Item Code is not an editable field"
+                    : ""
+                }
+                inputProps={{
+                  readOnly: selectedRowData !== null ? true : false,
+                  style: {
+                    cursor: selectedRowData !== null ? "not-allowed" : "",
+                  },
+                }}
+              />
 
               <Textfield
                 name="itemDescription"
@@ -558,6 +571,25 @@ const ItemsForm = () => {
                 disablePortal
                 disableClearable
               />
+
+              {watch("productSubCategory") !== null && (
+                <MuiTextField
+                  title={
+                    productSubCategoryNameDisplay
+                      ? `Product Category for ${productSubCategoryNameDisplay}. This field is not editable.`
+                      : ""
+                  }
+                  value={productCategoryNameDisplay}
+                  label="Product Category"
+                  size="small"
+                  inputProps={{
+                    readOnly: true,
+                    style: {
+                      cursor: "not-allowed",
+                    },
+                  }}
+                />
+              )}
 
               <AutoComplete
                 name="meatType"

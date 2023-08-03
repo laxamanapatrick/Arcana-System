@@ -21,6 +21,8 @@ import Terms from "../pages/setup/terms";
 import { TermDays } from "../pages/setup/terms/terms-and-conditions/TermDays";
 import Inventory from "../pages/setup/inventory";
 import { MRP } from "../pages/setup/inventory/mrp/MRP";
+import CustomerRegistration from "../pages/customer-registration/index.jsx";
+import { Prospect } from "../pages/customer-registration/prospect/Prospect";
 
 const Routing = () => {
   let routing = useRoutes([
@@ -105,6 +107,20 @@ const Routing = () => {
             {
               path: "term-days",
               element: <TermDays />,
+            },
+          ],
+        },
+        {
+          path: "customer-registration",
+          element: <CustomerRegistration />,
+          children: [
+            {
+              path: "prospect",
+              element: <Prospect />,
+            },
+            {
+              path: "direct",
+              element: "",
             },
           ],
         },

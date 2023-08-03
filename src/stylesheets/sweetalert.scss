@@ -1,4 +1,8 @@
-/* Custom CSS class to adjust the size */
+/* Custom CSS class to adjust the size of Basic Toast */
+.custom-zIndex {
+  z-index: 9999;
+}
+
 .basic-swal-size {
   min-width: 300px;
   width: auto; /* Adjust the width as per your requirement */
@@ -15,4 +19,35 @@
   font-size: 11px; /* Adjust the font size as needed */
   padding: 0;
   margin-bottom: 0;
+}
+
+
+/* Custom CSS class for Modal Toast */
+/* Set the desired zIndex value */
+.modal-toast-container {
+  z-index: 9999;
+}
+
+/* Minimal styles for the popup */
+.modal-toast-popup {
+  min-width: 200px;
+  width: auto;
+  height: auto;
+}
+
+/* Minimal styles for the title */
+.modal-toast-title {
+  font-size: 22px;
+}
+
+/* Minimal styles for the content */
+.modal-toast-content {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* Minimal styles for the actions (buttons) */
+.modal-toast-actions {
+  gap: 10px;
+  margin-top: 10px;
 }

@@ -54,7 +54,6 @@ import { productCategorySchema, uomSchema } from "../../../../schema";
 import { Textfield } from "../../../../components/Fields";
 import { setSelectedRow } from "../../../../services/store/selectedRowSlice";
 
-import moment from "moment/moment";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -371,6 +370,7 @@ const ProductCategoryForm = () => {
     } catch (error) {
       BasicToast("error", `${error?.data?.messages[0]}`, 1500);
       console.log(error);
+      return
     }
     reset();
     dispatch(setSelectedRow(null));

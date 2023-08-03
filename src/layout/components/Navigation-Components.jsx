@@ -88,7 +88,11 @@ const NavigationFooter = () => {
     <>
       <Box
         width="100%"
-        sx={{ display: "flex", justifyContent: "center", ...defaultButtonStyle }}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          ...defaultButtonStyle,
+        }}
       >
         <Button
           className="primaryButtons"
@@ -146,11 +150,12 @@ const NavigationContent = () => {
               sx={{ textTransform: "uppercase" }}
             >
               <Accordion
-                expanded={pathname.includes(item.path)}
+                // defaultExpanded={pathname.includes(item.path) || false}
+                // expanded={pathname.includes(item.path)}
                 sx={{ width: "100%", background: "none", color: "none " }}
               >
                 <AccordionSummary
-                  expandIcon={<ExpandMore />}
+                  // expandIcon={<ExpandMore />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
                   sx={{ height: "5px" }}

@@ -48,7 +48,7 @@ import {
 import { useDisclosure } from "../../../../hooks/useDisclosure";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleDrawer } from "../../../../services/store/disclosureSlice";
-import { meatTypeSchema, uomSchema } from "../../../../schema";
+import { meatTypeSchema } from "../../../../schema";
 import { Textfield } from "../../../../components/Fields";
 import { setSelectedRow } from "../../../../services/store/selectedRowSlice";
 import { useForm } from "react-hook-form";
@@ -367,6 +367,7 @@ const MeatTypeForm = () => {
     } catch (error) {
       BasicToast("error", `${error?.data?.messages[0]}`, 1500);
       console.log(error);
+      return
     }
     reset();
     dispatch(setSelectedRow(null));
