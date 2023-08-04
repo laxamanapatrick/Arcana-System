@@ -1,51 +1,89 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import {
-  Paper,
+  Checkbox,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableFooter,
-  TableHead,
-  TablePagination,
-  TableRow,
   Typography,
   useTheme,
 } from "@mui/material";
+import { ApprovedProspect } from "./Approved-Prospect";
+import { RejectedProspect } from "./Rejected-Prospect";
 import SearchField from "../../../components/SearchField";
-import {
-  LoadingData,
-  ZeroRecordsFound,
-} from "../../../components/Lottie-Components";
-import { useGetUOMQuery } from "../../../services/api";
-import moment from "moment/moment";
 
 export const ProspectStatus = () => {
-  const [search, setSearch] = useState("");
+  const theme = useTheme();
+  const [viewing, setViewing] = useState(true);
   const [status, setStatus] = useState(true);
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(25);
 
-  const { data: uoms, isLoading } = useGetUOMQuery({
-    Search: search,
-    Status: status,
-    PageNumber: page + 1,
-    PageSize: pageSize,
-  });
-  const totalCount = uoms?.data?.totalCount || 0;
-
-  const handleChangePage = (event, newPage) => {
-    setPage(Number(newPage));
+  const components = {
+    true: (
+      <ApprovedProspect
+        status={status}
+        search={search}
+        page={page}
+        setPage={setPage}
+        pageSize={pageSize}
+        setPageSize={setPageSize}
+      />
+    ),
+    false: (
+      <RejectedProspect
+        status={status}
+        search={search}
+        page={page}
+        setPage={setPage}
+        pageSize={pageSize}
+        setPageSize={setPageSize}
+      />
+    ),
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setPageSize(Number(event.target.value));
+  const handleViewArchived = () => {
+    setPage(0);
+    setPageSize(25);
+    setStatus((prev) => !prev);
   };
 
   return (
     <>
-      Status
+      <Stack
+        width="auto"
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <SearchField onChange={(e) => setSearch(e.target.value)} />
+        <Stack flexDirection="row" alignItems="center" justifyContent="center">
+          <Checkbox
+            size="small"
+            checked={status === false}
+            onClick={handleViewArchived}
+            inputProps={{ "aria-label": "controlled" }}
+            sx={{ color: theme.palette.secondary.main, mb: "2px", p: 0 }}
+          />
+          <Typography fontSize="small" mr={1}>
+            Archived
+          </Typography>
+          <FormControl size="small">
+            <InputLabel>Status</InputLabel>
+            <Select
+              value={viewing}
+              label="Status"
+              onChange={(e) => setViewing(e.target.value)}
+            >
+              <MenuItem value={true}>Approved</MenuItem>
+              <MenuItem value={false}>Rejected</MenuItem>
+            </Select>
+          </FormControl>
+        </Stack>
+      </Stack>
+      <Stack mt={2}>{components[viewing]}</Stack>
     </>
   );
 };

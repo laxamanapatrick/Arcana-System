@@ -73,11 +73,11 @@ export const RequestProspect = () => {
     setPageSize(Number(event.target.value));
   };
 
-  const handleViewArchived = () => {
-    setPage(0);
-    setPageSize(25);
-    setStatus((prev) => !prev);
-  };
+  // const handleViewArchived = () => {
+  //   setPage(0);
+  //   setPageSize(25);
+  //   setStatus((prev) => !prev);
+  // };
 
   return (
     <>
@@ -86,7 +86,7 @@ export const RequestProspect = () => {
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
-        mb={1}
+        mb={2}
       >
         <SearchField onChange={(e) => setSearch(e.target.value)} />
         {/* <Stack flexDirection="row">

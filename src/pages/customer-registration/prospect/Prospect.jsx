@@ -54,7 +54,7 @@ export const Prospect = () => {
           </Stack>
         ))}
       </Paper>
-      <Paper elevation={20} sx={defaultPaperContentStyle}>
+      <Paper elevation={20} sx={{...defaultPaperContentStyle, maxHeight: '85%'}}>
         {components[viewing]}
       </Paper>
     </>
