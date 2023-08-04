@@ -29,9 +29,9 @@ export const jsonServerApi = createApi({
   reducerPath: "jsonServerApi",
   baseQuery: baseQueryWithBearer,
 
-  // Login
-
   endpoints: (builder) => ({
+    // Login
+
     createLogin: builder.mutation({
       query: (payload) => ({
         url: `Authenticate/Authenticate`,
@@ -464,6 +464,97 @@ export const jsonServerApi = createApi({
       }),
       invalidatesTags: ["Term Days"],
     }),
+
+    //Request Prospect
+
+    getRequestedProspect: builder.query({
+      query: (params) => ({
+        url: `Prospecting/GetAllRequestedProspect`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Request Prospect"],
+    }),
+    createRequestProspect: builder.mutation({
+      query: (payload) => ({
+        url: `Prospecting/AddNewProspect`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Request Prospect"],
+    }),
+    createUpdateRequestProspect: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `Prospecting/UpdateProspectRequest/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Request Prospect"],
+    }),
+    createUpdateRequestedProspectStatus: builder.mutation({
+      query: (id) => ({
+        url: `Prospecting/UpdateRequestedProspectStatus/${encodeURIComponent(
+          id
+        )}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Request Prospect"],
+    }),
+
+    /****/
+    //Approving Prospects
+    createApproveProspectRequest: builder.mutation({
+      query: (id) => ({
+        url: `Prospecting/ApproveProspectRequest/${encodeURIComponent(id)}`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["Approving Prospect"],
+    }),
+    //Rejecting Prospects
+    createRejectProspectRequest: builder.mutation({
+      query: (id) => ({
+        url: `Prospecting/RejectProspectRequest/${encodeURIComponent(id)}`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["Rejecting Prospect"],
+    }),
+    /****/
+
+    //Approved Prospect
+    getApprovedProspect: builder.query({
+      query: (params) => ({
+        url: `Prospecting/GetAllApprovedProspect`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Approved Prospect"],
+    }),
+    createUpdateApprovedProspectStatus: builder.mutation({
+      query: (id) => ({
+        url: `Prospecting/UpdateApprovedProspectStatus/${encodeURIComponent(
+          id
+        )}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Approved Prospect"],
+    }),
+
+    //Rejected Prospect
+    getRejectedProspect: builder.query({
+      query: (params) => ({
+        url: `Prospecting/GetAllRejectedProspect`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Rejected Prospect"],
+    }),
+    createUpdateRejectedProspectStatus: builder.mutation({
+      query: (id) => ({
+        url: `Prospecting/UpdateRejectProspectStatus/${encodeURIComponent(id)}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Rejected Prospect"],
+    }),
   }),
 });
 
@@ -543,4 +634,24 @@ export const {
   useCreateTermDaysMutation,
   useUpdateTermDaysMutation,
   useUpdateTermDaysStatusMutation,
+
+  //Request Prospect
+  useGetRequestedProspectQuery,
+  useCreateRequestProspectMutation,
+  useCreateUpdateRequestProspectMutation,
+  useCreateUpdateRequestedProspectStatusMutation,
+
+  //Approving Prospect
+  useCreateApproveProspectRequestMutation,
+
+  //Rejecting Prospect
+  useCreateRejectProspectRequestMutation,
+
+  //Approved Prospect
+  useGetApprovedProspectQuery,
+  useCreateUpdateApprovedProspectStatusMutation,
+
+  //Rejected Prospect
+  useGetRejectedProspectQuery,
+  useCreateUpdateRejectedProspectStatusMutation,
 } = jsonServerApi;

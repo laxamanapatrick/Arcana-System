@@ -14,6 +14,7 @@ const initialState = {
     isItemsForm: false,
     isDiscountForm: false,
     isTermDaysForm: false,
+    isRequestProspectForm: false,
   },
   modals: {
     isTagging: false,

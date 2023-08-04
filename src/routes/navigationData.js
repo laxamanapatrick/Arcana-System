@@ -155,7 +155,7 @@ export const prospectNavbar = [
     },
     {
       case: 2,
-      name: "Approved Prospect",
+      name: "Prospect Status",
     },
     {
       case: 3,
@@ -163,7 +163,7 @@ export const prospectNavbar = [
     },
     {
       case: 4,
-      name: "Approved Freebies",
+      name: "Freebie Status",
     },
     {
       case: 5,

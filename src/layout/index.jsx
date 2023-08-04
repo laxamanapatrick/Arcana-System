@@ -82,15 +82,17 @@ const Layout = () => {
               ))}
             </Box>
             <Box mb={2}>
-              <IconButton
-                sx={{ color: theme.palette.secondary.main }}
-                onClick={() => {
-                  sessionStorage.clear();
-                  navigate("/login");
-                }}
-              >
-                <Logout sx={{ transform: "rotate(180deg)" }} />
-              </IconButton>
+              <Tooltip title={`Logout`} placement="right-start">
+                <IconButton
+                  sx={{ color: theme.palette.secondary.main }}
+                  onClick={() => {
+                    sessionStorage.clear();
+                    navigate("/login");
+                  }}
+                >
+                  <Logout sx={{ transform: "rotate(180deg)" }} />
+                </IconButton>
+              </Tooltip>
             </Box>
           </Box>
           <Box display="flex" flexDirection="column" height="100%" width="100%">

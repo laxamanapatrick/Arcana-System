@@ -131,6 +131,20 @@ export const termDaysSchema = yup
   .object()
   .shape({
     id: yup.string(),
-    days: yup.number().required("Days is a required field").typeError("Days must be a number"),
+    days: yup
+      .number()
+      .required("Days is a required field")
+      .typeError("Days must be a number"),
+  })
+  .required();
+
+export const prospectSchema = yup
+  .object()
+  .shape({
+    id: yup.string(),
+    ownersName: yup.string(),
+    ownersAddress: yup.string(),
+    phoneNumber: yup.string(),
+    businessName: yup.string(),
   })
   .required();
