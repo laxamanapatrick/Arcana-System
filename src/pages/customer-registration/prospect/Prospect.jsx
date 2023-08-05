@@ -17,14 +17,21 @@ export const Prospect = () => {
   const components = {
     1: <RequestProspect />,
     2: <ProspectStatus />,
-    3: <RequestFreebies />,
-    4: <FreebieStatus />,
-    5: <Released />,
+    // 3: <RequestFreebies />,
+    // 4: <FreebieStatus />,
+    // 5: <Released />,
   };
 
   return (
     <>
-      <Paper elevation={1} sx={defaultPaperHeaderStyle}>
+      <Paper
+        elevation={1}
+        sx={{
+          ...defaultPaperHeaderStyle,
+          justifyContent: "start",
+          //to remove ^ when freebie is coded 
+        }}
+      >
         {prospectNavbar?.map((item, i) => (
           <Stack
             sx={{ cursor: "pointer", alignItems: "center", width: "160px" }}
@@ -33,7 +40,7 @@ export const Prospect = () => {
           >
             <Typography
               sx={{
-                fontSize: '14.5px',
+                fontSize: "14.5px",
                 fontWeight: "bold",
                 color: theme.palette.secondary.main,
                 textAlign: "center",
@@ -54,7 +61,10 @@ export const Prospect = () => {
           </Stack>
         ))}
       </Paper>
-      <Paper elevation={20} sx={{...defaultPaperContentStyle, maxHeight: '85%'}}>
+      <Paper
+        elevation={20}
+        sx={{ ...defaultPaperContentStyle, maxHeight: "85%" }}
+      >
         {components[viewing]}
       </Paper>
     </>

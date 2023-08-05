@@ -23,8 +23,11 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { Archive, Edit, More,
-  //  ViewAgenda 
+import {
+  Archive,
+  Edit,
+  More,
+  //  ViewAgenda
 } from "@mui/icons-material";
 import SearchField from "../../../components/SearchField";
 import {
@@ -34,6 +37,7 @@ import {
 import {
   BasicToast,
   ModalToast,
+  RemarksToast,
 } from "../../../components/SweetAlert-Components";
 
 import { useDefaultStyles } from "../../../hooks/useDefaultStyles";
@@ -271,7 +275,7 @@ const LocationActions = ({ row }) => {
   const handleOnClick = (items) => {
     // if (items.type === "view") {
     //   handleView();
-    // } else 
+    // } else
     if (items.type === "edit") {
       handleEdit();
     } else if (items.type === "archive") {
@@ -373,7 +377,10 @@ const LocationForm = () => {
             3500
           );
         } else {
-          await updateLocation({payload: data, id: selectedRowData?.id}).unwrap();
+          await updateLocation({
+            payload: data,
+            id: selectedRowData?.id,
+          }).unwrap();
           BasicToast(
             "success",
             `Location ${selectedRowData?.locationName}
@@ -385,9 +392,9 @@ const LocationForm = () => {
     } catch (error) {
       BasicToast("error", `${error?.data?.messages[0]}`, 1500);
       console.log(error);
-      return
+      return;
     }
-    reset()
+    reset();
     dispatch(setSelectedRow(null));
     dispatch(toggleDrawer("isLocationForm"));
   };
@@ -396,7 +403,7 @@ const LocationForm = () => {
     <Stack width="auto" flexDirection="row" sx={{ ...defaultButtonStyle }}>
       <Button
         onClick={() => {
-          reset()
+          reset();
           dispatch(setSelectedRow(null));
           dispatch(toggleDrawer("isLocationForm"));
         }}

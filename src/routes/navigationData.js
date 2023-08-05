@@ -129,6 +129,24 @@ export const sidebarNavigationData = [
   },
   {
     id: 9,
+    path: "/approval",
+    name: "Approval",
+    icon: "Approval",
+    sub: [
+      {
+        id: 1,
+        name: "Prospect Approval",
+        path: "/approval/prospect-approval",
+      },
+      {
+        id: 2,
+        name: "Freebie Approval",
+        path: "/approval/freebie-approval",
+      },
+    ],
+  },
+  {
+    id: 10,
     path: "/inventory",
     name: "Inventory",
     icon: "Inventory",
@@ -157,16 +175,16 @@ export const prospectNavbar = [
       case: 2,
       name: "Prospect Status",
     },
-    {
-      case: 3,
-      name: "Request Freebies",
-    },
-    {
-      case: 4,
-      name: "Freebie Status",
-    },
-    {
-      case: 5,
-      name: "Released",
-    },
+    // {
+    //   case: 3,
+    //   name: "Request Freebies",
+    // },
+    // {
+    //   case: 4,
+    //   name: "Freebie Status",
+    // },
+    // {
+    //   case: 5,
+    //   name: "Released",
+    // },
   ];

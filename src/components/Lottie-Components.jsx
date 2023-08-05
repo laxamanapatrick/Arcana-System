@@ -16,6 +16,7 @@ import openSetup from "../assets/open-setup.json";
 import openDiscount from "../assets/open-discount.json";
 import openTerms from "../assets/open-terms.json";
 import openCustomerRegistration from "../assets/open-customer-registration.json";
+import openApproval from "../assets/success-response.json"
 import openInventory from "../assets/open-inventory.json";
 
 const StyledBox = styled(Box)(() => ({
@@ -364,6 +365,34 @@ export const OpenCustomerRegistration = ({ text }) => {
     >
       <Lottie
         animationData={openCustomerRegistration}
+        style={{ maxWidth: "50%" }}
+      />
+      {text && (
+        <Typography variant="h5" color="gray" fontSize="20px">
+          {text}
+        </Typography>
+      )}
+    </Box>
+  );
+};
+
+export const OpenApproval = ({ text }) => {
+  return (
+    <Box
+      sx={{
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        opacity: 0.95,
+        flexDirection: "column",
+      }}
+    >
+      <Lottie
+        animationData={openApproval}
         style={{ maxWidth: "50%" }}
       />
       {text && (

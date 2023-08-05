@@ -2,6 +2,7 @@ import {
   AccountBox,
   AddBusiness,
   AlignVerticalCenter,
+  Approval,
   Dashboard,
   Dataset,
   Discount,
@@ -20,6 +21,7 @@ export const getIconElement = (iconName) => {
     PostAdd: <PostAdd />,
     Discount: <Discount />,
     AlignVerticalCenter: <AlignVerticalCenter />,
+    Approval: <Approval />
   };
 
   return iconMap[iconName] || <IcecreamOutlined />;

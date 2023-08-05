@@ -23,6 +23,9 @@ import Inventory from "../pages/setup/inventory";
 import { MRP } from "../pages/setup/inventory/mrp/MRP";
 import CustomerRegistration from "../pages/customer-registration/index.jsx";
 import { Prospect } from "../pages/customer-registration/prospect/Prospect";
+import Approval from "../pages/approval";
+import { ProspectApproval } from "../pages/approval/prospect-approval/Prospect-Approval";
+import { FreebieApproval } from "../pages/approval/freebie-approval/Freebie-Approval";
 
 const Routing = () => {
   let routing = useRoutes([
@@ -120,6 +123,24 @@ const Routing = () => {
             },
             {
               path: "direct",
+              element: "",
+            },
+          ],
+        },
+        {
+          path: "approval",
+          element: <Approval />,
+          children: [
+            {
+              path: "prospect-approval",
+              element: <ProspectApproval />,
+            },
+            {
+              path: "freebie-approval",
+              element: <FreebieApproval />,
+            },
+            {
+              path: "direct-approval",
               element: "",
             },
           ],

@@ -151,7 +151,7 @@ const NavigationContent = () => {
             >
               <Accordion
                 // defaultExpanded={pathname.includes(item.path) || false}
-                // expanded={pathname.includes(item.path)}
+                expanded={pathname.includes(item.path)}
                 sx={{ width: "100%", background: "none", color: "none " }}
               >
                 <AccordionSummary

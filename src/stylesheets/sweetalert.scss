@@ -21,7 +21,6 @@
   margin-bottom: 0;
 }
 
-
 /* Custom CSS class for Modal Toast */
 /* Set the desired zIndex value */
 .modal-toast-container {
@@ -50,4 +49,16 @@
 .modal-toast-actions {
   gap: 10px;
   margin-top: 10px;
+}
+
+/* Custom styles for the cancel button */
+.modal-toast-cancel-button {
+  color: black !important; /* Set the text color to black */
+}
+
+//Remarks Toast
+
+.modal-toast-input-field {
+  margin-top: 10px;
+  width: 100%;
 }

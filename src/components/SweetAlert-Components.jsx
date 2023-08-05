@@ -30,7 +30,7 @@ export const ModalToast = (
     icon: icon ? icon : "question",
     showCancelButton: true,
     confirmButtonColor: confirmColor ? confirmColor : "#243448",
-    cancelButtonColor: cancelColor ? cancelColor : "#F30737",
+    cancelButtonColor: cancelColor ? cancelColor : "#E5E5E5",
     confirmButtonText: confirmButtonText ? confirmButtonText : "Yes",
     customClass: {
       container: "modal-toast-container",
@@ -38,6 +38,51 @@ export const ModalToast = (
       title: "modal-toast-title",
       content: "modal-toast-content",
       actions: "modal-toast-actions",
+      cancelButton: "modal-toast-cancel-button",
+    },
+  });
+};
+
+export const RemarksToast = (
+  title,
+  text,
+  icon,
+  // inputOptions,
+  inputPlaceholder,
+  confirmColor,
+  cancelColor,
+  confirmButtonText
+) => {
+  return Swal.fire({
+    title: title ? title : "Submit your remarks",
+    text: text ? text : "",
+    icon: icon ? icon : "question",
+    input: "text",
+    // input: "select",
+    // inputOptions: inputOptions ? inputOptions : {},
+    inputPlaceholder: inputPlaceholder
+      ? inputPlaceholder
+      : "Enter your remarks here...",
+    showCancelButton: true,
+    confirmButtonColor: confirmColor ? confirmColor : "#243448",
+    cancelButtonColor: cancelColor ? cancelColor : "#E5E5E5",
+    confirmButtonText: confirmButtonText ? confirmButtonText : "Submit",
+    showLoaderOnConfirm: true,
+    preConfirm: (remarks) => {
+      if (!remarks) {
+        Swal.showValidationMessage("Remarks are required!");
+        return false;
+      }
+      return remarks;
+    },
+    allowOutsideClick: () => !Swal.isLoading(),
+    customClass: {
+      container: "modal-toast-container",
+      popup: "modal-toast-popup",
+      title: "modal-toast-title",
+      content: "modal-toast-content",
+      actions: "modal-toast-actions",
+      cancelButton: "modal-toast-cancel-button",
     },
   });
 };

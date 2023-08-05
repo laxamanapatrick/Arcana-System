@@ -30,10 +30,10 @@ import {
 import {
   useCreateRequestProspectMutation,
   useCreateUpdateRequestProspectMutation,
-  //   useCreateUpdateRequestedProspectStatusMutation,
+    useCreateUpdateRequestedProspectStatusMutation,
   useGetRequestedProspectQuery,
 } from "../../../services/api";
-import moment from "moment/moment";
+// import moment from "moment/moment";
 import { Add, Archive, Edit, More } from "@mui/icons-material";
 import { useDefaultStyles } from "../../../hooks/useDefaultStyles";
 import { toggleDrawer } from "../../../services/store/disclosureSlice";
@@ -59,7 +59,7 @@ export const RequestProspect = () => {
 
   const { data: requestedProspects, isLoading } = useGetRequestedProspectQuery({
     Search: search,
-    Status: status,
+    IsActive: status,
     PageNumber: page + 1,
     PageSize: pageSize,
   });
@@ -73,11 +73,11 @@ export const RequestProspect = () => {
     setPageSize(Number(event.target.value));
   };
 
-  // const handleViewArchived = () => {
-  //   setPage(0);
-  //   setPageSize(25);
-  //   setStatus((prev) => !prev);
-  // };
+  const handleViewArchived = () => {
+    setPage(0);
+    setPageSize(25);
+    setStatus((prev) => !prev);
+  };
 
   return (
     <>
@@ -89,7 +89,7 @@ export const RequestProspect = () => {
         mb={2}
       >
         <SearchField onChange={(e) => setSearch(e.target.value)} />
-        {/* <Stack flexDirection="row">
+        <Stack flexDirection="row">
           <Checkbox
             size="small"
             checked={status === false}
@@ -100,7 +100,7 @@ export const RequestProspect = () => {
           <Typography fontSize="small" mr={1}>
             Archived
           </Typography>
-        </Stack> */}
+        </Stack>
       </Stack>
       {isLoading ? (
         <LoadingData />
@@ -412,11 +412,11 @@ const RequestProspectActions = ({ row }) => {
       name: "Edit",
       icon: <Edit />,
     },
-    // {
-    //   type: "archive",
-    //   name: row?.isActive ? "Archive" : "Restore",
-    //   icon: <Archive />,
-    // },
+    {
+      type: "archive",
+      name: row?.isActive ? "Archive" : "Restore",
+      icon: <Archive />,
+    },
   ];
 
   // const handleView = () => {
@@ -428,29 +428,29 @@ const RequestProspectActions = ({ row }) => {
     dispatch(toggleDrawer("isRequestProspectForm"));
   };
 
-  //   const [updateRequestedProspectStatus] =
-  //     useCreateUpdateRequestedProspectStatusMutation();
-  //   const handleArchive = () => {
-  //     ModalToast(
-  //       `You are about to set the request for ${row?.ownersName} as prospect to ${
-  //         row?.isActive ? "inactive" : "active"
-  //       }`,
-  //       "Are you sure you want to proceed?",
-  //       "question"
-  //     ).then((res) => {
-  //       if (res.isConfirmed) {
-  //         updateRequestedProspectStatus(row.id);
-  //         BasicToast(
-  //           "success",
-  //           `Request for ${row?.ownersName} as prospect was ${
-  //             row?.isActive ? "archived" : "set active"
-  //           }`,
-  //           3500
-  //         );
-  //       }
-  //     });
-  //     dispatch(setSelectedRow(null));
-  //   };
+  const [updateRequestedProspectStatus] =
+    useCreateUpdateRequestedProspectStatusMutation();
+  const handleArchive = () => {
+    ModalToast(
+      `You are about to set the request for ${row?.ownersName} as prospect ${
+        row?.isActive ? "inactive" : "active"
+      }`,
+      "Are you sure you want to proceed?",
+      "question"
+    ).then((res) => {
+      if (res.isConfirmed) {
+        updateRequestedProspectStatus(row.id);
+        BasicToast(
+          "success",
+          `Request for ${row?.ownersName} as prospect was ${
+            row?.isActive ? "archived" : "set active"
+          }`,
+          3500
+        );
+      }
+    });
+    dispatch(setSelectedRow(null));
+  };
 
   const handleOnClick = (items) => {
     // if (items.type === "view") {
@@ -458,10 +458,9 @@ const RequestProspectActions = ({ row }) => {
     // } else
     if (items.type === "edit") {
       handleEdit();
+    } else if (items.type === "archive") {
+      handleArchive();
     }
-    // else if (items.type === "archive") {
-    //   handleArchive();
-    // }
     toggleMenu();
   };
 

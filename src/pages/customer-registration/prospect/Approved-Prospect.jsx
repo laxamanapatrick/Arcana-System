@@ -117,7 +117,7 @@ export const ApprovedProspect = ({
         <ZeroRecordsFound
           text={
             search
-              ? `${search} not available in for User Accounts`
+              ? `${search} not available in for Approved Prospects`
               : `${
                   status ? "No active records" : "No archived records"
                 } for Approved Prospects`

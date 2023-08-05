@@ -555,6 +555,63 @@ export const jsonServerApi = createApi({
       }),
       invalidatesTags: ["Rejected Prospect"],
     }),
+
+
+    //Request Freebies
+
+    getRequestedFreebie: builder.query({
+      query: (params) => ({
+        url: `Freebies/GetAllFreebieRequest`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Request Freebie"],
+    }),
+    createRequestFreebie: builder.mutation({
+      query: (payload) => ({
+        url: `Freebies/RequestFreebies`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Request Freebie"],
+    }),
+    // createUpdateRequestFreebie: builder.mutation({
+    //   query: ({ payload, id }) => ({
+    //     url: `Freebies/UpdateFreebieRequest/${encodeURIComponent(id)}`,
+    //     method: "PUT",
+    //     body: payload,
+    //   }),
+    //   invalidatesTags: ["Request Freebie"],
+    // }),
+    // createUpdateRequestedFreebieStatus: builder.mutation({
+    //   query: (id) => ({
+    //     url: `Freebies/UpdateRequestedFreebieStatus/${encodeURIComponent(
+    //       id
+    //     )}`,
+    //     method: "PATCH",
+    //   }),
+    //   invalidatesTags: ["Request Freebie"],
+    // }),
+
+    /****/
+    //Approving Freebie
+    createApproveFreebieRequest: builder.mutation({
+      query: (id) => ({
+        url: `ApproveFreebieRequest/${encodeURIComponent(id)}`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["Approving Freebie"],
+    }),
+    //Rejecting Freebie
+    // createRejectProspectRequest: builder.mutation({
+    //   query: (id) => ({
+    //     url: `Prospecting/RejectProspectRequest/${encodeURIComponent(id)}`,
+    //     method: "PUT",
+    //   }),
+    //   invalidatesTags: ["Rejecting Freebie"],
+    // }),
+    /****/
+
   }),
 });
 
@@ -654,4 +711,14 @@ export const {
   //Rejected Prospect
   useGetRejectedProspectQuery,
   useCreateUpdateRejectedProspectStatusMutation,
+
+  //Request Freebie
+
+  //Approving Freebie
+
+  //Rejecting Freebie
+
+  //Approved Freebie
+
+  //Rejected Freebie
 } = jsonServerApi;
