@@ -69,9 +69,9 @@ const Layout = () => {
                 <Link
                   to={item.path}
                   key={i}
-                  onClick={() => dispatch(toggleDrawer("isSidebar"))}
+                  onDoubleClick={() => dispatch(toggleDrawer("isSidebar"))}
                 >
-                  <Tooltip title={`Open ${item.name}`} placement="right-start">
+                  <Tooltip title={`${item.name}`} placement="right-start">
                     <IconButton
                       sx={{ color: theme.palette.secondary.main, my: 1 }}
                     >

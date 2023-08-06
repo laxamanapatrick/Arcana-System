@@ -8,7 +8,7 @@ import { OpenApproval } from "../../components/Lottie-Components";
 const Approval = () => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
-  const isHomePage = pathname === "/customer-registration";
+  const isHomePage = pathname === "/approval";
   return (
     <>
       {isHomePage ? (
@@ -24,9 +24,7 @@ const Approval = () => {
             flexDirection: "column",
           }}
         >
-          <OpenApproval
-            text={"Open Approval Modules"}
-          />
+          <OpenApproval text={"Approval Module"} />
         </Box>
       ) : (
         <Outlet />

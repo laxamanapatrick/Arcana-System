@@ -67,7 +67,7 @@ const Login = () => {
 
   const { defaultButtonStyle } = useDefaultStyles();
   const pageBackground = {
-    background: "#6c5982",
+    background: "linear-gradient(120deg, rgba(135,143,196,1) 10%, rgba(149,113,167,1) 41%, rgba(149,113,167,1) 78%)",
     position: "fixed",
     top: 0,
     left: 0,
@@ -81,7 +81,9 @@ const Login = () => {
 
   const loginPaper = {
     background: showLogo
-      ? "linear-gradient(90deg, rgba(255,255,255,1) 32%, rgba(35,2,74,1) 93%)"
+      ? 
+      // "linear-gradient(90deg, rgba(255,255,255,1) 32%, rgba(35,2,74,1) 93%)"
+      "#E5E5E5"
       : "transparent",
     maxWidth: "48%",
     minWidth: "35%",
@@ -111,7 +113,7 @@ const Login = () => {
       color: `${theme.palette.common.white} !important`,
     },
     "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: `${theme.palette.primary.main} !important`,
+      borderColor: `${theme.palette.secondary.main} !important`,
     },
     "&:hover .MuiOutlinedInput-notchedOutline": {
       borderColor: `${theme.palette.common.white} !important`,

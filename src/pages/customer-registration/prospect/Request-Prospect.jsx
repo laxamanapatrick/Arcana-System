@@ -30,7 +30,7 @@ import {
 import {
   useCreateRequestProspectMutation,
   useCreateUpdateRequestProspectMutation,
-    useCreateUpdateRequestedProspectStatusMutation,
+  useCreateUpdateRequestedProspectStatusMutation,
   useGetRequestedProspectQuery,
 } from "../../../services/api";
 // import moment from "moment/moment";
@@ -208,6 +208,7 @@ const RequestProspectForm = () => {
       ownersAddress: "",
       phoneNumber: "",
       businessName: "",
+      storeType: "",
     },
   });
 
@@ -218,6 +219,7 @@ const RequestProspectForm = () => {
       setValue("ownersAddress", selectedRowData?.address);
       setValue("phoneNumber", selectedRowData?.phoneNumber);
       setValue("businessName", selectedRowData?.businessName);
+      setValue("storeType", selectedRowData?.storeType);
     }
 
     return () => {
@@ -226,6 +228,7 @@ const RequestProspectForm = () => {
       setValue("ownersAddress", "");
       setValue("phoneNumber", "");
       setValue("businessName", "");
+      setValue("storeType", "");
     };
   }, [selectedRowData, dispatch]);
 
@@ -366,6 +369,16 @@ const RequestProspectForm = () => {
                 autoComplete="off"
                 error={!!errors?.businessName}
                 helperText={errors?.businessName?.message}
+              />
+
+              <Textfield
+                name="storeType"
+                control={control}
+                label="Store Type"
+                size="small"
+                autoComplete="off"
+                error={!!errors?.storeType}
+                helperText={errors?.storeType?.message}
               />
             </Box>
 

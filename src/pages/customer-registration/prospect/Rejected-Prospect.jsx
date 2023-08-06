@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -18,7 +19,11 @@ import {
   BasicToast,
   ModalToast,
 } from "../../../components/SweetAlert-Components";
-import { useGetRejectedProspectQuery } from "../../../services/api";
+import {
+  useCreateUpdateRejectedProspectStatusMutation,
+  useGetRejectedProspectQuery,
+} from "../../../services/api";
+import { Archive, Restore } from "@mui/icons-material";
 
 export const RejectedProspect = ({
   status,
@@ -44,6 +49,27 @@ export const RejectedProspect = ({
     setPageSize(Number(event.target.value));
   };
 
+  const [createUpdateRejectedProspectStatus] =
+    useCreateUpdateRejectedProspectStatusMutation();
+  const handleArchiveRestore = (id, isActive) => {
+    ModalToast(
+      `You are about to set this rejected prospect ${
+        isActive ? "inactive" : "active"
+      }`,
+      "Are you sure you want to proceed?",
+      "question"
+    ).then((res) => {
+      if (res.isConfirmed) {
+        createUpdateRejectedProspectStatus(id);
+        BasicToast(
+          "success",
+          `Rejected Prospect was ${isActive ? "archived" : "set active"}`,
+          3500
+        );
+      }
+    });
+  };
+
   return (
     <>
       {isLoading ? (
@@ -58,7 +84,9 @@ export const RejectedProspect = ({
                 <TableCell className="tableHeadCell">Owner Address</TableCell>
                 <TableCell className="tableHeadCell">Phone Number</TableCell>
                 <TableCell className="tableHeadCell">Business Name</TableCell>
-                <TableCell className="tableHeadCell">Actions</TableCell>
+                <TableCell className="tableHeadCell">
+                  {status ? "Archive" : "Restore"}
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody sx={{ maxHeight: "560px" }}>
@@ -81,7 +109,11 @@ export const RejectedProspect = ({
                     {row?.businessName}
                   </TableCell>
                   <TableCell className="tableBodyCell">
-                    {/* <RequestProspectActions row={row} /> */}
+                    <IconButton
+                      onClick={() => handleArchiveRestore(row.id, row.isActive)}
+                    >
+                      {status ? <Archive /> : <Restore />}
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}

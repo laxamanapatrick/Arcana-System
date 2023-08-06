@@ -14,6 +14,7 @@ import {
   ListItemText,
   Radio,
   Stack,
+  Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -23,7 +24,7 @@ import { useDefaultStyles } from "../../hooks/useDefaultStyles";
 import { useDispatch, useSelector } from "react-redux";
 import { getIconElement } from "../../components/Get-Icon";
 import { toggleDrawer } from "../../services/store/disclosureSlice";
-import systemLogo from "../../assets/images/SystemLogo.png";
+import systemLogoName from "../../assets/images/SystemLogoName.png";
 
 const NavigationHeader = () => {
   const dispatch = useDispatch();
@@ -48,7 +49,7 @@ const NavigationHeader = () => {
             }}
           >
             <img
-              src={systemLogo}
+              src={systemLogoName}
               alt="logo"
               loading="lazy"
               style={{
@@ -68,7 +69,7 @@ const NavigationHeader = () => {
             }}
           >
             <IconButton onClick={() => dispatch(toggleDrawer("isSidebar"))}>
-              <Close sx={{ color: theme.palette.primary.main }} />
+              <Close sx={{ color: theme.palette.secondary.main }} />
             </IconButton>
           </div>
         </Box>
@@ -147,7 +148,9 @@ const NavigationContent = () => {
             <ListItem
               key={i}
               disablePadding
-              sx={{ textTransform: "uppercase" }}
+              sx={{
+                textTransform: "uppercase",
+              }}
             >
               <Accordion
                 // defaultExpanded={pathname.includes(item.path) || false}
@@ -158,11 +161,15 @@ const NavigationContent = () => {
                   // expandIcon={<ExpandMore />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
-                  sx={{ height: "5px" }}
+                  sx={{
+                    height: "5px",
+                    color: theme.palette.secondary.main,
+                  }}
                   onClick={() => handleAccordionExpand(item)}
                 >
                   <ListItemButton
                     sx={{
+                      color: theme.palette.secondary.main,
                       px: 1,
                       gap: 1,
                       height: "40px",
@@ -182,6 +189,7 @@ const NavigationContent = () => {
                   >
                     <ListItemIcon
                       sx={{
+                        color: theme.palette.secondary.main,
                         minWidth: 0,
                         // mr: open ? 3 : "auto",
                         justifyContent: "center",
@@ -191,12 +199,16 @@ const NavigationContent = () => {
                     </ListItemIcon>
                     <ListItemText
                       primary={item.name}
-                      sx={{ fontSize: "10px" }}
+                      sx={{
+                        color: theme.palette.secondary.main,
+                        fontSize: "10px",
+                      }}
                     />
                   </ListItemButton>
                 </AccordionSummary>
                 <AccordionDetails
                   sx={{
+                    color: theme.palette.common.white,
                     width: "auto",
                     display: "flex",
                     flexDirection: "column",
@@ -214,12 +226,8 @@ const NavigationContent = () => {
                       <Box px={5} display="flex" justifyContent="space-between">
                         <Button
                           sx={{
-                            color: theme.palette.common.white,
+                            color: pathname.includes(item2.path) ? theme.palette.primary.main : theme.palette.common.white,
                             fontSize: "12px",
-                            ":hover": {
-                              color: theme.palette.common.white,
-                              background: theme.palette.primary.main,
-                            },
                           }}
                         >
                           {item2.name}
@@ -227,6 +235,7 @@ const NavigationContent = () => {
                         <Radio
                           checked={pathname.includes(item2.path)}
                           sx={{
+                            color: theme.palette.common.white,
                             "& .MuiSvgIcon-root": {
                               marginBottom: "2.5px",
                               fontSize: "12px",
@@ -260,7 +269,8 @@ export const NavigationMain = () => {
         sx={{
           "& .MuiDrawer-paper": {
             width: 370,
-            background: theme.palette.secondary.main,
+            // background: theme.palette.common.white,
+            background: " linear-gradient(180deg, rgba(135,143,196,1) 10%, rgba(149,113,167,1) 41%, rgba(149,113,167,1) 78%);"
           },
         }}
       >

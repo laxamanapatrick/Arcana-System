@@ -24,7 +24,7 @@ const Terms = () => {
             flexDirection: "column",
           }}
         >
-          <OpenTerms text={"Open Terms Modules"} />
+          <OpenTerms text={"Terms"} />
         </Box>
       ) : (
         <Outlet />

@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import {
+  Badge,
   IconButton,
   Menu,
   MenuItem,
@@ -44,15 +45,12 @@ export const ProspectApproval = () => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(25);
 
-  const { data: requestedProspects, isLoading } = useGetRequestedProspectQuery(
-    {
-      Search: search,
-      IsActive: true,
-      PageNumber: page + 1,
-      PageSize: pageSize,
-    },
-    { refetchOnMountOrArgChange: true }
-  );
+  const { data: requestedProspects, isLoading } = useGetRequestedProspectQuery({
+    Search: search,
+    IsActive: true,
+    PageNumber: page + 1,
+    PageSize: pageSize,
+  });
   const totalCount = requestedProspects?.data?.totalCount || 0;
 
   const handleChangePage = (event, newPage) => {
@@ -69,11 +67,16 @@ export const ProspectApproval = () => {
       <Paper elevation={1} sx={defaultPaperHeaderStyle}>
         <Stack flexDirection="row" alignItems="center" gap={0.5}>
           <>
-            <Typography
-              sx={{ fontWeight: "bold", color: theme.palette.secondary.main }}
+            <Badge
+              badgeContent={totalCount}
+              color="primary"
             >
-              Prospect Approval
-            </Typography>
+              <Typography
+                sx={{ fontWeight: "bold", color: theme.palette.secondary.main }}
+              >
+                Prospect Approval
+              </Typography>
+            </Badge>
           </>
         </Stack>
         <Stack

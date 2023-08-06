@@ -165,26 +165,3 @@ export const sidebarNavigationData = [
   },
 ];
 
-
-export const prospectNavbar = [
-    {
-      case: 1,
-      name: "Request Prospect",
-    },
-    {
-      case: 2,
-      name: "Prospect Status",
-    },
-    // {
-    //   case: 3,
-    //   name: "Request Freebies",
-    // },
-    // {
-    //   case: 4,
-    //   name: "Freebie Status",
-    // },
-    // {
-    //   case: 5,
-    //   name: "Released",
-    // },
-  ];

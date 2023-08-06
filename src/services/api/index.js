@@ -508,7 +508,7 @@ export const jsonServerApi = createApi({
         url: `Prospecting/ApproveProspectRequest/${encodeURIComponent(id)}`,
         method: "PUT",
       }),
-      invalidatesTags: ["Approving Prospect"],
+      invalidatesTags: ["Request Prospect"],
     }),
     //Rejecting Prospects
     createRejectProspectRequest: builder.mutation({
@@ -516,7 +516,7 @@ export const jsonServerApi = createApi({
         url: `Prospecting/RejectProspectRequest/${encodeURIComponent(id)}`,
         method: "PUT",
       }),
-      invalidatesTags: ["Rejecting Prospect"],
+      invalidatesTags: ["Request Prospect"],
     }),
     /****/
 

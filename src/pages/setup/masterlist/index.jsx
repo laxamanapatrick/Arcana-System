@@ -24,7 +24,7 @@ const Setup = () => {
             flexDirection: "column",
           }}
         >
-          <OpenSetup text={"Open Setup"} />
+          <OpenSetup text={"Setup"} />
         </Box>
       ) : (
         <Outlet />

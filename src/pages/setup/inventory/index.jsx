@@ -24,7 +24,7 @@ const Inventory = () => {
             flexDirection: "column",
           }}
         >
-          <OpenInventory text={'Open Inventory Modules'} />
+          <OpenInventory text={'Inventory'} />
         </Box>
       ) : (
         <Outlet />

@@ -24,7 +24,7 @@ const Discount = () => {
             flexDirection: "column",
           }}
         >
-          <OpenDiscount text={'Open Discount Modules'} />
+          <OpenDiscount text={'Discount'} />
         </Box>
       ) : (
         <Outlet />

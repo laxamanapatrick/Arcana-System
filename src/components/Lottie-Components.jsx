@@ -16,7 +16,7 @@ import openSetup from "../assets/open-setup.json";
 import openDiscount from "../assets/open-discount.json";
 import openTerms from "../assets/open-terms.json";
 import openCustomerRegistration from "../assets/open-customer-registration.json";
-import openApproval from "../assets/success-response.json"
+import openApproval from "../assets/approval.json"
 import openInventory from "../assets/open-inventory.json";
 
 const StyledBox = styled(Box)(() => ({

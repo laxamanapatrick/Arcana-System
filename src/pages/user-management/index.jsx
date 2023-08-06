@@ -24,7 +24,7 @@ const UserManagement = () => {
             flexDirection: "column",
           }}
         >
-          <OpenUserManagement text={'Open User Management Modules'} />
+          <OpenUserManagement text={'User Management'} />
         </Box>
       ) : (
         <Outlet />

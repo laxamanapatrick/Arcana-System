@@ -25,7 +25,7 @@ const CustomerRegistration = () => {
           }}
         >
           <OpenCustomerRegistration
-            text={"Open Customer Registration Modules"}
+            text={"Customer Registration"}
           />
         </Box>
       ) : (

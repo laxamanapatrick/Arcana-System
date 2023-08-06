@@ -146,5 +146,6 @@ export const prospectSchema = yup
     ownersAddress: yup.string(),
     phoneNumber: yup.string(),
     businessName: yup.string(),
+    storeType: yup.string(),
   })
   .required();
