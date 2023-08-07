@@ -47,6 +47,7 @@ export const RemarksToast = (
   title,
   text,
   icon,
+  inputType,
   // inputOptions,
   inputPlaceholder,
   confirmColor,
@@ -57,7 +58,7 @@ export const RemarksToast = (
     title: title ? title : "Submit your remarks",
     text: text ? text : "",
     icon: icon ? icon : "question",
-    input: "text",
+    input: inputType ? inputType : "text",
     // input: "select",
     // inputOptions: inputOptions ? inputOptions : {},
     inputPlaceholder: inputPlaceholder

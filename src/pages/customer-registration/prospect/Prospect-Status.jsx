@@ -60,16 +60,20 @@ export const ProspectStatus = () => {
       >
         <SearchField onChange={(e) => setSearch(e.target.value)} />
         <Stack flexDirection="row" alignItems="center" justifyContent="center">
-          <Checkbox
-            size="small"
-            checked={status === false}
-            onClick={handleViewArchived}
-            inputProps={{ "aria-label": "controlled" }}
-            sx={{ color: theme.palette.secondary.main, mb: "2px", p: 0 }}
-          />
-          <Typography fontSize="small" mr={1}>
-            Archived
-          </Typography>
+          {!viewing && (
+            <>
+              <Checkbox
+                size="small"
+                checked={status === false}
+                onClick={handleViewArchived}
+                inputProps={{ "aria-label": "controlled" }}
+                sx={{ color: theme.palette.secondary.main, mb: "2px", p: 0 }}
+              />
+              <Typography fontSize="small" mr={1}>
+                Archived
+              </Typography>
+            </>
+          )}
           <FormControl size="small">
             <InputLabel>Status</InputLabel>
             <Select

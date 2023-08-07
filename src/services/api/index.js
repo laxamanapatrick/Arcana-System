@@ -512,9 +512,10 @@ export const jsonServerApi = createApi({
     }),
     //Rejecting Prospects
     createRejectProspectRequest: builder.mutation({
-      query: (id) => ({
+      query: ({payload, id}) => ({
         url: `Prospecting/RejectProspectRequest/${encodeURIComponent(id)}`,
         method: "PUT",
+        body: payload
       }),
       invalidatesTags: ["Request Prospect"],
     }),

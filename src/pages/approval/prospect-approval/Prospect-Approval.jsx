@@ -33,6 +33,7 @@ import { useDispatch } from "react-redux";
 import {
   BasicToast,
   ModalToast,
+  RemarksToast,
 } from "../../../components/SweetAlert-Components";
 import { useDisclosure } from "../../../hooks/useDisclosure";
 
@@ -67,10 +68,7 @@ export const ProspectApproval = () => {
       <Paper elevation={1} sx={defaultPaperHeaderStyle}>
         <Stack flexDirection="row" alignItems="center" gap={0.5}>
           <>
-            <Badge
-              badgeContent={totalCount}
-              color="primary"
-            >
+            <Badge badgeContent={totalCount} color="primary">
               <Typography
                 sx={{ fontWeight: "bold", color: theme.palette.secondary.main }}
               >
@@ -206,13 +204,29 @@ const ProspectApprovalActions = ({ row }) => {
   const [createRejectProspectRequest] =
     useCreateRejectProspectRequestMutation();
   const handleReject = () => {
-    ModalToast(
-      `You are about to reject the request for prospect ${row?.ownersName}`,
-      "Are you sure you want to proceed?",
-      "question"
+    // ModalToast(
+    //   `You are about to reject the request for prospect ${row?.ownersName}`,
+    //   "Are you sure you want to proceed?",
+    //   "question"
+    // ).then((res) => {
+    //   if (res.isConfirmed) {
+    //     createRejectProspectRequest(row.id);
+    //     BasicToast("success", `Prospect ${row?.ownersName} rejected`, 3500);
+    //   }
+    // });
+
+    RemarksToast(
+      "Reject Prospect",
+      "You are about to reject this prospect.",
+      "info",
+      "",
+      "Please provide a reason."
     ).then((res) => {
       if (res.isConfirmed) {
-        createRejectProspectRequest(row.id);
+        createRejectProspectRequest({
+          payload: { reason: res.value },
+          id: row.id,
+        });
         BasicToast("success", `Prospect ${row?.ownersName} rejected`, 3500);
       }
     });

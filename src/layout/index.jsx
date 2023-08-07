@@ -35,6 +35,30 @@ const Layout = () => {
     permissions?.includes(item.name)
   );
 
+  const generateTooltipContent = (subItems) => {
+    return (
+      <>
+        {subItems?.map((subItem) => (
+          <Link
+            to={subItem.path}
+            key={subItem.id}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              padding: "10px",
+              margin: 0,
+              textDecoration: "none",
+              color: theme.palette.common.white,
+              background: "none",
+            }}
+          >
+            {subItem.name}
+          </Link>
+        ))}
+      </>
+    );
+  };
+
   return (
     <>
       <Stack width="100wv" height="100vh" display="flex" flexDirection="column">
@@ -71,7 +95,20 @@ const Layout = () => {
                   key={i}
                   onDoubleClick={() => dispatch(toggleDrawer("isSidebar"))}
                 >
-                  <Tooltip title={`${item.name}`} placement="right-start">
+                  <Tooltip
+                    PopperProps={{
+                      sx: {
+                        background: "none",
+                        "& .MuiTooltip-tooltip": {
+                          fontSize: "13px",
+                          fontWeight: "bold",
+                          background: theme.palette.secondary.main,
+                        },
+                      },
+                    }}
+                    title={generateTooltipContent(item.sub)}
+                    placement="right-start"
+                  >
                     <IconButton
                       sx={{ color: theme.palette.secondary.main, my: 1 }}
                     >

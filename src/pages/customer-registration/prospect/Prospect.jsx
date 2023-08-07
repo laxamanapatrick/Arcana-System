@@ -28,7 +28,7 @@ export const Prospect = () => {
   const { data: approved } = useGetApprovedProspectQuery({ status: true });
 
   const totalRequest = requested?.data?.totalCount || 0;
-  const totalRejected = approved?.data?.totalCount || 0;
+  const totalApproved = approved?.data?.totalCount || 0;
 
   const prospectNavbar = [
     {
@@ -39,7 +39,7 @@ export const Prospect = () => {
     {
       case: 2,
       name: "Prospect Status",
-      badge: totalRejected || 0,
+      badge: totalApproved || 0,
     },
     // {
     //   case: 3,

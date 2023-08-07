@@ -84,6 +84,7 @@ export const RejectedProspect = ({
                 <TableCell className="tableHeadCell">Owner Address</TableCell>
                 <TableCell className="tableHeadCell">Phone Number</TableCell>
                 <TableCell className="tableHeadCell">Business Name</TableCell>
+                <TableCell className="tableHeadCell">Reason</TableCell>
                 <TableCell className="tableHeadCell">
                   {status ? "Archive" : "Restore"}
                 </TableCell>
@@ -109,6 +110,9 @@ export const RejectedProspect = ({
                     {row?.businessName}
                   </TableCell>
                   <TableCell className="tableBodyCell">
+                    {row?.reason}
+                  </TableCell>
+                  <TableCell className="tableBodyCell">
                     <IconButton
                       onClick={() => handleArchiveRestore(row.id, row.isActive)}
                     >
@@ -128,7 +132,7 @@ export const RejectedProspect = ({
                     25,
                     { label: "All", value: totalCount },
                   ]}
-                  colSpan={5}
+                  colSpan={6}
                   count={totalCount}
                   page={page}
                   rowsPerPage={pageSize}
