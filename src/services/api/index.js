@@ -485,7 +485,7 @@ export const jsonServerApi = createApi({
     }),
     createUpdateRequestProspect: builder.mutation({
       query: ({ payload, id }) => ({
-        url: `Prospecting/UpdateProspectRequest/${encodeURIComponent(id)}`,
+        url: `Prospecting/UpdateProspectInformation/${encodeURIComponent(id)}`,
         method: "PUT",
         body: payload,
       }),
@@ -512,10 +512,10 @@ export const jsonServerApi = createApi({
     }),
     //Rejecting Prospects
     createRejectProspectRequest: builder.mutation({
-      query: ({payload, id}) => ({
+      query: ({ payload, id }) => ({
         url: `Prospecting/RejectProspectRequest/${encodeURIComponent(id)}`,
         method: "PUT",
-        body: payload
+        body: payload,
       }),
       invalidatesTags: ["Request Prospect"],
     }),
@@ -539,6 +539,14 @@ export const jsonServerApi = createApi({
       }),
       invalidatesTags: ["Approved Prospect"],
     }),
+    createUpdateApprovedProspect: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `Prospecting/UpdateProspectInformation/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Approved Prospect"],
+    }),
 
     //Rejected Prospect
     getRejectedProspect: builder.query({
@@ -556,7 +564,6 @@ export const jsonServerApi = createApi({
       }),
       invalidatesTags: ["Rejected Prospect"],
     }),
-
 
     //Request Freebies
 
@@ -576,23 +583,14 @@ export const jsonServerApi = createApi({
       }),
       invalidatesTags: ["Request Freebie"],
     }),
-    // createUpdateRequestFreebie: builder.mutation({
-    //   query: ({ payload, id }) => ({
-    //     url: `Freebies/UpdateFreebieRequest/${encodeURIComponent(id)}`,
-    //     method: "PUT",
-    //     body: payload,
-    //   }),
-    //   invalidatesTags: ["Request Freebie"],
-    // }),
-    // createUpdateRequestedFreebieStatus: builder.mutation({
-    //   query: (id) => ({
-    //     url: `Freebies/UpdateRequestedFreebieStatus/${encodeURIComponent(
-    //       id
-    //     )}`,
-    //     method: "PATCH",
-    //   }),
-    //   invalidatesTags: ["Request Freebie"],
-    // }),
+    createUpdateRequestFreebie: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `Freebies/UpdateFreebieRequest/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Request Freebie"],
+    }),
 
     /****/
     //Approving Freebie
@@ -601,18 +599,52 @@ export const jsonServerApi = createApi({
         url: `ApproveFreebieRequest/${encodeURIComponent(id)}`,
         method: "PUT",
       }),
-      invalidatesTags: ["Approving Freebie"],
+      invalidatesTags: ["Request Freebie"],
     }),
     //Rejecting Freebie
-    // createRejectProspectRequest: builder.mutation({
-    //   query: (id) => ({
-    //     url: `Prospecting/RejectProspectRequest/${encodeURIComponent(id)}`,
-    //     method: "PUT",
-    //   }),
-    //   invalidatesTags: ["Rejecting Freebie"],
-    // }),
+    createRejectFreebieRequest: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `RejectFreebieRequest/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Request Freebie"],
+    }),
     /****/
 
+    //Approved Freebies
+    getApprovedFreebies: builder.query({
+      query: (params) => ({
+        url: `Freebies/GetAllApprovedFreebies`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Approved Freebies"],
+    }),
+    createUpdateApprovedFreebiesStatus: builder.mutation({
+      query: (id) => ({
+        url: `Freebies/UpdateApprovedFreebiesStatus/${encodeURIComponent(id)}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Approved Freebies"],
+    }),
+
+    //Rejected Freebies
+    getRejectedFreebies: builder.query({
+      query: (params) => ({
+        url: `Freebies/GetAllRejectedFreebies`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Rejected Freebies"],
+    }),
+    createUpdateRejectedFreebiesStatus: builder.mutation({
+      query: (id) => ({
+        url: `Freebies/UpdateRejectFreebiesStatus/${encodeURIComponent(id)}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Rejected Freebies"],
+    }),
   }),
 });
 
@@ -708,18 +740,26 @@ export const {
   //Approved Prospect
   useGetApprovedProspectQuery,
   useCreateUpdateApprovedProspectStatusMutation,
+  useCreateUpdateApprovedProspectMutation,
 
   //Rejected Prospect
   useGetRejectedProspectQuery,
   useCreateUpdateRejectedProspectStatusMutation,
 
   //Request Freebie
+  useGetRequestedFreebieQuery,
+  useCreateRequestFreebieMutation,
+  useCreateUpdateRequestFreebieMutation,
 
   //Approving Freebie
+  useCreateApproveFreebieRequestMutation,
 
   //Rejecting Freebie
+  useCreateRejectFreebieRequestMutation,
 
   //Approved Freebie
+  useGetApprovedFreebiesQuery,
 
   //Rejected Freebie
+  useGetRejectedFreebiesQuery,
 } = jsonServerApi;

@@ -63,7 +63,7 @@ export const RemarksToast = (
     // inputOptions: inputOptions ? inputOptions : {},
     inputPlaceholder: inputPlaceholder
       ? inputPlaceholder
-      : "Enter your remarks here...",
+      : "Enter your reason here...",
     showCancelButton: true,
     confirmButtonColor: confirmColor ? confirmColor : "#243448",
     cancelButtonColor: cancelColor ? cancelColor : "#E5E5E5",
@@ -71,7 +71,7 @@ export const RemarksToast = (
     showLoaderOnConfirm: true,
     preConfirm: (remarks) => {
       if (!remarks) {
-        Swal.showValidationMessage("Remarks are required!");
+        Swal.showValidationMessage("This field is required!");
         return false;
       }
       return remarks;

@@ -226,7 +226,10 @@ const NavigationContent = () => {
                       <Box px={5} display="flex" justifyContent="space-between">
                         <Button
                           sx={{
-                            color: pathname.includes(item2.path) ? theme.palette.primary.main : theme.palette.common.white,
+                            color: pathname.includes(item2.path)
+                              ? theme.palette.primary.main
+                              : // theme.palette.common.white,
+                                theme.palette.secondary.main,
                             fontSize: "12px",
                           }}
                         >
@@ -235,7 +238,8 @@ const NavigationContent = () => {
                         <Radio
                           checked={pathname.includes(item2.path)}
                           sx={{
-                            color: theme.palette.common.white,
+                            // color: theme.palette.common.white,
+                            color: theme.palette.secondary.main,
                             "& .MuiSvgIcon-root": {
                               marginBottom: "2.5px",
                               fontSize: "12px",
@@ -270,7 +274,9 @@ export const NavigationMain = () => {
           "& .MuiDrawer-paper": {
             width: 370,
             // background: theme.palette.common.white,
-            background: " linear-gradient(180deg, rgba(135,143,196,1) 10%, rgba(149,113,167,1) 41%, rgba(149,113,167,1) 78%);"
+            // background: "linear-gradient(180deg, rgba(135,143,196,1) 10%, rgba(149,113,167,1) 41%, rgba(149,113,167,1) 78%);"
+            background:
+              "linear-gradient(120deg, rgba(229,229,229,1) 10%, rgba(204,164,224,1) 39%, rgba(229,229,229,1) 78%)",
           },
         }}
       >

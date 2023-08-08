@@ -80,9 +80,8 @@ export const RequestProspect = () => {
   };
 
   return (
-    <>
+    <Stack height="100%" maxHeight="100%" width="100%">
       <Stack
-        width="auto"
         flexDirection="row"
         alignItems="center"
         justifyContent="space-between"
@@ -102,11 +101,11 @@ export const RequestProspect = () => {
           </Typography>
         </Stack>
       </Stack>
-      {isLoading ? (
-        <LoadingData />
-      ) : totalCount > 0 ? (
-        <>
-          {/* Table */}
+      <Stack alignItems="center" mb={2}>
+        {isLoading ? (
+          <LoadingData />
+        ) : totalCount > 0 ? (
+          //Table
           <TableContainer component={Paper} sx={{ maxHeight: "590px" }}>
             <Table className="table" aria-label="custom pagination table">
               <TableHead className="tableHead">
@@ -170,17 +169,16 @@ export const RequestProspect = () => {
               </TableFooter>
             </Table>
           </TableContainer>
-        </>
-      ) : (
-        <ZeroRecordsFound
-          text={`${
-            status ? "No active records" : "No archived records"
-          } for Prospect Requests`}
-        />
-      )}
-
-      <Box mt={2}>{status && <RequestProspectForm />}</Box>
-    </>
+        ) : (
+          <ZeroRecordsFound
+            text={`${
+              status ? "No active records" : "No archived records"
+            } for Prospect Requests`}
+          />
+        )}
+      </Stack>
+      <>{status && <RequestProspectForm />}</>
+    </Stack>
   );
 };
 

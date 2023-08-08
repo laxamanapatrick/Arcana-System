@@ -2,6 +2,7 @@ import React from "react";
 import {
   IconButton,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -71,7 +72,7 @@ export const RejectedProspect = ({
   };
 
   return (
-    <>
+    <Stack alignItems="center">
       {isLoading ? (
         <LoadingData />
       ) : totalCount > 0 ? (
@@ -109,9 +110,7 @@ export const RejectedProspect = ({
                   <TableCell className="tableBodyCell">
                     {row?.businessName}
                   </TableCell>
-                  <TableCell className="tableBodyCell">
-                    {row?.reason}
-                  </TableCell>
+                  <TableCell className="tableBodyCell">{row?.reason}</TableCell>
                   <TableCell className="tableBodyCell">
                     <IconButton
                       onClick={() => handleArchiveRestore(row.id, row.isActive)}
@@ -160,6 +159,6 @@ export const RejectedProspect = ({
           }
         />
       )}
-    </>
+    </Stack>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { styled } from "@mui/system";
 import Lottie from "lottie-react";
 import noDataFound from "../assets/no-data.json";
@@ -82,7 +82,7 @@ export const NoDataFound = ({ text }) => {
 
 export const ZeroRecordsFound = ({ text }) => {
   return (
-    <Box
+    <Stack
       sx={{
         top: 0,
         left: 0,
@@ -104,7 +104,7 @@ export const ZeroRecordsFound = ({ text }) => {
           {text}
         </Typography>
       )}
-    </Box>
+    </Stack>
   );
 };
 

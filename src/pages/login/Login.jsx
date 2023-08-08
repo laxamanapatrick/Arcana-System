@@ -67,7 +67,8 @@ const Login = () => {
 
   const { defaultButtonStyle } = useDefaultStyles();
   const pageBackground = {
-    background: "linear-gradient(120deg, rgba(135,143,196,1) 10%, rgba(149,113,167,1) 41%, rgba(149,113,167,1) 78%)",
+    // background: "linear-gradient(120deg, rgba(135,143,196,1) 10%, rgba(149,113,167,1) 41%, rgba(149,113,167,1) 78%)",
+    background: "linear-gradient(120deg, rgba(229,229,229,1) 10%, rgba(204,164,224,1) 39%, rgba(229,229,229,1) 78%)",
     position: "fixed",
     top: 0,
     left: 0,
@@ -80,11 +81,14 @@ const Login = () => {
   };
 
   const loginPaper = {
-    background: showLogo
-      ? 
-      // "linear-gradient(90deg, rgba(255,255,255,1) 32%, rgba(35,2,74,1) 93%)"
-      "#E5E5E5"
-      : "transparent",
+    background: 
+    // showLogo
+    //   ? 
+      // "linear-gradient(90deg, rgba(255,255,255,1) 32%, rgba(35,2,74,1) 93%)",
+      // "linear-gradient(120deg, rgba(229,229,229,1) 10%, rgba(204,164,224,1) 39%, rgba(229,229,229,1) 78%)",
+      // "#E5E5E5",
+      // : 
+      "transparent",
     maxWidth: "48%",
     minWidth: "35%",
     borderRadius: "10px",
@@ -230,7 +234,8 @@ const Login = () => {
           <Typography
             variant="h7"
             fontSize={showLogo ? "" : "10px"}
-            color="white"
+            // color={theme.palette.common.white}
+            color={theme.palette.secondary.main}
             textAlign="center"
           >
             &#169; 2023 Powered by <br /> Management Information System

@@ -130,6 +130,9 @@ const darkTheme = createTheme({
         root: {
           color: colorSchemes.dark.secondary,
           padding: 0,
+          "&:hover": {
+            color: colorSchemes.dark.primary,
+          }
         },
       },
     },

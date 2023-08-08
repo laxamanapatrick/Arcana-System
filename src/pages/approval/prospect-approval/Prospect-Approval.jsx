@@ -64,7 +64,7 @@ export const ProspectApproval = () => {
 
   return (
     <>
-      {/* <Stack height="100%" maxHeight="100%" width="100%"> */}
+      <Stack height="100%" maxHeight="100%" width="100%">
       <Paper elevation={1} sx={defaultPaperHeaderStyle}>
         <Stack flexDirection="row" alignItems="center" gap={0.5}>
           <>
@@ -158,7 +158,7 @@ export const ProspectApproval = () => {
       ) : (
         <ZeroRecordsFound text="No pending requests" />
       )}
-      {/* </Stack> */}
+      </Stack>
     </>
   );
 };

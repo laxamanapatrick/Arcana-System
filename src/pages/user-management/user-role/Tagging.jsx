@@ -110,21 +110,21 @@ const Tagging = () => {
   };
 
   const handleTagging = async () => {
-    if (checkedItems?.length > 0) {
-      const payload = { permissions: checkedItems };
-      try {
-        await updateTaggedUserRole({
-          payload: payload,
-          id: selectedRowData?.id,
-        });
-        BasicToast(
-          "success",
-          `Permissions for ${selectedRowData?.roleName} has been updated`,
-          1500
-        );
-        dispatch(toggleModal("isTagging"));
-      } catch (error) {}
-    }
+    // if (checkedItems?.length > 0) {
+    const payload = { permissions: checkedItems };
+    try {
+      await updateTaggedUserRole({
+        payload: payload,
+        id: selectedRowData?.id,
+      });
+      BasicToast(
+        "success",
+        `Permissions for ${selectedRowData?.roleName} has been updated`,
+        1500
+      );
+      dispatch(toggleModal("isTagging"));
+    } catch (error) {}
+    // }
   };
 
   const CustomBackdrop = () => {
@@ -142,6 +142,8 @@ const Tagging = () => {
     );
   };
 
+  console.log(checkedItems);
+
   return (
     <Stack width="auto" flexDirection="row">
       <Modal
@@ -156,6 +158,13 @@ const Tagging = () => {
           <Typography variant="h6" sx={headerStyle}>
             Tagging of Permissions
           </Typography>
+          {/* <Box sx={{ display: "flex", flexDirection: "row", mb: 1 }}>
+            <Checkbox
+              checked={checkedItems?.includes("No Permission for this user")}
+              onChange={() => setCheckedItems(["No Permission for this user"])}
+            />
+            <Typography>No Permissions</Typography>
+          </Box> */}
           <Box sx={mainContainerStyle}>
             {sidebarNavigationData?.map((item) => (
               <Box key={item.id} sx={itemContainerStyle}>

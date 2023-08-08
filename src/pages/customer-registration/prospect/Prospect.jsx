@@ -41,26 +41,26 @@ export const Prospect = () => {
       name: "Prospect Status",
       badge: totalApproved || 0,
     },
-    // {
-    //   case: 3,
-    //   name: "Request Freebies",
-    // },
-    // {
-    //   case: 4,
-    //   name: "Freebie Status",
-    // },
-    // {
-    //   case: 5,
-    //   name: "Released",
-    // },
+    {
+      case: 3,
+      name: "Request Freebies",
+    },
+    {
+      case: 4,
+      name: "Freebie Status",
+    },
+    {
+      case: 5,
+      name: "Released",
+    },
   ];
 
   const components = {
     1: <RequestProspect />,
     2: <ProspectStatus />,
-    // 3: <RequestFreebies />,
-    // 4: <FreebieStatus />,
-    // 5: <Released />,
+    3: <RequestFreebies />,
+    4: <FreebieStatus />,
+    5: <Released />,
   };
 
   return (
@@ -69,7 +69,7 @@ export const Prospect = () => {
         elevation={1}
         sx={{
           ...defaultPaperHeaderStyle,
-          justifyContent: "start",
+          // justifyContent: "start",
           //to remove ^ when freebie is coded
         }}
       >
@@ -79,7 +79,11 @@ export const Prospect = () => {
             key={i}
             onClick={() => setViewing(Number(item.case))}
           >
-            <Badge badgeContent={item.badge} color="primary" invisible={item.case === viewing}>
+            <Badge
+              badgeContent={item.badge}
+              color="primary"
+              invisible={item.case === viewing}
+            >
               <Typography
                 sx={{
                   fontSize: "14.5px",

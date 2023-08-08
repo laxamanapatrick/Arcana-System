@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
+  Button,
   IconButton,
   Paper,
   Stack,
@@ -25,7 +26,7 @@ const Layout = () => {
   const theme = useTheme();
   const permissions = useSelector((state) => state.permissions.permissions);
 
-  const headerHeight = 6.5;
+  const headerHeight = 6;
 
   const sidebarNavigation = useSelector(
     (state) => state.sidebarNavigation.sidebarNavigation
@@ -36,23 +37,32 @@ const Layout = () => {
   );
 
   const generateTooltipContent = (subItems) => {
+    const permittedSubNavs = subItems?.filter((item) =>
+      permissions?.includes(item.name)
+    );
+
     return (
       <>
-        {subItems?.map((subItem) => (
+        {permittedSubNavs?.map((subItem) => (
           <Link
             to={subItem.path}
             key={subItem.id}
             style={{
               display: "flex",
               flexDirection: "column",
-              padding: "10px",
+              padding: "8px",
               margin: 0,
               textDecoration: "none",
               color: theme.palette.common.white,
               background: "none",
             }}
           >
-            {subItem.name}
+            <Button
+              size="sm"
+              sx={{ color: "white", fontSize: "11px", m: 0, p: 0 }}
+            >
+              {subItem.name}
+            </Button>
           </Link>
         ))}
       </>
@@ -74,7 +84,7 @@ const Layout = () => {
           flexDirection="row"
           // mt={adjustNavButtonsHeight ? "1px" : "11px"}
           // height={`${100 - headerHeight}%`}
-          height="100%"
+          height={`${100 - headerHeight}%`}
         >
           <Box
             // bgcolor={theme.palette.secondary.main}
@@ -91,9 +101,9 @@ const Layout = () => {
             >
               {permittedSidebar?.map((item, i) => (
                 <Link
-                  to={item.path}
+                  // to={item.path}
                   key={i}
-                  onDoubleClick={() => dispatch(toggleDrawer("isSidebar"))}
+                  onDoubleClick={() => {dispatch(toggleDrawer("isSidebar")); navigate(item.path)}}
                 >
                   <Tooltip
                     PopperProps={{
