@@ -1,17 +1,24 @@
 import { useState } from "react";
 import {
-  Checkbox,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
+  Badge,
+  Breadcrumbs,
+  Button,
+  Divider,
+  // Checkbox,
+  // FormControl,
+  // InputLabel,
+  // MenuItem,
+  // Select,
   Stack,
-  Typography,
   useTheme,
 } from "@mui/material";
 import { ApprovedProspect } from "./Approved-Prospect";
 import { RejectedProspect } from "./Rejected-Prospect";
 import SearchField from "../../../components/SearchField";
+import {
+  useGetApprovedProspectQuery,
+  useGetRejectedProspectQuery,
+} from "../../../services/api";
 
 export const ProspectStatus = () => {
   const theme = useTheme();
@@ -44,11 +51,17 @@ export const ProspectStatus = () => {
     ),
   };
 
-  const handleViewArchived = () => {
-    setPage(0);
-    setPageSize(25);
-    setStatus((prev) => !prev);
-  };
+  const { data: approved } = useGetApprovedProspectQuery({ status: true });
+  const { data: rejected } = useGetRejectedProspectQuery({ status: true });
+
+  const totalApproved = approved?.data?.totalCount || 0;
+  const totalRejected = rejected?.data?.totalCount || 0;
+
+  // const handleViewArchived = () => {
+  //   setPage(0);
+  //   setPageSize(25);
+  //   setStatus((prev) => !prev);
+  // };
 
   return (
     <>
@@ -60,7 +73,7 @@ export const ProspectStatus = () => {
       >
         <SearchField onChange={(e) => setSearch(e.target.value)} />
         <Stack flexDirection="row" alignItems="center" justifyContent="center">
-          {!viewing && (
+          {/* {!viewing && (
             <>
               <Checkbox
                 size="small"
@@ -73,8 +86,8 @@ export const ProspectStatus = () => {
                 Archived
               </Typography>
             </>
-          )}
-          <FormControl size="small">
+          )} */}
+          {/* <FormControl size="small">
             <InputLabel>Status</InputLabel>
             <Select
               value={viewing}
@@ -84,7 +97,60 @@ export const ProspectStatus = () => {
               <MenuItem value={true}>Approved</MenuItem>
               <MenuItem value={false}>Rejected</MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            sx={{ color: theme.palette.secondary.main }}
+          >
+            <Stack alignItems="center">
+              <Badge
+                badgeContent={totalApproved}
+                color="primary"
+                invisible={viewing}
+              >
+                <Button
+                  sx={{ color: theme.palette.secondary.main }}
+                  onClick={() => setViewing(true)}
+                >
+                  Approved
+                </Button>
+              </Badge>
+              {viewing && (
+                <Divider
+                  sx={{
+                    background: theme.palette.secondary.main,
+                    width: "90px",
+                    height: "1.2px",
+                    transition: "width 0.8s ease-in-out",
+                  }}
+                />
+              )}
+            </Stack>
+            <Stack alignItems="center">
+              <Badge
+                badgeContent={totalRejected}
+                color="primary"
+                invisible={!viewing}
+              >
+                <Button
+                  sx={{ color: theme.palette.secondary.main }}
+                  onClick={() => setViewing(false)}
+                >
+                  Rejected
+                </Button>
+              </Badge>
+              {!viewing && (
+                <Divider
+                  sx={{
+                    background: theme.palette.secondary.main,
+                    width: "90px",
+                    height: "1.2px",
+                    transition: "width 0.8s ease-in-out",
+                  }}
+                />
+              )}
+            </Stack>
+          </Breadcrumbs>
         </Stack>
       </Stack>
       <Stack mt={2}>{components[viewing]}</Stack>

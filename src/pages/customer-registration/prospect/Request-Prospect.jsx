@@ -1,11 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
-  Box,
   Button,
-  ButtonGroup,
   Checkbox,
-  Divider,
-  Drawer,
   IconButton,
   Menu,
   MenuItem,
@@ -28,8 +24,6 @@ import {
   ZeroRecordsFound,
 } from "../../../components/Lottie-Components";
 import {
-  useCreateRequestProspectMutation,
-  useCreateUpdateRequestProspectMutation,
   useCreateUpdateRequestedProspectStatusMutation,
   useGetRequestedProspectQuery,
 } from "../../../services/api";
@@ -39,18 +33,21 @@ import { useDefaultStyles } from "../../../hooks/useDefaultStyles";
 import { toggleDrawer } from "../../../services/store/disclosureSlice";
 import { setSelectedRow } from "../../../services/store/selectedRowSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { Textfield } from "../../../components/Fields";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { prospectSchema } from "../../../schema";
 import {
   BasicToast,
   ModalToast,
 } from "../../../components/SweetAlert-Components";
 import { useDisclosure } from "../../../hooks/useDisclosure";
+import { RequestProspectForm } from "./Prospect-Form";
 
 export const RequestProspect = () => {
   const theme = useTheme();
+  const { defaultButtonStyle } = useDefaultStyles();
+  const dispatch = useDispatch();
+
+  // const { isRequestProspectForm } = useSelector(
+  //   (state) => state.disclosure.drawers
+  // );
 
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState(true);
@@ -106,7 +103,7 @@ export const RequestProspect = () => {
           <LoadingData />
         ) : totalCount > 0 ? (
           //Table
-          <TableContainer component={Paper} sx={{ maxHeight: "590px" }}>
+          <TableContainer component={Paper} sx={{ maxHeight: "560px" }}>
             <Table className="table" aria-label="custom pagination table">
               <TableHead className="tableHead">
                 <TableRow>
@@ -114,10 +111,11 @@ export const RequestProspect = () => {
                   <TableCell className="tableHeadCell">Owner Address</TableCell>
                   <TableCell className="tableHeadCell">Phone Number</TableCell>
                   <TableCell className="tableHeadCell">Business Name</TableCell>
+                  <TableCell className="tableHeadCell">Store Type</TableCell>
                   <TableCell className="tableHeadCell">Actions</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody sx={{ maxHeight: "560px" }}>
+              <TableBody sx={{ maxHeight: "520px" }}>
                 {requestedProspects?.data?.requestedProspect?.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell
@@ -137,6 +135,9 @@ export const RequestProspect = () => {
                       {row?.businessName}
                     </TableCell>
                     <TableCell className="tableBodyCell">
+                      {row?.storeType}
+                    </TableCell>
+                    <TableCell className="tableBodyCell">
                       <RequestProspectActions row={row} />
                     </TableCell>
                   </TableRow>
@@ -152,7 +153,7 @@ export const RequestProspect = () => {
                       25,
                       { label: "All", value: totalCount },
                     ]}
-                    colSpan={5}
+                    colSpan={6}
                     count={totalCount}
                     page={page}
                     rowsPerPage={pageSize}
@@ -177,231 +178,22 @@ export const RequestProspect = () => {
           />
         )}
       </Stack>
-      <>{status && <RequestProspectForm />}</>
-    </Stack>
-  );
-};
-
-const RequestProspectForm = () => {
-  const theme = useTheme();
-  const dispatch = useDispatch();
-  const { defaultButtonStyle } = useDefaultStyles();
-  const { isRequestProspectForm } = useSelector(
-    (state) => state.disclosure.drawers
-  );
-  const { selectedRowData } = useSelector((state) => state.selectedRowData);
-
-  const {
-    formState: { errors },
-    control,
-    setValue,
-    reset,
-    handleSubmit,
-  } = useForm({
-    resolver: yupResolver(prospectSchema),
-    mode: "onChange",
-    defaultValues: {
-      clientId: "",
-      ownersName: "",
-      ownersAddress: "",
-      phoneNumber: "",
-      businessName: "",
-      storeType: "",
-    },
-  });
-
-  useEffect(() => {
-    if (selectedRowData !== null) {
-      setValue("clientId", Number(selectedRowData?.id));
-      setValue("ownersName", selectedRowData?.ownersName);
-      setValue("ownersAddress", selectedRowData?.address);
-      setValue("phoneNumber", selectedRowData?.phoneNumber);
-      setValue("businessName", selectedRowData?.businessName);
-      setValue("storeType", selectedRowData?.storeType);
-    }
-
-    return () => {
-      setValue("clientId", "");
-      setValue("ownersName", "");
-      setValue("ownersAddress", "");
-      setValue("phoneNumber", "");
-      setValue("businessName", "");
-      setValue("storeType", "");
-    };
-  }, [selectedRowData, dispatch]);
-
-  const [createRequestProspect] = useCreateRequestProspectMutation();
-  const [createUpdateRequestProspect] =
-    useCreateUpdateRequestProspectMutation();
-  const submitAddOrEditHandler = async (data) => {
-    try {
-      if (selectedRowData === null) {
-        delete data["clientId"];
-        await createRequestProspect(data).unwrap();
-        BasicToast(
-          "success",
-          `Prospect ${data?.ownersName} was requested`,
-          1500
-        );
-        data["clientId"] = "";
-      } else {
-        await createUpdateRequestProspect({
-          payload: data,
-          id: selectedRowData?.id,
-        }).unwrap();
-        BasicToast("success", `Prospect Request Updated`, 1500);
-      }
-    } catch (error) {
-      BasicToast("error", `${error?.data?.messages[0]}`, 1500);
-      console.log(error);
-      return;
-    }
-    reset();
-    dispatch(setSelectedRow(null));
-    dispatch(toggleDrawer("isRequestProspectForm"));
-  };
-
-  return (
-    <Stack
-      width="auto"
-      flexDirection="row"
-      justifyContent="end"
-      sx={{ ...defaultButtonStyle }}
-    >
-      <Button
-        onClick={() => {
-          reset();
-          dispatch(setSelectedRow(null));
-          dispatch(toggleDrawer("isRequestProspectForm"));
-        }}
-        startIcon={<Add sx={{ mb: 0.2 }} />}
-        sx={{ marginRight: 1, px: 1 }}
-        size="small"
-        className="addRowButtons"
-      >
-        New Request
-      </Button>
-      <Drawer
-        open={isRequestProspectForm}
-        onClose={() => {}}
-        sx={{
-          "& .MuiDrawer-paper": {
-            width: 300,
-            height: "100%",
-            background: "none",
-            bgcolor: "white",
-            ...defaultButtonStyle,
-          },
-        }}
-        anchor="right"
-      >
-        <form
-          style={{ height: "100%" }}
-          onSubmit={handleSubmit(submitAddOrEditHandler)}
+      <Stack alignItems="end" sx={defaultButtonStyle}>
+        <Button
+          onClick={() => {
+            dispatch(setSelectedRow(null));
+            dispatch(toggleDrawer("isRequestProspectForm"));
+          }}
+          startIcon={<Add sx={{ mb: "4px" }} />}
+          size="small"
+          className="primaryButtons"
+          sx={{ width: "18% !important" }}
         >
-          <Stack sx={{ height: "100%" }}>
-            <Box
-              sx={{
-                height: "6%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: theme.palette.primary.main,
-                fontWeight: "bold",
-              }}
-            >
-              {`${selectedRowData?.id ? "Edit" : "New"} Prospect Request`}
-            </Box>
-            <Divider
-              sx={{
-                height: "1.5px",
-                color: theme.palette.secondary.main,
-                bgcolor: theme.palette.secondary.main,
-              }}
-            />
-            <Box
-              sx={{
-                height: "100%",
-                p: 2,
-                display: "flex",
-                justifyContent: "start",
-                flexDirection: "column",
-                gap: 3,
-              }}
-            >
-              <Textfield
-                name="ownersName"
-                control={control}
-                label="Owner Name"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.ownersName}
-                helperText={errors?.ownersName?.message}
-              />
+          Add Request
+        </Button>
+      </Stack>
 
-              <Textfield
-                name="ownersAddress"
-                control={control}
-                label="Owner Address"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.ownersAddress}
-                helperText={errors?.ownersAddress?.message}
-              />
-
-              <Textfield
-                name="phoneNumber"
-                control={control}
-                label="Phone Number"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.phoneNumber}
-                helperText={errors?.phoneNumber?.message}
-              />
-
-              <Textfield
-                name="businessName"
-                control={control}
-                label="Business Name"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.businessName}
-                helperText={errors?.businessName?.message}
-              />
-
-              <Textfield
-                name="storeType"
-                control={control}
-                label="Store Type"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.storeType}
-                helperText={errors?.storeType?.message}
-              />
-            </Box>
-
-            <Divider
-              sx={{
-                height: "1.5px",
-                color: theme.palette.secondary.main,
-                bgcolor: theme.palette.secondary.main,
-              }}
-            />
-            <ButtonGroup sx={{ gap: 1, m: 1, justifyContent: "end" }}>
-              <Button className="primaryButtons" type="submit" tabIndex={0}>
-                Add
-              </Button>
-              <Button
-                className="cancelButtons"
-                onClick={() => dispatch(toggleDrawer("isRequestProspectForm"))}
-                tabIndex={0}
-              >
-                Close
-              </Button>
-            </ButtonGroup>
-          </Stack>
-        </form>
-      </Drawer>
+      <RequestProspectForm />
     </Stack>
   );
 };
@@ -413,11 +205,6 @@ const RequestProspectActions = ({ row }) => {
   const dispatch = useDispatch();
 
   const menuItems = [
-    // {
-    //   type: "view",
-    //   name: "View More",
-    //   icon: <ViewAgenda />,
-    // },
     {
       type: "edit",
       name: "Edit",
@@ -429,10 +216,6 @@ const RequestProspectActions = ({ row }) => {
       icon: <Archive />,
     },
   ];
-
-  // const handleView = () => {
-  //   console.log("View More", row);
-  // };
 
   const handleEdit = () => {
     dispatch(setSelectedRow(row));
@@ -464,9 +247,6 @@ const RequestProspectActions = ({ row }) => {
   };
 
   const handleOnClick = (items) => {
-    // if (items.type === "view") {
-    //   handleView();
-    // } else
     if (items.type === "edit") {
       handleEdit();
     } else if (items.type === "archive") {

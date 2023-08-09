@@ -96,6 +96,14 @@ export const meatTypeSchema = yup
   })
   .required();
 
+export const storeTypeSchema = yup
+  .object()
+  .shape({
+    storeTypeId: yup.string(),
+    storeTypeName: yup.string().required("Store Type Name is required"),
+  })
+  .required();
+
 export const itemsSchema = yup
   .object()
   .shape({
@@ -142,10 +150,10 @@ export const prospectSchema = yup
   .object()
   .shape({
     id: yup.string(),
-    ownersName: yup.string(),
-    ownersAddress: yup.string(),
-    phoneNumber: yup.string(),
-    businessName: yup.string(),
-    storeType: yup.string(),
+    ownersName: yup.string().required("Owner Name is required"),
+    ownersAddress: yup.string().required("Owner Address is required"),
+    phoneNumber: yup.string().required("Phone Number is required"),
+    businessName: yup.string().required("Business Name is required"),
+    storeType: yup.object().required("Store Type is required"),
   })
   .required();

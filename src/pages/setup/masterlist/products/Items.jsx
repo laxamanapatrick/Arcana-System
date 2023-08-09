@@ -436,7 +436,7 @@ const ItemsForm = () => {
     } catch (error) {
       BasicToast("error", `${error?.data?.messages[0]}`, 1500);
       console.log(error);
-      return
+      return;
     }
     reset();
     dispatch(setSelectedRow(null));
@@ -549,7 +549,13 @@ const ItemsForm = () => {
                 getOptionLabel={(option) => option?.uomCode}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 renderInput={(params) => (
-                  <MuiTextField {...params} label="UOM" size="small" />
+                  <MuiTextField
+                    {...params}
+                    label="UOM"
+                    size="small"
+                    error={!!errors?.uom}
+                    helperText={errors?.uom?.message}
+                  />
                 )}
                 disablePortal
                 disableClearable
@@ -566,6 +572,8 @@ const ItemsForm = () => {
                     {...params}
                     label="Product Sub Category"
                     size="small"
+                    error={!!errors?.productSubCategory}
+                    helperText={errors?.productSubCategory?.message}
                   />
                 )}
                 disablePortal
@@ -598,7 +606,13 @@ const ItemsForm = () => {
                 getOptionLabel={(option) => option?.meatTypeName}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 renderInput={(params) => (
-                  <MuiTextField {...params} label="Meat Type" size="small" />
+                  <MuiTextField
+                    {...params}
+                    label="Meat Type"
+                    size="small"
+                    error={!!errors?.meatType}
+                    helperText={errors?.meatType?.message}
+                  />
                 )}
                 disablePortal
                 disableClearable

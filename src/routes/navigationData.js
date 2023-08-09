@@ -75,6 +75,11 @@ export const sidebarNavigationData = [
         name: "Unit of Measurements",
         path: "/setup/uom",
       },
+      {
+        id: 6,
+        name: "Store Type",
+        path: "/setup/store-type",
+      },
     ],
   },
   {

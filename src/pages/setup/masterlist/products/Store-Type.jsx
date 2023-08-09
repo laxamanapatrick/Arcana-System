@@ -22,7 +22,6 @@ import {
   TableRow,
   Typography,
   useTheme,
-  TextField as MuiTextField,
 } from "@mui/material";
 import {
   Archive,
@@ -39,27 +38,23 @@ import {
   BasicToast,
   ModalToast,
 } from "../../../../components/SweetAlert-Components";
-
 import { useDefaultStyles } from "../../../../hooks/useDefaultStyles";
-
 import {
-  useGetProductSubCategoryQuery,
-  useCreateProductSubCategoryMutation,
-  useUpdateProductSubCategoryMutation,
-  useUpdateProductSubCategoryStatusMutation,
-  useGetProductCategoryQuery,
+  useGetStoreTypeQuery,
+  useCreateStoreTypeMutation,
+  useUpdateStoreTypeMutation,
+  useUpdateStoreTypeStatusMutation,
 } from "../../../../services/api";
 import { useDisclosure } from "../../../../hooks/useDisclosure";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleDrawer } from "../../../../services/store/disclosureSlice";
-import { productSubCategorySchema } from "../../../../schema";
-import { AutoComplete, Textfield } from "../../../../components/Fields";
+import { meatTypeSchema, storeTypeSchema } from "../../../../schema";
+import { Textfield } from "../../../../components/Fields";
 import { setSelectedRow } from "../../../../services/store/selectedRowSlice";
-
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-export const ProductSubCategory = () => {
+export const StoreType = () => {
   const theme = useTheme();
   const { defaultPaperHeaderStyle, defaultPaperContentStyle } =
     useDefaultStyles();
@@ -69,14 +64,13 @@ export const ProductSubCategory = () => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(25);
 
-  const { data: productSubCategories, isLoading } =
-    useGetProductSubCategoryQuery({
-      Search: search,
-      Status: status,
-      PageNumber: page + 1,
-      PageSize: pageSize,
-    });
-  const totalCount = productSubCategories?.data?.totalCount || 0;
+  const { data: storeTypes, isLoading } = useGetStoreTypeQuery({
+    Search: search,
+    Status: status,
+    PageNumber: page + 1,
+    PageSize: pageSize,
+  });
+  const totalCount = storeTypes?.data?.totalCount || 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(Number(newPage));
@@ -101,13 +95,13 @@ export const ProductSubCategory = () => {
               <Typography
                 sx={{ fontWeight: "bold", color: theme.palette.secondary.main }}
               >
-                Product Sub Category
+                Store Type
               </Typography>
             </>
             {isLoading ? (
               <Skeleton variant="rectangular" />
             ) : status === true ? (
-              <ProductSubCategoryForm />
+              <StoreTypeForm />
             ) : (
               ""
             )}
@@ -140,34 +134,26 @@ export const ProductSubCategory = () => {
                 <TableHead className="tableHead">
                   <TableRow>
                     <TableCell className="tableHeadCell">
-                      Product Category Name
-                    </TableCell>
-                    <TableCell className="tableHeadCell">
-                      Product Sub Category Name
+                      Store Type Name
                     </TableCell>
                     <TableCell className="tableHeadCell">Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {productSubCategories?.data?.productSubCategories?.map(
-                    (row) => (
-                      <TableRow key={row.id}>
-                        <TableCell
-                          component="th"
-                          scope="row"
-                          className="tableBodyCell"
-                        >
-                          {row.productCategoryName}
-                        </TableCell>
-                        <TableCell className="tableBodyCell">
-                          {row.productSubCategoryName}
-                        </TableCell>
-                        <TableCell className="tableBodyCell">
-                          <ProductSubCategoryActions row={row} />
-                        </TableCell>
-                      </TableRow>
-                    )
-                  )}
+                  {storeTypes?.data?.storeTypes?.map((row) => (
+                    <TableRow key={row.id}>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        className="tableBodyCell"
+                      >
+                        {row.storeTypeName}
+                      </TableCell>
+                      <TableCell className="tableBodyCell">
+                        <StoreTypeActions row={row} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
                 <TableFooter>
                   <TableRow>
@@ -179,7 +165,7 @@ export const ProductSubCategory = () => {
                         25,
                         { label: "All", value: totalCount },
                       ]}
-                      colSpan={3}
+                      colSpan={2}
                       count={totalCount}
                       page={page}
                       rowsPerPage={pageSize}
@@ -201,7 +187,7 @@ export const ProductSubCategory = () => {
           <ZeroRecordsFound
             text={`${
               status ? "No active records" : "No archived records"
-            } for Product Sub Category`}
+            } for Store Type`}
           />
         )}
       </Stack>
@@ -209,9 +195,9 @@ export const ProductSubCategory = () => {
   );
 };
 
-export default ProductSubCategory;
+export default StoreType;
 
-const ProductSubCategoryActions = ({ row }) => {
+const StoreTypeActions = ({ row }) => {
   const { isOpen: isMenu, onToggle: toggleMenu } = useDisclosure();
   const { actionMenuStyle } = useDefaultStyles();
   const anchorRef = useRef();
@@ -241,24 +227,24 @@ const ProductSubCategoryActions = ({ row }) => {
 
   const handleEdit = () => {
     dispatch(setSelectedRow(row));
-    dispatch(toggleDrawer("isProductSubCategoryForm"));
+    dispatch(toggleDrawer("isStoreTypeForm"));
   };
 
-  const [updateProductSubCategoryStatus] =
-    useUpdateProductSubCategoryStatusMutation();
+  const [updateStoreTypeStatus] =
+    useUpdateStoreTypeStatusMutation();
   const handleArchive = () => {
     ModalToast(
-      `You are about to set ${row?.productSubCategoryName} as ${
+      `You are about to set ${row?.storeTypeName} as ${
         row?.isActive ? "inactive" : "active"
       }`,
       "Are you sure you want to proceed?",
       "question"
     ).then((res) => {
       if (res.isConfirmed) {
-        updateProductSubCategoryStatus(row.id);
+        updateStoreTypeStatus(row.id);
         BasicToast(
           "success",
-          `Product Sub Category ${row?.productSubCategoryName} was ${
+          `Store Type ${row?.storeTypeName} was ${
             row?.isActive ? "archived" : "set active"
           }`,
           3500
@@ -312,10 +298,9 @@ const ProductSubCategoryActions = ({ row }) => {
   );
 };
 
-const ProductSubCategoryForm = () => {
+const StoreTypeForm = () => {
   const dispatch = useDispatch();
-  const { data: productCategories } = useGetProductCategoryQuery();
-  const { isProductSubCategoryForm } = useSelector(
+  const { isStoreTypeForm } = useSelector(
     (state) => state.disclosure.drawers
   );
   const { selectedRowData } = useSelector((state) => state.selectedRowData);
@@ -330,65 +315,40 @@ const ProductSubCategoryForm = () => {
     setValue,
     reset,
   } = useForm({
-    resolver: yupResolver(productSubCategorySchema),
+    resolver: yupResolver(storeTypeSchema),
     mode: "onChange",
     defaultValues: {
-      productSubCategoryId: "",
-      productCategory: null,
-      productSubCategoryName: "",
+      storeTypeId: "",
+      storeTypeName: "",
     },
   });
 
   useEffect(() => {
     if (selectedRowData !== null) {
-      setValue("productSubCategoryId", selectedRowData?.id);
-      setValue(
-        "productCategory",
-        productCategories?.data?.result?.find((item) => {
-          if (
-            item?.productCategoryName === selectedRowData?.productCategoryName
-          )
-            return item;
-          return null;
-        })
-      );
-      setValue(
-        "productSubCategoryName",
-        selectedRowData?.productSubCategoryName
-      );
+      setValue("storeTypeId", selectedRowData?.id);
+      setValue("storeTypeName", selectedRowData?.storeTypeName);
     }
 
     return () => {
-      setValue("productSubCategoryId", "");
-      setValue("productCategory", null);
-      setValue("productSubCategoryName", "");
+      setValue("storeTypeId", "");
+      setValue("storeTypeName", "");
     };
   }, [selectedRowData, dispatch]);
 
-  const [createProductSubCategory] = useCreateProductSubCategoryMutation();
-  const [updateProductSubCategory] = useUpdateProductSubCategoryMutation();
+  const [createStoreType] = useCreateStoreTypeMutation();
+  const [updateStoreType] = useUpdateStoreTypeMutation();
   const submitAddOrEditHandler = async (data) => {
-    const addPayload = {
-      productCategoryId: data?.productCategory?.id,
-      productSubCategoryName: data?.productSubCategoryName,
-    };
-    const editPayload = {
-      productSubCategoryId: data?.productSubCategoryId,
-      productCategoryId: data?.productCategory?.id,
-      productSubCategoryName: data?.productSubCategoryName,
-    };
     try {
       if (selectedRowData === null) {
-        await createProductSubCategory(addPayload).unwrap();
+        await createStoreType(data).unwrap();
         BasicToast(
           "success",
-          `Product Sub Category ${data?.productSubCategoryName} was created`,
+          `Store Type ${data?.storeTypeName} was created`,
           1500
         );
       } else {
         if (
-          selectedRowData?.productSubCategoryName ===
-          data?.productSubCategoryName
+          selectedRowData?.storeTypeName === data?.storeTypeName
         ) {
           BasicToast(
             "warning",
@@ -397,25 +357,21 @@ const ProductSubCategoryForm = () => {
             3500
           );
         } else {
-          await updateProductSubCategory({
-            payload: editPayload,
+          await updateStoreType({
+            payload: data,
             id: selectedRowData?.id,
           }).unwrap();
-          BasicToast(
-            "success",
-            `Product Sub Category successfully updated!`,
-            1500
-          );
+          BasicToast("success", `Store Type successfully updated!`, 1500);
         }
       }
     } catch (error) {
       BasicToast("error", `${error?.data?.messages[0]}`, 1500);
       console.log(error);
-      return;
+      return
     }
     reset();
     dispatch(setSelectedRow(null));
-    dispatch(toggleDrawer("isProductSubCategoryForm"));
+    dispatch(toggleDrawer("isStoreTypeForm"));
   };
 
   return (
@@ -424,7 +380,7 @@ const ProductSubCategoryForm = () => {
         onClick={() => {
           reset();
           dispatch(setSelectedRow(null));
-          dispatch(toggleDrawer("isProductSubCategoryForm"));
+          dispatch(toggleDrawer("isStoreTypeForm"));
         }}
         sx={{ marginRight: 1 }}
         size="small"
@@ -433,7 +389,7 @@ const ProductSubCategoryForm = () => {
         Add
       </Button>
       <Drawer
-        open={isProductSubCategoryForm}
+        open={isStoreTypeForm}
         onClose={() => {}}
         sx={{
           "& .MuiDrawer-paper": {
@@ -461,9 +417,7 @@ const ProductSubCategoryForm = () => {
                 fontWeight: "bold",
               }}
             >
-              {`${
-                selectedRowData?.id ? "Edit" : "New"
-              } Product Sub Category Form`}
+              {`${selectedRowData?.id ? "Edit" : "New"} Store Type Form`}
             </Box>
             <Divider
               sx={{
@@ -482,33 +436,14 @@ const ProductSubCategoryForm = () => {
                 gap: 3,
               }}
             >
-              <AutoComplete
-                name="productCategory"
-                control={control}
-                options={productCategories?.data?.result}
-                getOptionLabel={(option) => option?.productCategoryName}
-                isOptionEqualToValue={(option, value) => option.id === value.id}
-                renderInput={(params) => (
-                  <MuiTextField
-                    {...params}
-                    label="Product Category"
-                    size="small"
-                    error={!!errors?.productCategory}
-                    helperText={errors?.productCategory?.message}
-                  />
-                )}
-                disablePortal
-                disableClearable
-              />
-
               <Textfield
-                name="productSubCategoryName"
+                name="storeTypeName"
                 control={control}
-                label="Product Sub Category Name"
+                label="Store Type Name"
                 size="small"
                 autoComplete="off"
-                error={!!errors?.productSubCategoryName}
-                helperText={errors?.productSubCategoryName?.message}
+                error={!!errors?.storeTypeName}
+                helperText={errors?.storeTypeName?.message}
               />
             </Box>
 
@@ -525,9 +460,7 @@ const ProductSubCategoryForm = () => {
               </Button>
               <Button
                 className="cancelButtons"
-                onClick={() =>
-                  dispatch(toggleDrawer("isProductSubCategoryForm"))
-                }
+                onClick={() => dispatch(toggleDrawer("isStoreTypeForm"))}
                 tabIndex={0}
               >
                 Close

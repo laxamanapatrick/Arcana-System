@@ -19,6 +19,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TextField as MuiTextField,
   Typography,
   useTheme,
 } from "@mui/material";
@@ -29,13 +30,15 @@ import {
 import {
   useGetApprovedProspectQuery,
   useCreateUpdateApprovedProspectMutation,
+  useGetStoreTypeQuery,
+  jsonServerApi,
 } from "../../../services/api";
-import { Edit } from "@mui/icons-material";
+import { Edit, List, More } from "@mui/icons-material";
 import { useDefaultStyles } from "../../../hooks/useDefaultStyles";
 import { toggleDrawer } from "../../../services/store/disclosureSlice";
 import { setSelectedRow } from "../../../services/store/selectedRowSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { Textfield } from "../../../components/Fields";
+import { AutoComplete, Textfield } from "../../../components/Fields";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { prospectSchema } from "../../../schema";
@@ -43,6 +46,9 @@ import {
   BasicToast,
   ModalToast,
 } from "../../../components/SweetAlert-Components";
+import { FreebieForm } from "../prospect/freebies/Freebie-Form";
+import { useDisclosure } from "../../../hooks/useDisclosure";
+import { RequestProspectForm } from "./Prospect-Form";
 
 export const ApprovedProspect = ({
   status,
@@ -52,14 +58,17 @@ export const ApprovedProspect = ({
   pageSize,
   setPageSize,
 }) => {
-  const { data: approvedProspects, isLoading } = useGetApprovedProspectQuery({
-    Search: search,
-    Status: status,
-    PageNumber: page + 1,
-    PageSize: pageSize,
-  }, {
-    refetchOnMountOrArgChange: true
-  });
+  const { data: approvedProspects, isLoading } = useGetApprovedProspectQuery(
+    {
+      Search: search,
+      Status: status,
+      PageNumber: page + 1,
+      PageSize: pageSize,
+    },
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
   const totalCount = approvedProspects?.data?.totalCount || 0;
 
   const handleChangePage = (event, newPage) => {
@@ -70,34 +79,13 @@ export const ApprovedProspect = ({
     setPageSize(Number(event.target.value));
   };
 
-  // const [createUpdateApprovedProspectStatus] =
-  //   useCreateUpdateApprovedProspectStatusMutation();
-  // const handleArchiveRestore = (id, isActive) => {
-  //   ModalToast(
-  //     `You are about to set this approved prospect ${
-  //       isActive ? "inactive" : "active"
-  //     }`,
-  //     "Are you sure you want to proceed?",
-  //     "question"
-  //   ).then((res) => {
-  //     if (res.isConfirmed) {
-  //       createUpdateApprovedProspectStatus(id);
-  //       BasicToast(
-  //         "success",
-  //         `Approved Prospect was ${isActive ? "archived" : "set active"}`,
-  //         3500
-  //       );
-  //     }
-  //   });
-  // };
-
   return (
     <Stack alignItems="center">
       {isLoading ? (
         <LoadingData />
       ) : totalCount > 0 ? (
         // Table
-        <TableContainer component={Paper} sx={{ maxHeight: "590px" }}>
+        <TableContainer component={Paper} sx={{ maxHeight: "560px" }}>
           <Table className="table" aria-label="custom pagination table">
             <TableHead className="tableHead">
               <TableRow>
@@ -105,10 +93,14 @@ export const ApprovedProspect = ({
                 <TableCell className="tableHeadCell">Owner Address</TableCell>
                 <TableCell className="tableHeadCell">Phone Number</TableCell>
                 <TableCell className="tableHeadCell">Business Name</TableCell>
-                <TableCell className="tableHeadCell">Edit Details</TableCell>
+                <TableCell className="tableHeadCell">Store Type</TableCell>
+                <TableCell className="tableHeadCell">Actions</TableCell>
+                {/* <TableCell className="tableHeadCell">
+                  Request Freebies
+                </TableCell> */}
               </TableRow>
             </TableHead>
-            <TableBody sx={{ maxHeight: "560px" }}>
+            <TableBody sx={{ maxHeight: "520px" }}>
               {approvedProspects?.data?.requestedProspect?.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell
@@ -128,7 +120,10 @@ export const ApprovedProspect = ({
                     {row?.businessName}
                   </TableCell>
                   <TableCell className="tableBodyCell">
-                    <ApprovedProspectForm row={row} />
+                    {row?.storeType}
+                  </TableCell>
+                  <TableCell className="tableBodyCell">
+                    <ApprovedPospectActions row={row} />
                   </TableCell>
                 </TableRow>
               ))}
@@ -171,219 +166,98 @@ export const ApprovedProspect = ({
           }
         />
       )}
+       <RequestProspectForm />
     </Stack>
   );
 };
 
-const ApprovedProspectForm = ({ row }) => {
-  const theme = useTheme();
+const ApprovedPospectActions = ({ row }) => {
+  const { isOpen: isMenu, onToggle: toggleMenu } = useDisclosure();
+  const { actionMenuStyle } = useDefaultStyles();
+  const anchorRef = useRef();
   const dispatch = useDispatch();
-  const { defaultButtonStyle } = useDefaultStyles();
-  const { isApprovedProspectForm } = useSelector(
-    (state) => state.disclosure.drawers
-  );
-  const { selectedRowData } = useSelector((state) => state.selectedRowData);
 
-  const {
-    formState: { errors },
-    control,
-    setValue,
-    reset,
-    handleSubmit,
-  } = useForm({
-    resolver: yupResolver(prospectSchema),
-    mode: "onChange",
-    defaultValues: {
-      clientId: "",
-      ownersName: "",
-      ownersAddress: "",
-      phoneNumber: "",
-      businessName: "",
-      storeType: "",
+  const menuItems = [
+    {
+      type: "edit",
+      name: "Edit",
+      icon: <Edit />,
     },
-  });
+    {
+      type: "freebie",
+      name: "Add Freebie",
+      icon: <List />,
+    },
+  ];
 
-  useEffect(() => {
-    if (selectedRowData !== null) {
-      setValue("clientId", Number(selectedRowData?.id));
-      setValue("ownersName", selectedRowData?.ownersName);
-      setValue("ownersAddress", selectedRowData?.address);
-      setValue("phoneNumber", selectedRowData?.phoneNumber);
-      setValue("businessName", selectedRowData?.businessName);
-      setValue("storeType", selectedRowData?.storeType);
+  const handleEdit = () => {
+    dispatch(setSelectedRow(row));
+    dispatch(toggleDrawer("isRequestProspectForm"));
+  };
+
+  const handleFreebie = () => {
+    dispatch(setSelectedRow(row));
+    dispatch(toggleDrawer("isFreebieForm"));
+  };
+
+  // const [createUpdateApprovedProspectStatus] =
+  //   useCreateUpdateApprovedProspectStatusMutation();
+  // const handleArchiveRestore = (id, isActive) => {
+  //   ModalToast(
+  //     `You are about to set this approved prospect ${
+  //       isActive ? "inactive" : "active"
+  //     }`,
+  //     "Are you sure you want to proceed?",
+  //     "question"
+  //   ).then((res) => {
+  //     if (res.isConfirmed) {
+  //       createUpdateApprovedProspectStatus(id);
+  //       BasicToast(
+  //         "success",
+  //         `Approved Prospect was ${isActive ? "archived" : "set active"}`,
+  //         3500
+  //       );
+  //     }
+  //   });
+  // };
+
+  const handleOnClick = (items) => {
+    if (items.type === "edit") {
+      handleEdit();
+    } else if (items.type === "freebie") {
+      handleFreebie();
     }
-
-    return () => {
-      setValue("clientId", "");
-      setValue("ownersName", "");
-      setValue("ownersAddress", "");
-      setValue("phoneNumber", "");
-      setValue("businessName", "");
-      setValue("storeType", "");
-    };
-  }, [dispatch, selectedRowData]);
-
-  const [createUpdateApprovedProspect] =
-    useCreateUpdateApprovedProspectMutation();
-  const submitAddOrEditHandler = (data) => {
-    ModalToast(
-      "Edited request will be subject again for approval.",
-      "Are you sure you want to proceed?",
-      "question"
-    ).then(async (res) => {
-      if (res.isConfirmed) {
-        try {
-          if (selectedRowData?.id) {
-            await createUpdateApprovedProspect({
-              payload: data,
-              id: selectedRowData?.id,
-            }).unwrap();
-            BasicToast("success", `Prospect Request Updated`, 1500);
-          }
-        } catch (error) {
-          BasicToast("error", `${error?.data?.messages[0]}`, 1500);
-          console.log(error);
-          return;
-        }
-        reset();
-        dispatch(toggleDrawer("isApprovedProspectForm"));
-      }
-    });
+    toggleMenu();
   };
 
   return (
-    <Stack width="auto" display="flex" alignItems="start">
-      <IconButton
-        onClick={() => {
-          dispatch(setSelectedRow(row));
-          dispatch(toggleDrawer("isApprovedProspectForm"));
-        }}
-        sx={{ marginRight: 1, px: 1 }}
-        size="small"
-      >
-        <Edit />
+    <>
+      <IconButton ref={anchorRef} onClick={toggleMenu}>
+        <More />
       </IconButton>
-      <Drawer
-        open={isApprovedProspectForm}
-        onClose={() => {}}
-        sx={{
-          "& .MuiDrawer-paper": {
-            width: 300,
-            height: "100%",
-            background: "none",
-            bgcolor: "white",
-            ...defaultButtonStyle,
+      <Menu
+        anchorEl={anchorRef.current}
+        open={isMenu}
+        onClose={toggleMenu}
+        PaperProps={{
+          style: {
+            maxHeight: 45 * 4.5,
+            width: "20ch",
+            ...actionMenuStyle,
           },
         }}
-        anchor="right"
       >
-        <form
-          style={{ height: "100%" }}
-          onSubmit={handleSubmit(submitAddOrEditHandler)}
-        >
-          <Stack sx={{ height: "100%" }}>
-            <Box
-              sx={{
-                height: "6%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: theme.palette.primary.main,
-                fontWeight: "bold",
-              }}
-            >
-              {`Edit Prospect Request`}
-            </Box>
-            <Divider
-              sx={{
-                height: "1.5px",
-                color: theme.palette.secondary.main,
-                bgcolor: theme.palette.secondary.main,
-              }}
-            />
-            <Box
-              sx={{
-                height: "100%",
-                p: 2,
-                display: "flex",
-                justifyContent: "start",
-                flexDirection: "column",
-                gap: 3,
-              }}
-            >
-              <Textfield
-                name="ownersName"
-                control={control}
-                label="Owner Name"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.ownersName}
-                helperText={errors?.ownersName?.message}
-              />
-
-              <Textfield
-                name="ownersAddress"
-                control={control}
-                label="Owner Address"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.ownersAddress}
-                helperText={errors?.ownersAddress?.message}
-              />
-
-              <Textfield
-                name="phoneNumber"
-                control={control}
-                label="Phone Number"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.phoneNumber}
-                helperText={errors?.phoneNumber?.message}
-              />
-
-              <Textfield
-                name="businessName"
-                control={control}
-                label="Business Name"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.businessName}
-                helperText={errors?.businessName?.message}
-              />
-
-              <Textfield
-                name="storeType"
-                control={control}
-                label="Store Type"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.storeType}
-                helperText={errors?.storeType?.message}
-              />
-            </Box>
-
-            <Divider
-              sx={{
-                height: "1.5px",
-                color: theme.palette.secondary.main,
-                bgcolor: theme.palette.secondary.main,
-              }}
-            />
-            <ButtonGroup sx={{ gap: 1, m: 1, justifyContent: "end" }}>
-              <Button className="primaryButtons" type="submit" tabIndex={0}>
-                Add
-              </Button>
-              <Button
-                className="cancelButtons"
-                onClick={() => dispatch(toggleDrawer("isApprovedProspectForm"))}
-                tabIndex={0}
-              >
-                Close
-              </Button>
-            </ButtonGroup>
-          </Stack>
-        </form>
-      </Drawer>
-    </Stack>
+        {menuItems?.map((items) => (
+          <MenuItem
+            onClick={() => handleOnClick(items)}
+            key={items.type}
+            sx={{ gap: 1, textAlign: "center" }}
+          >
+            {items.icon}
+            {items.name}
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
   );
 };

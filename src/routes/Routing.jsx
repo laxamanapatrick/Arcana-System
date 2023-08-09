@@ -26,6 +26,7 @@ import { Prospect } from "../pages/customer-registration/prospect/Prospect";
 import Approval from "../pages/approval";
 import { ProspectApproval } from "../pages/approval/prospect-approval/Prospect-Approval";
 import { FreebieApproval } from "../pages/approval/freebie-approval/Freebie-Approval";
+import StoreType from "../pages/setup/masterlist/products/Store-Type";
 
 const Routing = () => {
   let routing = useRoutes([
@@ -90,6 +91,10 @@ const Routing = () => {
             {
               path: "uom",
               element: <UOM />,
+            },
+            {
+              path: "store-type",
+              element: <StoreType />,
             },
           ],
         },

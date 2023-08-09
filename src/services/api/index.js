@@ -397,6 +397,42 @@ export const jsonServerApi = createApi({
       invalidatesTags: ["Items"],
     }),
 
+    // Store Type
+
+    getStoreType: builder.query({
+      query: (params) => ({
+        url: `StoreType/GetAllStoreTypes`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Store Type"],
+    }),
+    createStoreType: builder.mutation({
+      query: (payload) => ({
+        url: `StoreType/AddNewStoreType`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Store Type"],
+    }),
+    updateStoreType: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `StoreType/UpdateStoreType/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Store Type"],
+    }),
+    updateStoreTypeStatus: builder.mutation({
+      query: (id) => ({
+        url: `StoreType/UpdateStoreTypeStatus/${encodeURIComponent(
+          id
+        )}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["Store Type"],
+    }),
+
     // Discount
 
     getDiscount: builder.query({
@@ -712,6 +748,12 @@ export const {
   useCreateItemsMutation,
   useUpdateItemsMutation,
   useUpdateItemsStatusMutation,
+
+  //Store Type
+  useGetStoreTypeQuery,
+  useCreateStoreTypeMutation,
+  useUpdateStoreTypeMutation,
+  useUpdateStoreTypeStatusMutation,
 
   //Discount
   useGetDiscountQuery,

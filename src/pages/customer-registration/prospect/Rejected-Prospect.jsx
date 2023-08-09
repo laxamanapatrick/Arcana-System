@@ -21,10 +21,12 @@ import {
   ModalToast,
 } from "../../../components/SweetAlert-Components";
 import {
-  useCreateUpdateRejectedProspectStatusMutation,
+  jsonServerApi,
+  // useCreateUpdateRejectedProspectStatusMutation,
   useGetRejectedProspectQuery,
 } from "../../../services/api";
 import { Archive, Restore } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
 
 export const RejectedProspect = ({
   status,
@@ -34,6 +36,7 @@ export const RejectedProspect = ({
   pageSize,
   setPageSize,
 }) => {
+  const dispatch = useDispatch()
   const { data: rejectedProspects, isLoading } = useGetRejectedProspectQuery({
     Search: search,
     Status: status,
@@ -50,26 +53,27 @@ export const RejectedProspect = ({
     setPageSize(Number(event.target.value));
   };
 
-  const [createUpdateRejectedProspectStatus] =
-    useCreateUpdateRejectedProspectStatusMutation();
-  const handleArchiveRestore = (id, isActive) => {
-    ModalToast(
-      `You are about to set this rejected prospect ${
-        isActive ? "inactive" : "active"
-      }`,
-      "Are you sure you want to proceed?",
-      "question"
-    ).then((res) => {
-      if (res.isConfirmed) {
-        createUpdateRejectedProspectStatus(id);
-        BasicToast(
-          "success",
-          `Rejected Prospect was ${isActive ? "archived" : "set active"}`,
-          3500
-        );
-      }
-    });
-  };
+  // const [createUpdateRejectedProspectStatus] =
+  //   useCreateUpdateRejectedProspectStatusMutation();
+  // const handleArchiveRestore = (id, isActive) => {
+  //   ModalToast(
+  //     `You are about to set this rejected prospect ${
+  //       isActive ? "inactive" : "active"
+  //     }`,
+  //     "Are you sure you want to proceed?",
+  //     "question"
+  //   ).then((res) => {
+  //     if (res.isConfirmed) {
+  //       createUpdateRejectedProspectStatus(id);
+  //       BasicToast(
+  //         "success",
+  //         `Rejected Prospect was ${isActive ? "archived" : "set active"}`,
+  //         3500
+  //       );
+  //     }
+  //   });
+  //   dispatch(jsonServerApi.util.invalidateTags(["Requested Prospect"]))
+  // };
 
   return (
     <Stack alignItems="center">
@@ -77,7 +81,7 @@ export const RejectedProspect = ({
         <LoadingData />
       ) : totalCount > 0 ? (
         // Table
-        <TableContainer component={Paper} sx={{ maxHeight: "590px" }}>
+        <TableContainer component={Paper} sx={{ maxHeight: "560px" }}>
           <Table className="table" aria-label="custom pagination table">
             <TableHead className="tableHead">
               <TableRow>
@@ -86,12 +90,12 @@ export const RejectedProspect = ({
                 <TableCell className="tableHeadCell">Phone Number</TableCell>
                 <TableCell className="tableHeadCell">Business Name</TableCell>
                 <TableCell className="tableHeadCell">Reason</TableCell>
-                <TableCell className="tableHeadCell">
+                {/* <TableCell className="tableHeadCell">
                   {status ? "Archive" : "Restore"}
-                </TableCell>
+                </TableCell> */}
               </TableRow>
             </TableHead>
-            <TableBody sx={{ maxHeight: "560px" }}>
+            <TableBody sx={{ maxHeight: "520px" }}>
               {rejectedProspects?.data?.requestedProspect?.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell
@@ -111,13 +115,13 @@ export const RejectedProspect = ({
                     {row?.businessName}
                   </TableCell>
                   <TableCell className="tableBodyCell">{row?.reason}</TableCell>
-                  <TableCell className="tableBodyCell">
+                  {/* <TableCell className="tableBodyCell">
                     <IconButton
                       onClick={() => handleArchiveRestore(row.id, row.isActive)}
                     >
                       {status ? <Archive /> : <Restore />}
                     </IconButton>
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
               ))}
             </TableBody>

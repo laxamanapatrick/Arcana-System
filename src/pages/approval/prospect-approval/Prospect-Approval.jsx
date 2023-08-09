@@ -26,6 +26,7 @@ import {
   useGetRequestedProspectQuery,
   useCreateApproveProspectRequestMutation,
   useCreateRejectProspectRequestMutation,
+  jsonServerApi,
 } from "../../../services/api";
 import { ApprovalTwoTone, More, Remove, ViewAgenda } from "@mui/icons-material";
 import { useDefaultStyles } from "../../../hooks/useDefaultStyles";
@@ -94,7 +95,7 @@ export const ProspectApproval = () => {
         ) : totalCount > 0 ? (
           <Paper elevation={20} sx={defaultPaperContentStyle}>
             {/* Table */}
-            <TableContainer component={Paper} sx={{ maxHeight: "590px" }}>
+            <TableContainer component={Paper} sx={{ maxHeight: "560px" }}>
               <Table className="table" aria-label="custom pagination table">
                 <TableHead className="tableHead">
                   <TableRow>
@@ -108,10 +109,13 @@ export const ProspectApproval = () => {
                     <TableCell className="tableHeadCell">
                       Business Name
                     </TableCell>
+                    <TableCell className="tableHeadCell">
+                      Store Type
+                    </TableCell>
                     <TableCell className="tableHeadCell">Actions</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody sx={{ maxHeight: "560px" }}>
+                <TableBody sx={{ maxHeight: "520px" }}>
                   {requestedProspects?.data?.requestedProspect?.map((row) => (
                     <TableRow key={row.id}>
                       <TableCell
@@ -131,6 +135,9 @@ export const ProspectApproval = () => {
                         {row?.businessName}
                       </TableCell>
                       <TableCell className="tableBodyCell">
+                        {row?.storeType}
+                      </TableCell>
+                      <TableCell className="tableBodyCell">
                         <ProspectApprovalActions row={row} />
                       </TableCell>
                     </TableRow>
@@ -146,7 +153,7 @@ export const ProspectApproval = () => {
                         25,
                         { label: "All", value: totalCount },
                       ]}
-                      colSpan={5}
+                      colSpan={6}
                       count={totalCount}
                       page={page}
                       rowsPerPage={pageSize}
@@ -173,6 +180,7 @@ export const ProspectApproval = () => {
 };
 
 const ProspectApprovalActions = ({ row }) => {
+  const dispatch = useDispatch()
   const { isOpen: isMenu, onToggle: toggleMenu } = useDisclosure();
   const { actionMenuStyle } = useDefaultStyles();
   const anchorRef = useRef();
@@ -208,6 +216,7 @@ const ProspectApprovalActions = ({ row }) => {
         BasicToast("success", `Prospect ${row?.ownersName} approved`, 3500);
       }
     });
+    dispatch(jsonServerApi.util.invalidateTags(["Approved Prospect"]))
   };
 
   const formatOptionsForRemarksToast = (options) => {
@@ -244,6 +253,7 @@ const ProspectApprovalActions = ({ row }) => {
         BasicToast("success", `Prospect ${row?.ownersName} rejected`, 3500);
       }
     });
+    dispatch(jsonServerApi.util.invalidateTags(["Rejected Prospect"]))
   };
 
   const handleOnClick = (items) => {

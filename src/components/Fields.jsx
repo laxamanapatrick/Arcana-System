@@ -16,6 +16,7 @@ export const Textfield = ({ name, control, ...textfield }) => {
 
         return (
           <TextField
+            fullWidth
             {...textfield}
             inputRef={ref}
             value={value}

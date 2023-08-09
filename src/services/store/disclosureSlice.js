@@ -11,11 +11,13 @@ const initialState = {
     isUOMForm: false,
     isProductSubCategoryForm: false,
     isMeatTypeForm: false,
+    isStoreTypeForm: false,
     isItemsForm: false,
     isDiscountForm: false,
     isTermDaysForm: false,
     isRequestProspectForm: false,
-    isApprovedProspectForm: false
+    isApprovedProspectForm: false,
+    isFreebieForm: false,
   },
   modals: {
     isTagging: false,
