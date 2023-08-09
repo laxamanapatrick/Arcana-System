@@ -65,99 +65,108 @@ export const ProspectApproval = () => {
   return (
     <>
       <Stack height="100%" maxHeight="100%" width="100%">
-      <Paper elevation={1} sx={defaultPaperHeaderStyle}>
-        <Stack flexDirection="row" alignItems="center" gap={0.5}>
-          <>
-            <Badge badgeContent={totalCount} color="primary">
-              <Typography
-                sx={{ fontWeight: "bold", color: theme.palette.secondary.main }}
-              >
-                Prospect Approval
-              </Typography>
-            </Badge>
-          </>
-        </Stack>
-        <Stack
-          width="auto"
-          flexDirection="row"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <SearchField onChange={(e) => setSearch(e.target.value)} />
-        </Stack>
-      </Paper>
-      {isLoading ? (
-        <LoadingData />
-      ) : totalCount > 0 ? (
-        <Paper elevation={20} sx={defaultPaperContentStyle}>
-          {/* Table */}
-          <TableContainer component={Paper} sx={{ maxHeight: "590px" }}>
-            <Table className="table" aria-label="custom pagination table">
-              <TableHead className="tableHead">
-                <TableRow>
-                  <TableCell className="tableHeadCell">Owner Name</TableCell>
-                  <TableCell className="tableHeadCell">Owner Address</TableCell>
-                  <TableCell className="tableHeadCell">Phone Number</TableCell>
-                  <TableCell className="tableHeadCell">Business Name</TableCell>
-                  <TableCell className="tableHeadCell">Actions</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody sx={{ maxHeight: "560px" }}>
-                {requestedProspects?.data?.requestedProspect?.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      className="tableBodyCell"
-                    >
-                      {row?.ownersName}
-                    </TableCell>
-                    <TableCell className="tableBodyCell">
-                      {row?.address}
-                    </TableCell>
-                    <TableCell className="tableBodyCell">
-                      {row?.phoneNumber}
-                    </TableCell>
-                    <TableCell className="tableBodyCell">
-                      {row?.businessName}
-                    </TableCell>
-                    <TableCell className="tableBodyCell">
-                      <ProspectApprovalActions row={row} />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TablePagination
-                    className="tablePagination"
-                    rowsPerPageOptions={[
-                      5,
-                      10,
-                      25,
-                      { label: "All", value: totalCount },
-                    ]}
-                    colSpan={5}
-                    count={totalCount}
-                    page={page}
-                    rowsPerPage={pageSize}
-                    SelectProps={{
-                      inputProps: {
-                        "aria-label": "rows per page",
-                      },
-                      native: true,
-                    }}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </TableContainer>
+        <Paper elevation={1} sx={defaultPaperHeaderStyle}>
+          <Stack flexDirection="row" alignItems="center" gap={0.5}>
+            <>
+              <Badge badgeContent={totalCount} color="primary">
+                <Typography
+                  sx={{
+                    fontWeight: "bold",
+                    color: theme.palette.secondary.main,
+                  }}
+                >
+                  Prospect Approval
+                </Typography>
+              </Badge>
+            </>
+          </Stack>
+          <Stack
+            width="auto"
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <SearchField onChange={(e) => setSearch(e.target.value)} />
+          </Stack>
         </Paper>
-      ) : (
-        <ZeroRecordsFound text="No pending requests" />
-      )}
+        {isLoading ? (
+          <LoadingData />
+        ) : totalCount > 0 ? (
+          <Paper elevation={20} sx={defaultPaperContentStyle}>
+            {/* Table */}
+            <TableContainer component={Paper} sx={{ maxHeight: "590px" }}>
+              <Table className="table" aria-label="custom pagination table">
+                <TableHead className="tableHead">
+                  <TableRow>
+                    <TableCell className="tableHeadCell">Owner Name</TableCell>
+                    <TableCell className="tableHeadCell">
+                      Owner Address
+                    </TableCell>
+                    <TableCell className="tableHeadCell">
+                      Phone Number
+                    </TableCell>
+                    <TableCell className="tableHeadCell">
+                      Business Name
+                    </TableCell>
+                    <TableCell className="tableHeadCell">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody sx={{ maxHeight: "560px" }}>
+                  {requestedProspects?.data?.requestedProspect?.map((row) => (
+                    <TableRow key={row.id}>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        className="tableBodyCell"
+                      >
+                        {row?.ownersName}
+                      </TableCell>
+                      <TableCell className="tableBodyCell">
+                        {row?.address}
+                      </TableCell>
+                      <TableCell className="tableBodyCell">
+                        {row?.phoneNumber}
+                      </TableCell>
+                      <TableCell className="tableBodyCell">
+                        {row?.businessName}
+                      </TableCell>
+                      <TableCell className="tableBodyCell">
+                        <ProspectApprovalActions row={row} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      className="tablePagination"
+                      rowsPerPageOptions={[
+                        5,
+                        10,
+                        25,
+                        { label: "All", value: totalCount },
+                      ]}
+                      colSpan={5}
+                      count={totalCount}
+                      page={page}
+                      rowsPerPage={pageSize}
+                      SelectProps={{
+                        inputProps: {
+                          "aria-label": "rows per page",
+                        },
+                        native: true,
+                      }}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </TableContainer>
+          </Paper>
+        ) : (
+          <ZeroRecordsFound text="No pending requests" />
+        )}
       </Stack>
     </>
   );
@@ -201,25 +210,30 @@ const ProspectApprovalActions = ({ row }) => {
     });
   };
 
+  const formatOptionsForRemarksToast = (options) => {
+    return options.reduce((formattedOptions, option) => {
+      formattedOptions[option.name] = option.name;
+      return formattedOptions;
+    }, {});
+  };
+
+  const temporaryInputOptions = [
+    { id: 1, name: "Invalid Address" },
+    { id: 2, name: "Invalid Contact Number" },
+    { id: 3, name: "No DTI Permit" },
+  ];
+
+  const formattedOptions = formatOptionsForRemarksToast(temporaryInputOptions);
+
   const [createRejectProspectRequest] =
     useCreateRejectProspectRequestMutation();
   const handleReject = () => {
-    // ModalToast(
-    //   `You are about to reject the request for prospect ${row?.ownersName}`,
-    //   "Are you sure you want to proceed?",
-    //   "question"
-    // ).then((res) => {
-    //   if (res.isConfirmed) {
-    //     createRejectProspectRequest(row.id);
-    //     BasicToast("success", `Prospect ${row?.ownersName} rejected`, 3500);
-    //   }
-    // });
-
     RemarksToast(
       "Reject Prospect",
       "You are about to reject this prospect.",
       "info",
-      "",
+      "select",
+      formattedOptions,
       "Please provide a reason."
     ).then((res) => {
       if (res.isConfirmed) {

@@ -48,19 +48,24 @@ export const RemarksToast = (
   text,
   icon,
   inputType,
-  // inputOptions,
+  inputOptions,
   inputPlaceholder,
   confirmColor,
   cancelColor,
   confirmButtonText
 ) => {
+  const defaultInputType = inputType || "text";
+
+  const inputConfig =
+    inputType === "select"
+      ? { input: "select", inputOptions }
+      : { input: defaultInputType };
+
   return Swal.fire({
     title: title ? title : "Submit your remarks",
     text: text ? text : "",
     icon: icon ? icon : "question",
-    input: inputType ? inputType : "text",
-    // input: "select",
-    // inputOptions: inputOptions ? inputOptions : {},
+    ...inputConfig,
     inputPlaceholder: inputPlaceholder
       ? inputPlaceholder
       : "Enter your reason here...",
@@ -70,7 +75,10 @@ export const RemarksToast = (
     confirmButtonText: confirmButtonText ? confirmButtonText : "Submit",
     showLoaderOnConfirm: true,
     preConfirm: (remarks) => {
-      if (!remarks) {
+      if (inputType === "select" && !remarks) {
+        Swal.showValidationMessage("Please select a reason!");
+        return false;
+      } else if (defaultInputType === "text" && !remarks) {
         Swal.showValidationMessage("This field is required!");
         return false;
       }
