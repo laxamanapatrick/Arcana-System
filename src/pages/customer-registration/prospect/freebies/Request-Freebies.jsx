@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Box,
-  Button,
-  ButtonGroup,
+  // Box,
+  // Button,
+  // ButtonGroup,
   Checkbox,
-  Divider,
-  Drawer,
+  // Divider,
+  // Drawer,
   IconButton,
-  Menu,
-  MenuItem,
+  // Menu,
+  // MenuItem,
   Paper,
   Stack,
   Table,
@@ -29,24 +29,32 @@ import {
 } from "../../../../components/Lottie-Components";
 import {
   useGetRequestedFreebieQuery,
-  useCreateRequestFreebieMutation,
-  useCreateUpdateRequestFreebieMutation,
+  // useCreateRequestFreebieMutation,
+  // useCreateUpdateRequestFreebieMutation,
 } from "../../../../services/api";
-import moment from "moment/moment";
-import { Add, Archive, Edit, More } from "@mui/icons-material";
-import { useDefaultStyles } from "../../../../hooks/useDefaultStyles";
+// import moment from "moment/moment";
+import {
+  ProductionQuantityLimits,
+  // Add, Archive, Edit, More,
+  // ViewAgenda
+} from "@mui/icons-material";
+// import { useDefaultStyles } from "../../../../hooks/useDefaultStyles";
 import { toggleDrawer } from "../../../../services/store/disclosureSlice";
 import { setSelectedRow } from "../../../../services/store/selectedRowSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { Textfield } from "../../../../components/Fields";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { prospectSchema } from "../../../../schema";
 import {
-  BasicToast,
-  ModalToast,
-} from "../../../../components/SweetAlert-Components";
-import { useDisclosure } from "../../../../hooks/useDisclosure";
+  useDispatch,
+  // useSelector
+} from "react-redux";
+// import { Textfield } from "../../../../components/Fields";
+// import { useForm } from "react-hook-form";
+// import { yupResolver } from "@hookform/resolvers/yup";
+// import { prospectSchema } from "../../../../schema";
+// import {
+//   BasicToast,
+//   ModalToast,
+// } from "../../../../components/SweetAlert-Components";
+// import { useDisclosure } from "../../../../hooks/useDisclosure";
+import { FreebieForm } from "./Freebie-Form";
 
 export const RequestFreebies = () => {
   const theme = useTheme();
@@ -100,23 +108,27 @@ export const RequestFreebies = () => {
           </Typography>
         </Stack>
       </Stack>
-      {isLoading ? (
-        <LoadingData />
-      ) : totalCount > 0 ? (
-        <>
-          {/* Table */}
-          <TableContainer component={Paper} sx={{ maxHeight: "590px" }}>
+      <Stack alignItems="center" mb={2}>
+        {isLoading ? (
+          <LoadingData />
+        ) : totalCount > 0 ? (
+          <TableContainer component={Paper}>
             <Table className="table" aria-label="custom pagination table">
               <TableHead className="tableHead">
                 <TableRow>
                   <TableCell className="tableHeadCell">Owner Name</TableCell>
                   <TableCell className="tableHeadCell">Owner Address</TableCell>
                   <TableCell className="tableHeadCell">Phone Number</TableCell>
-                  <TableCell className="tableHeadCell">Business Name</TableCell>
-                  <TableCell className="tableHeadCell">Actions</TableCell>
+                  <TableCell className="tableHeadCell">
+                    Transaction Number
+                  </TableCell>
+                  <TableCell className="tableHeadCell">
+                    {/* Actions */}
+                    Freebies
+                  </TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody sx={{ maxHeight: "560px" }}>
+              <TableBody>
                 {requestedFreebies?.data?.freebieRequest?.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell
@@ -127,13 +139,13 @@ export const RequestFreebies = () => {
                       {row?.ownersName}
                     </TableCell>
                     <TableCell className="tableBodyCell">
-                      {row?.address}
+                      {row?.ownersAddress}
                     </TableCell>
                     <TableCell className="tableBodyCell">
                       {row?.phoneNumber}
                     </TableCell>
                     <TableCell className="tableBodyCell">
-                      {row?.businessName}
+                      {row?.transactionNumber}
                     </TableCell>
                     <TableCell className="tableBodyCell">
                       <RequestFreebiesActions row={row} />
@@ -168,317 +180,53 @@ export const RequestFreebies = () => {
               </TableFooter>
             </Table>
           </TableContainer>
-        </>
-      ) : (
-        <ZeroRecordsFound
-          text={`${
-            status ? "No active records" : "No archived records"
-          } for Freebie Requests`}
-        />
-      )}
-
-      <Box mt={2}>{status && <RequestFreebiesForm />}</Box>
-    </Stack>
-  );
-};
-
-const RequestFreebiesForm = () => {
-  const theme = useTheme();
-  const dispatch = useDispatch();
-  const { defaultButtonStyle } = useDefaultStyles();
-  const { isRequestFreebiesForm } = useSelector(
-    (state) => state.disclosure.drawers
-  );
-  const { selectedRowData } = useSelector((state) => state.selectedRowData);
-
-  const {
-    formState: { errors },
-    control,
-    setValue,
-    reset,
-    handleSubmit,
-  } = useForm({
-    resolver: yupResolver(prospectSchema),
-    mode: "onChange",
-    defaultValues: {
-      clientId: "",
-      ownersName: "",
-      ownersAddress: "",
-      phoneNumber: "",
-      businessName: "",
-      storeType: "",
-    },
-  });
-
-  useEffect(() => {
-    if (selectedRowData !== null) {
-      setValue("clientId", Number(selectedRowData?.id));
-      setValue("ownersName", selectedRowData?.ownersName);
-      setValue("ownersAddress", selectedRowData?.address);
-      setValue("phoneNumber", selectedRowData?.phoneNumber);
-      setValue("businessName", selectedRowData?.businessName);
-      setValue("storeType", selectedRowData?.storeType);
-    }
-
-    return () => {
-      setValue("clientId", "");
-      setValue("ownersName", "");
-      setValue("ownersAddress", "");
-      setValue("phoneNumber", "");
-      setValue("businessName", "");
-      setValue("storeType", "");
-    };
-  }, [selectedRowData, dispatch]);
-
-  const [createRequestFreebies] = useCreateRequestFreebieMutation();
-  const [createUpdateRequestFreebies] =
-    useCreateUpdateRequestFreebieMutation();
-  const submitAddOrEditHandler = async (data) => {
-    try {
-      if (selectedRowData === null) {
-        delete data["clientId"];
-        await createRequestFreebies(data).unwrap();
-        BasicToast(
-          "success",
-          `Prospect ${data?.ownersName} was requested`,
-          1500
-        );
-        data["clientId"] = "";
-      } else {
-        await createUpdateRequestFreebies({
-          payload: data,
-          id: selectedRowData?.id,
-        }).unwrap();
-        BasicToast("success", `Prospect Request Updated`, 1500);
-      }
-    } catch (error) {
-      BasicToast("error", `${error?.data?.messages[0]}`, 1500);
-      console.log(error);
-      return;
-    }
-    reset();
-    dispatch(setSelectedRow(null));
-    dispatch(toggleDrawer("isRequestFreebiesForm"));
-  };
-
-  return (
-    <Stack
-      width="auto"
-      flexDirection="row"
-      justifyContent="end"
-      sx={{ ...defaultButtonStyle }}
-    >
-      <Button
-        onClick={() => {
-          reset();
-          dispatch(setSelectedRow(null));
-          dispatch(toggleDrawer("isRequestFreebiesForm"));
-        }}
-        startIcon={<Add sx={{ mb: 0.2 }} />}
-        sx={{ marginRight: 1, px: 1 }}
-        size="small"
-        className="addRowButtons"
-      >
-        New Request
-      </Button>
-      <Drawer
-        open={isRequestFreebiesForm}
-        onClose={() => {}}
-        sx={{
-          "& .MuiDrawer-paper": {
-            width: 300,
-            height: "100%",
-            background: "none",
-            bgcolor: "white",
-            ...defaultButtonStyle,
-          },
-        }}
-        anchor="right"
-      >
-        <form
-          style={{ height: "100%" }}
-          onSubmit={handleSubmit(submitAddOrEditHandler)}
-        >
-          <Stack sx={{ height: "100%" }}>
-            <Box
-              sx={{
-                height: "6%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: theme.palette.primary.main,
-                fontWeight: "bold",
-              }}
-            >
-              {`${selectedRowData?.id ? "Edit" : "New"} Prospect Request`}
-            </Box>
-            <Divider
-              sx={{
-                height: "1.5px",
-                color: theme.palette.secondary.main,
-                bgcolor: theme.palette.secondary.main,
-              }}
-            />
-            <Box
-              sx={{
-                height: "100%",
-                p: 2,
-                display: "flex",
-                justifyContent: "start",
-                flexDirection: "column",
-                gap: 3,
-              }}
-            >
-              <Textfield
-                name="ownersName"
-                control={control}
-                label="Owner Name"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.ownersName}
-                helperText={errors?.ownersName?.message}
-              />
-
-              <Textfield
-                name="ownersAddress"
-                control={control}
-                label="Owner Address"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.ownersAddress}
-                helperText={errors?.ownersAddress?.message}
-              />
-
-              <Textfield
-                name="phoneNumber"
-                control={control}
-                label="Phone Number"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.phoneNumber}
-                helperText={errors?.phoneNumber?.message}
-              />
-
-              <Textfield
-                name="businessName"
-                control={control}
-                label="Business Name"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.businessName}
-                helperText={errors?.businessName?.message}
-              />
-
-              <Textfield
-                name="storeType"
-                control={control}
-                label="Store Type"
-                size="small"
-                autoComplete="off"
-                error={!!errors?.storeType}
-                helperText={errors?.storeType?.message}
-              />
-            </Box>
-
-            <Divider
-              sx={{
-                height: "1.5px",
-                color: theme.palette.secondary.main,
-                bgcolor: theme.palette.secondary.main,
-              }}
-            />
-            <ButtonGroup sx={{ gap: 1, m: 1, justifyContent: "end" }}>
-              <Button className="primaryButtons" type="submit" tabIndex={0}>
-                Add
-              </Button>
-              <Button
-                className="cancelButtons"
-                onClick={() => dispatch(toggleDrawer("isRequestFreebiesForm"))}
-                tabIndex={0}
-              >
-                Close
-              </Button>
-            </ButtonGroup>
-          </Stack>
-        </form>
-      </Drawer>
+        ) : (
+          <ZeroRecordsFound
+            text={`${
+              status ? "No active records" : "No archived records"
+            } for Freebie Requests`}
+          />
+        )}
+      </Stack>
+      <FreebieForm />
     </Stack>
   );
 };
 
 const RequestFreebiesActions = ({ row }) => {
-  const { isOpen: isMenu, onToggle: toggleMenu } = useDisclosure();
-  const { actionMenuStyle } = useDefaultStyles();
-  const anchorRef = useRef();
+  // const { isOpen: isMenu, onToggle: toggleMenu } = useDisclosure();
+  // const { actionMenuStyle } = useDefaultStyles();
+  // const anchorRef = useRef();
   const dispatch = useDispatch();
 
-  const menuItems = [
-    // {
-    //   type: "view",
-    //   name: "View More",
-    //   icon: <ViewAgenda />,
-    // },
-    {
-      type: "edit",
-      name: "Edit",
-      icon: <Edit />,
-    },
-    // {
-    //   type: "archive",
-    //   name: row?.isActive ? "Archive" : "Restore",
-    //   icon: <Archive />,
-    // },
-  ];
+  // const menuItems = [
+  //   {
+  //     type: "view",
+  //     name: "View Freebies",
+  //     icon: <ViewAgenda />,
+  //   },
+  // ];
 
-  // const handleView = () => {
-  //   console.log("View More", row);
-  // };
-
-  const handleEdit = () => {
+  const handleView = () => {
     dispatch(setSelectedRow(row));
-    dispatch(toggleDrawer("isRequestFreebiesForm"));
+    dispatch(toggleDrawer("isFreebieForm"));
   };
 
-  // const [updateRequestedProspectStatus] =
-  //   useCreateUpdateRequestedProspectStatusMutation();
-  // const handleArchive = () => {
-  //   ModalToast(
-  //     `You are about to set the request for ${row?.ownersName} as prospect ${
-  //       row?.isActive ? "inactive" : "active"
-  //     }`,
-  //     "Are you sure you want to proceed?",
-  //     "question"
-  //   ).then((res) => {
-  //     if (res.isConfirmed) {
-  //       updateRequestedProspectStatus(row.id);
-  //       BasicToast(
-  //         "success",
-  //         `Request for ${row?.ownersName} as prospect was ${
-  //           row?.isActive ? "archived" : "set active"
-  //         }`,
-  //         3500
-  //       );
-  //     }
-  //   });
-  //   dispatch(setSelectedRow(null));
+  // const handleOnClick = (items) => {
+  //   if (items.type === "view") {
+  //     handleView();
+  //   }
+  //   toggleMenu();
   // };
-
-  const handleOnClick = (items) => {
-    // if (items.type === "view") {
-    //   handleView();
-    // } else
-    if (items.type === "edit") {
-      handleEdit();
-    } 
-    // else if (items.type === "archive") {
-    //   handleArchive();
-    // }
-    toggleMenu();
-  };
 
   return (
     <>
-      <IconButton ref={anchorRef} onClick={toggleMenu}>
+      <IconButton title="View freebies?" onClick={handleView}>
+        <ProductionQuantityLimits />
+      </IconButton>
+      {/* <IconButton ref={anchorRef}
+       onClick={toggleMenu}
+       >
         <More />
       </IconButton>
       <Menu
@@ -503,7 +251,7 @@ const RequestFreebiesActions = ({ row }) => {
             {items.name}
           </MenuItem>
         ))}
-      </Menu>
+      </Menu> */}
     </>
   );
 };

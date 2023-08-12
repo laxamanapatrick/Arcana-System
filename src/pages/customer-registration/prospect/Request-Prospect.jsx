@@ -102,8 +102,7 @@ export const RequestProspect = () => {
         {isLoading ? (
           <LoadingData />
         ) : totalCount > 0 ? (
-          //Table
-          <TableContainer component={Paper} sx={{ maxHeight: "560px" }}>
+          <TableContainer component={Paper}>
             <Table className="table" aria-label="custom pagination table">
               <TableHead className="tableHead">
                 <TableRow>
@@ -115,7 +114,7 @@ export const RequestProspect = () => {
                   <TableCell className="tableHeadCell">Actions</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody sx={{ maxHeight: "520px" }}>
+              <TableBody>
                 {requestedProspects?.data?.requestedProspect?.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell
@@ -187,9 +186,8 @@ export const RequestProspect = () => {
           startIcon={<Add sx={{ mb: "4px" }} />}
           size="small"
           className="primaryButtons"
-          sx={{ width: "18% !important" }}
         >
-          Add Request
+          Add
         </Button>
       </Stack>
 

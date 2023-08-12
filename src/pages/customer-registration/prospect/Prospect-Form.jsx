@@ -256,7 +256,7 @@ export const RequestProspectForm = () => {
           />
           <ButtonGroup sx={{ gap: 1, m: 1, justifyContent: "end" }}>
             <Button className="primaryButtons" type="submit" tabIndex={0}>
-              Add
+              {selectedRowData?.id ? 'Save' : 'Add'}
             </Button>
             <Button
               className="cancelButtons"

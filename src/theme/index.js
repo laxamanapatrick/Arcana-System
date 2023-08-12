@@ -77,7 +77,7 @@ const darkTheme = createTheme({
     MuiTableContainer: {
       styleOverrides: {
         root: {
-          maxHeight: "670px",
+          maxHeight: "560px",
           background: "white",
           padding: 0,
           margin: 0,

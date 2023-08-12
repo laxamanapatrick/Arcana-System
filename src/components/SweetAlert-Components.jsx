@@ -16,6 +16,24 @@ export const BasicToast = (icon, title, timer, position) => {
   });
 };
 
+export const InteractiveToast = (title, text, icon, confirmButtonText, confirmColor) => {
+  return Swal.fire({
+    title: title ? title : "Oops...",
+    text: text ? text : "Something went wrong!",
+    icon: icon ? icon : "error",
+    confirmButtonText: confirmButtonText ? confirmButtonText : "Okay",
+    confirmButtonColor: confirmColor ? confirmColor : "#243448",
+    customClass: {
+      container: "modal-toast-container",
+      popup: "modal-toast-popup",
+      title: "modal-toast-title",
+      content: "modal-toast-content",
+      actions: "modal-toast-actions",
+      confirmButton: "modal-toast-confirm-button",
+    },
+  });
+};
+
 export const ModalToast = (
   title,
   text,

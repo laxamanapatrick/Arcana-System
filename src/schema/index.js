@@ -157,3 +157,19 @@ export const prospectSchema = yup
     storeType: yup.object().required("Store Type is required"),
   })
   .required();
+
+export const freebieSchema = yup
+  .object()
+  .shape({
+    clientId: yup.string(),
+    freebies: yup.array().of(
+      yup.object().shape({
+        items: yup.object().required("Product Code Required"),
+        quantity: yup
+          .number()
+          .required("Quantity is required")
+          .typeError("Must be a number"),
+      })
+    ),
+  })
+  .required();

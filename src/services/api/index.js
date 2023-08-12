@@ -425,9 +425,7 @@ export const jsonServerApi = createApi({
     }),
     updateStoreTypeStatus: builder.mutation({
       query: (id) => ({
-        url: `StoreType/UpdateStoreTypeStatus/${encodeURIComponent(
-          id
-        )}`,
+        url: `StoreType/UpdateStoreTypeStatus/${encodeURIComponent(id)}`,
         method: "PATCH",
       }),
       invalidatesTags: ["Store Type"],
@@ -605,7 +603,7 @@ export const jsonServerApi = createApi({
 
     getRequestedFreebie: builder.query({
       query: (params) => ({
-        url: `Freebies/GetAllFreebieRequest`,
+        url: `Freebies/GetAllFreebieRequests`,
         method: "GET",
         params: params,
       }),
@@ -619,10 +617,11 @@ export const jsonServerApi = createApi({
       }),
       invalidatesTags: ["Request Freebie"],
     }),
-    createUpdateRequestFreebie: builder.mutation({
-      query: ({ payload, id }) => ({
-        url: `Freebies/UpdateFreebieRequest/${encodeURIComponent(id)}`,
+    createUpdateFreebieInformation: builder.mutation({
+      query: ({ payload, id, freebieId }) => ({
+        url: `Freebies/UpdateFreebieInformation/${encodeURIComponent(id)}`,
         method: "PUT",
+        params: {freebieId: freebieId},
         body: payload,
       }),
       invalidatesTags: ["Request Freebie"],
@@ -632,15 +631,15 @@ export const jsonServerApi = createApi({
     //Approving Freebie
     createApproveFreebieRequest: builder.mutation({
       query: (id) => ({
-        url: `ApproveFreebieRequest/${encodeURIComponent(id)}`,
-        method: "PUT",
+        url: `Freebies/ApproveFreebieRequest/${encodeURIComponent(id)}`,
+        method: "PATCH",
       }),
       invalidatesTags: ["Request Freebie"],
     }),
     //Rejecting Freebie
     createRejectFreebieRequest: builder.mutation({
       query: ({ payload, id }) => ({
-        url: `RejectFreebieRequest/${encodeURIComponent(id)}`,
+        url: `Freebies/RejectFreebieRequest/${encodeURIComponent(id)}`,
         method: "PUT",
         body: payload,
       }),
@@ -791,7 +790,7 @@ export const {
   //Request Freebie
   useGetRequestedFreebieQuery,
   useCreateRequestFreebieMutation,
-  useCreateUpdateRequestFreebieMutation,
+  useCreateUpdateFreebieInformationMutation,
 
   //Approving Freebie
   useCreateApproveFreebieRequestMutation,

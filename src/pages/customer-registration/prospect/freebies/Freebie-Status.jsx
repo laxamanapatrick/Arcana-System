@@ -1,17 +1,19 @@
 import { useState } from "react";
 import {
-  Checkbox,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
+  Badge,
+  Breadcrumbs,
+  Button,
+  Divider,
   Stack,
-  Typography,
   useTheme,
 } from "@mui/material";
-import { ApprovedFreebies } from "../freebies/Approved-Freebies";
-import { RejectedFreebies } from "../freebies/Rejected-Freebies";
 import SearchField from "../../../../components/SearchField";
+import {
+  useGetApprovedFreebiesQuery,
+  useGetRejectedFreebiesQuery,
+} from "../../../../services/api";
+import { ApprovedFreebies } from "./Approved-Freebies";
+import { RejectedFreebies } from "./Rejected-Freebies";
 
 export const FreebieStatus = () => {
   const theme = useTheme();
@@ -44,9 +46,13 @@ export const FreebieStatus = () => {
     ),
   };
 
-  const handleViewArchived = () => {
-    "";
-  };
+  const { data: approved } = useGetApprovedFreebiesQuery({ status: true });
+  const { data: rejected } = useGetRejectedFreebiesQuery({ status: true });
+
+  const totalApproved = approved?.data?.totalCount || 0;
+  const totalRejected = rejected?.data?.totalCount || 0;
+
+  const handleViewArchived = () => {};
 
   return (
     <>
@@ -58,7 +64,7 @@ export const FreebieStatus = () => {
       >
         <SearchField onChange={(e) => setSearch(e.target.value)} />
         <Stack flexDirection="row" alignItems="center" justifyContent="center">
-          {!viewing && (
+          {/* {!viewing && (
             <>
               <Checkbox
                 size="small"
@@ -71,8 +77,8 @@ export const FreebieStatus = () => {
                 Archived
               </Typography>
             </>
-          )}
-          <FormControl size="small">
+          )} */}
+          {/* <FormControl size="small">  
             <InputLabel>Status</InputLabel>
             <Select
               value={viewing}
@@ -82,7 +88,60 @@ export const FreebieStatus = () => {
               <MenuItem value={true}>Approved</MenuItem>
               <MenuItem value={false}>Rejected</MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            sx={{ color: theme.palette.secondary.main }}
+          >
+            <Stack alignItems="center">
+              <Badge
+                badgeContent={totalApproved}
+                color="primary"
+                invisible={viewing}
+              >
+                <Button
+                  sx={{ color: theme.palette.secondary.main }}
+                  onClick={() => setViewing(true)}
+                >
+                  Approved
+                </Button>
+              </Badge>
+              {viewing && (
+                <Divider
+                  sx={{
+                    background: theme.palette.secondary.main,
+                    width: "90px",
+                    height: "1.2px",
+                    transition: "width 0.8s ease-in-out",
+                  }}
+                />
+              )}
+            </Stack>
+            <Stack alignItems="center">
+              <Badge
+                badgeContent={totalRejected}
+                color="primary"
+                invisible={!viewing}
+              >
+                <Button
+                  sx={{ color: theme.palette.secondary.main }}
+                  onClick={() => setViewing(false)}
+                >
+                  Rejected
+                </Button>
+              </Badge>
+              {!viewing && (
+                <Divider
+                  sx={{
+                    background: theme.palette.secondary.main,
+                    width: "90px",
+                    height: "1.2px",
+                    transition: "width 0.8s ease-in-out",
+                  }}
+                />
+              )}
+            </Stack>
+          </Breadcrumbs>
         </Stack>
       </Stack>
       <Stack mt={2}>{components[viewing]}</Stack>

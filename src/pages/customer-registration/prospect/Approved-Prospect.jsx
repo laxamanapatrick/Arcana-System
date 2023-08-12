@@ -167,6 +167,7 @@ export const ApprovedProspect = ({
         />
       )}
        <RequestProspectForm />
+       <FreebieForm />
     </Stack>
   );
 };

@@ -16,6 +16,7 @@ import { RequestFreebies } from "./freebies/Request-Freebies";
 import {
   useGetApprovedProspectQuery,
   useGetRejectedProspectQuery,
+  useGetRequestedFreebieQuery,
   useGetRequestedProspectQuery,
 } from "../../../services/api";
 
@@ -28,10 +29,13 @@ export const Prospect = () => {
   const { data: requested } = useGetRequestedProspectQuery({ IsActive: true });
   const { data: approved } = useGetApprovedProspectQuery({ status: true });
   const { data: rejected } = useGetRejectedProspectQuery({ status: true });
+  const {data: requestedFreebies} = useGetRequestedFreebieQuery({Status: true})
 
   const totalRequest = requested?.data?.totalCount || 0;
   const totalApproved = approved?.data?.totalCount || 0;
   const totalRejected = rejected?.data?.totalCount || 0;
+
+  const totalRequestedFreebies = requestedFreebies?.data?.totalCount || 0;
 
   const prospectNavbar = [
     {
@@ -46,7 +50,8 @@ export const Prospect = () => {
     },
     {
       case: 3,
-      name: "Request Freebies",
+      name: "Requested Freebies",
+      badge: totalRequestedFreebies || 0,
     },
     {
       case: 4,
