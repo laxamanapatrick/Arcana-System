@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Badge,
   IconButton,
@@ -50,7 +50,11 @@ export const FreebieApproval = () => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(25);
 
-  const { data: requestedFreebies, isLoading } = useGetRequestedFreebieQuery({
+  const {
+    data: requestedFreebies,
+    isLoading,
+    refetch,
+  } = useGetRequestedFreebieQuery({
     Search: search,
     IsActive: true,
     PageNumber: page + 1,
@@ -65,6 +69,16 @@ export const FreebieApproval = () => {
   const handleChangeRowsPerPage = (event) => {
     setPageSize(Number(event.target.value));
   };
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      refetch();
+    }, 60000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [refetch]);
 
   return (
     <>

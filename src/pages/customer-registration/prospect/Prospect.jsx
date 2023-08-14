@@ -14,7 +14,9 @@ import { Released } from "./released/Released";
 import { FreebieStatus } from "./freebies/Freebie-Status";
 import { RequestFreebies } from "./freebies/Request-Freebies";
 import {
+  useGetApprovedFreebiesQuery,
   useGetApprovedProspectQuery,
+  useGetRejectedFreebiesQuery,
   useGetRejectedProspectQuery,
   useGetRequestedFreebieQuery,
   useGetRequestedProspectQuery,
@@ -29,18 +31,28 @@ export const Prospect = () => {
   const { data: requested } = useGetRequestedProspectQuery({ IsActive: true });
   const { data: approved } = useGetApprovedProspectQuery({ status: true });
   const { data: rejected } = useGetRejectedProspectQuery({ status: true });
-  const {data: requestedFreebies} = useGetRequestedFreebieQuery({Status: true})
+  const { data: requestedFreebies } = useGetRequestedFreebieQuery({
+    Status: true,
+  });
+  const { data: approvedFreebies } = useGetApprovedFreebiesQuery({
+    Status: true,
+  });
+  const { data: rejectedFreebies } = useGetRejectedFreebiesQuery({
+    Status: true,
+  });
 
   const totalRequest = requested?.data?.totalCount || 0;
   const totalApproved = approved?.data?.totalCount || 0;
   const totalRejected = rejected?.data?.totalCount || 0;
 
   const totalRequestedFreebies = requestedFreebies?.data?.totalCount || 0;
+  const totalApprovedFreebies = approvedFreebies?.data?.totalCount || 0;
+  const totalRejectedFreebies = rejectedFreebies?.data?.totalCount || 0;
 
   const prospectNavbar = [
     {
       case: 1,
-      name: "Request Prospect",
+      name: "Requested Prospect",
       badge: totalRequest || 0,
     },
     {
@@ -56,6 +68,7 @@ export const Prospect = () => {
     {
       case: 4,
       name: "Freebie Status",
+      badge: totalApprovedFreebies || totalRejectedFreebies || 0,
     },
     {
       case: 5,

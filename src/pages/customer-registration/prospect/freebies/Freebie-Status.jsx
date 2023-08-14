@@ -52,7 +52,7 @@ export const FreebieStatus = () => {
   const totalApproved = approved?.data?.totalCount || 0;
   const totalRejected = rejected?.data?.totalCount || 0;
 
-  const handleViewArchived = () => {};
+  // const handleViewArchived = () => {};
 
   return (
     <>

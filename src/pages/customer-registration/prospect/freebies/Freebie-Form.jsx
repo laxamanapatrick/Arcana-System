@@ -144,7 +144,7 @@ export const FreebieForm = () => {
         await requestFreebie(addPayload).unwrap();
         BasicToast(
           "success",
-          `Freebies requested ${selectedRowData?.ownersName}`,
+          `Freebies requested for ${selectedRowData?.ownersName}`,
           1500
         );
       } else {
@@ -155,7 +155,7 @@ export const FreebieForm = () => {
         }).unwrap();
         BasicToast(
           "success",
-          `Freebies updated ${selectedRowData?.ownersName}`,
+          `Freebies updated for ${selectedRowData?.ownersName}`,
           1500
         );
       }
