@@ -9,16 +9,17 @@ import {
 } from "@mui/material";
 import { useDefaultStyles } from "../../../hooks/useDefaultStyles";
 import { RequestProspect } from "./Request-Prospect";
-import { ProspectStatus } from "./Prospect-Status";
+// import { ProspectStatus } from "./Prospect-Status";
 import { Released } from "./released/Released";
 import { FreebieStatus } from "./freebies/Freebie-Status";
-import { RequestFreebies } from "./freebies/Request-Freebies";
+// import { RequestFreebies } from "./freebies/Request-Freebies";
 import {
+  useGetAllReleasedProspectQuery,
   useGetApprovedFreebiesQuery,
-  useGetApprovedProspectQuery,
   useGetRejectedFreebiesQuery,
-  useGetRejectedProspectQuery,
-  useGetRequestedFreebieQuery,
+  // useGetApprovedProspectQuery,
+  // useGetRejectedProspectQuery,
+  // useGetRequestedFreebieQuery,
   useGetRequestedProspectQuery,
 } from "../../../services/api";
 
@@ -29,11 +30,11 @@ export const Prospect = () => {
   const [viewing, setViewing] = useState(0);
 
   const { data: requested } = useGetRequestedProspectQuery({ IsActive: true });
-  const { data: approved } = useGetApprovedProspectQuery({ status: true });
-  const { data: rejected } = useGetRejectedProspectQuery({ status: true });
-  const { data: requestedFreebies } = useGetRequestedFreebieQuery({
-    Status: true,
-  });
+  // const { data: approved } = useGetApprovedProspectQuery({ status: true });
+  // const { data: rejected } = useGetRejectedProspectQuery({ status: true });
+  // const { data: requestedFreebies } = useGetRequestedFreebieQuery({
+  //   Status: true,
+  // });
   const { data: approvedFreebies } = useGetApprovedFreebiesQuery({
     Status: true,
   });
@@ -41,13 +42,19 @@ export const Prospect = () => {
     Status: true,
   });
 
-  const totalRequest = requested?.data?.totalCount || 0;
-  const totalApproved = approved?.data?.totalCount || 0;
-  const totalRejected = rejected?.data?.totalCount || 0;
+  const { data: releasedProspects } = useGetAllReleasedProspectQuery({
+    Status: true,
+  });
 
-  const totalRequestedFreebies = requestedFreebies?.data?.totalCount || 0;
+  const totalRequest = requested?.data?.totalCount || 0;
+  // const totalApproved = approved?.data?.totalCount || 0;
+  // const totalRejected = rejected?.data?.totalCount || 0;
+
+  // const totalRequestedFreebies = requestedFreebies?.data?.totalCount || 0;
   const totalApprovedFreebies = approvedFreebies?.data?.totalCount || 0;
   const totalRejectedFreebies = rejectedFreebies?.data?.totalCount || 0;
+
+  const totalReleasedProspects = releasedProspects?.data?.totalCount || 0;
 
   const prospectNavbar = [
     {
@@ -55,16 +62,16 @@ export const Prospect = () => {
       name: "Requested Prospect",
       badge: totalRequest || 0,
     },
-    {
-      case: 2,
-      name: "Prospect Status",
-      badge: totalApproved || totalRejected || 0,
-    },
-    {
-      case: 3,
-      name: "Requested Freebies",
-      badge: totalRequestedFreebies || 0,
-    },
+    // {
+    //   case: 2,
+    //   name: "Prospect Status",
+    //   badge: totalApproved || totalRejected || 0,
+    // },
+    // {
+    //   case: 3,
+    //   name: "Requested Freebies",
+    //   badge: totalRequestedFreebies || 0,
+    // },
     {
       case: 4,
       name: "Freebie Status",
@@ -73,13 +80,14 @@ export const Prospect = () => {
     {
       case: 5,
       name: "Released",
+      badge: totalReleasedProspects || 0,
     },
   ];
 
   const components = {
     1: <RequestProspect />,
-    2: <ProspectStatus />,
-    3: <RequestFreebies />,
+    // 2: <ProspectStatus />,
+    // 3: <RequestFreebies />,
     4: <FreebieStatus />,
     5: <Released />,
   };
@@ -90,7 +98,7 @@ export const Prospect = () => {
         elevation={1}
         sx={{
           ...defaultPaperHeaderStyle,
-          // justifyContent: "start",
+          justifyContent: "space-evenly",
           //to remove ^ when freebie is coded
         }}
       >

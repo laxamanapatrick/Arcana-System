@@ -243,7 +243,7 @@ const ApprovedPospectActions = ({ row }) => {
         PaperProps={{
           style: {
             maxHeight: 45 * 4.5,
-            width: "20ch",
+            width: "30ch",
             ...actionMenuStyle,
           },
         }}

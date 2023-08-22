@@ -20,6 +20,9 @@ const initialState = {
   },
   modals: {
     isTagging: false,
+    isFreebieReleasing: false,
+    isFreebieViewing: false,
+    isSignature: false,
   },
 };
 

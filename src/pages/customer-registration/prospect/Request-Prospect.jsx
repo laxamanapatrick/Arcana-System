@@ -28,7 +28,7 @@ import {
   useGetRequestedProspectQuery,
 } from "../../../services/api";
 // import moment from "moment/moment";
-import { Add, Archive, Edit, More } from "@mui/icons-material";
+import { Add, Archive, Edit, More, List } from "@mui/icons-material";
 import { useDefaultStyles } from "../../../hooks/useDefaultStyles";
 import { toggleDrawer } from "../../../services/store/disclosureSlice";
 import { setSelectedRow } from "../../../services/store/selectedRowSlice";
@@ -39,6 +39,7 @@ import {
 } from "../../../components/SweetAlert-Components";
 import { useDisclosure } from "../../../hooks/useDisclosure";
 import { RequestProspectForm } from "./Prospect-Form";
+import { FreebieForm } from "./freebies/Freebie-Form";
 
 export const RequestProspect = () => {
   const theme = useTheme();
@@ -192,6 +193,7 @@ export const RequestProspect = () => {
       </Stack>
 
       <RequestProspectForm />
+      <FreebieForm />
     </Stack>
   );
 };
@@ -205,8 +207,13 @@ const RequestProspectActions = ({ row }) => {
   const menuItems = [
     {
       type: "edit",
-      name: "Edit",
+      name: "Edit Prospect",
       icon: <Edit />,
+    },
+    {
+      type: "freebie",
+      name: "Add Freebie(s)",
+      icon: <List />,
     },
     {
       type: "archive",
@@ -247,6 +254,9 @@ const RequestProspectActions = ({ row }) => {
   const handleOnClick = (items) => {
     if (items.type === "edit") {
       handleEdit();
+    } else if (items.type === "freebie") {
+      setSelectedRow(row);
+      dispatch(toggleDrawer("isFreebieForm"));
     } else if (items.type === "archive") {
       handleArchive();
     }

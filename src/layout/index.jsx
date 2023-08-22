@@ -165,7 +165,7 @@ const Layout = () => {
                   border="1px solid white"
                   color={theme.palette.secondary.main}
                 >
-                  {fullname}
+                  Welcome Back, {fullname}
                 </Box>
               )}
               <Box

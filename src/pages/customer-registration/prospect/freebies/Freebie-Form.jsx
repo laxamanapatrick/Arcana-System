@@ -18,16 +18,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { freebieSchema } from "../../../../schema";
 import { AutoComplete, Textfield } from "../../../../components/Fields";
 import {
+  jsonServerApi,
   useCreateRequestFreebieMutation,
   useCreateUpdateFreebieInformationMutation,
   useGetItemsQuery,
 } from "../../../../services/api";
-import { Add, Cancel } from "@mui/icons-material";
+import { Add, Cancel, Print } from "@mui/icons-material";
 import { setSelectedRow } from "../../../../services/store/selectedRowSlice";
 import {
   BasicToast,
   InteractiveToast,
 } from "../../../../components/SweetAlert-Components";
+import { FreebieViewing } from "./Freebie-Viewing";
 
 export const FreebieForm = () => {
   const dispatch = useDispatch();
@@ -49,9 +51,11 @@ export const FreebieForm = () => {
 
     return {
       items: selectedItem || null,
-      quantity: item?.quantity || "",
+      quantity: item?.quantity || 1,
     };
   });
+
+  console.log(selectedRowData)
 
   const {
     formState: { errors },
@@ -85,7 +89,7 @@ export const FreebieForm = () => {
       setValue("freebies", [
         {
           items: null,
-          quantity: "",
+          quantity: 1,
         },
       ]);
     };
@@ -106,7 +110,6 @@ export const FreebieForm = () => {
     useCreateUpdateFreebieInformationMutation();
   const onSubmit = async (data) => {
     const addPayload = {
-      clientId: data?.clientId,
       freebies: data?.freebies?.map((item) => {
         return {
           itemId: item?.items?.id,
@@ -141,7 +144,10 @@ export const FreebieForm = () => {
     }
     try {
       if (!selectedRowData?.clientId) {
-        await requestFreebie(addPayload).unwrap();
+        await requestFreebie({
+          id: data?.clientId,
+          payload: addPayload,
+        }).unwrap();
         BasicToast(
           "success",
           `Freebies requested for ${selectedRowData?.ownersName}`,
@@ -163,6 +169,10 @@ export const FreebieForm = () => {
       console.log(error);
     }
     dispatch(toggleDrawer("isFreebieForm"));
+    dispatch(jsonServerApi.util.invalidateTags(["Approved Prospect"]));
+    dispatch(jsonServerApi.util.invalidateTags(["Request Freebie"]));
+    dispatch(jsonServerApi.util.invalidateTags(["Approved Freebies"]));
+    dispatch(jsonServerApi.util.invalidateTags(["Rejected Freebies"]));
   };
 
   return (
@@ -193,6 +203,15 @@ export const FreebieForm = () => {
             }}
           >
             Freebie Form
+            {/* {isPrintable && (
+              <IconButton
+                sx={{ ml: 1 }}
+                onClick={() => dispatch(toggleDrawer("isFreebieViewing"))}
+              >
+                <Print />
+                <FreebieViewing />
+              </IconButton>
+            )} */}
           </Box>
           <Divider
             sx={{
@@ -235,6 +254,10 @@ export const FreebieForm = () => {
                   type="number"
                   inputProps={{
                     min: 1,
+                    readOnly: true,
+                    style: {
+                      cursor: "not-allowed",
+                    },
                   }}
                   onWheel={(e) => e.target.blur()}
                   onKeyDown={(e) =>
@@ -334,7 +357,7 @@ export const FreebieForm = () => {
                 }}
                 size="small"
                 onClick={() => {
-                  append({ items: null, quantity: "" });
+                  append({ items: null, quantity: 1 });
                 }}
               >
                 {fields?.length === 5

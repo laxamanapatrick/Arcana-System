@@ -99,6 +99,7 @@ export const useDefaultStyles = () => {
 
   const actionMenuStyle = {
     background: theme.palette.primary.main,
+    width: 'auto'
   };
 
   return {

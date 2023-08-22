@@ -1,11 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import {
-  Box,
-  Button,
-  ButtonGroup,
-  Checkbox,
-  Divider,
-  Drawer,
   IconButton,
   Menu,
   MenuItem,
@@ -19,35 +13,23 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  TextField as MuiTextField,
-  Typography,
-  useTheme,
 } from "@mui/material";
 import {
   LoadingData,
   ZeroRecordsFound,
 } from "../../../../components/Lottie-Components";
-import {
-  useGetApprovedFreebiesQuery,
-  useCreateUpdateApprovedFreebiesMutation,
-  useGetStoreTypeQuery,
-  jsonServerApi,
-} from "../../../../services/api";
-import { Edit, List, More } from "@mui/icons-material";
+import { useGetApprovedFreebiesQuery } from "../../../../services/api";
+import { Edit, List, More, Print } from "@mui/icons-material";
 import { useDefaultStyles } from "../../../../hooks/useDefaultStyles";
-import { toggleDrawer } from "../../../../services/store/disclosureSlice";
-import { setSelectedRow } from "../../../../services/store/selectedRowSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { AutoComplete, Textfield } from "../../../../components/Fields";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { prospectSchema } from "../../../../schema";
 import {
-  BasicToast,
-  ModalToast,
-} from "../../../../components/SweetAlert-Components";
+  toggleDrawer,
+  toggleModal,
+} from "../../../../services/store/disclosureSlice";
+import { setSelectedRow } from "../../../../services/store/selectedRowSlice";
+import { useDispatch } from "react-redux";
 import { FreebieForm } from "./Freebie-Form";
 import { useDisclosure } from "../../../../hooks/useDisclosure";
+import { FreebieReleasing } from "./Freebie-Releasing";
 
 export const ApprovedFreebies = ({
   status,
@@ -167,6 +149,7 @@ export const ApprovedFreebies = ({
           }
         />
       )}
+      <FreebieReleasing />
       <FreebieForm />
     </Stack>
   );
@@ -181,8 +164,13 @@ const ApprovedPospectActions = ({ row }) => {
   const menuItems = [
     {
       type: "freebie",
-      name: "View Freebie",
+      name: "View Freebie(s)",
       icon: <List />,
+    },
+    {
+      type: "print",
+      name: "Release Freebie(s)",
+      icon: <Print />,
     },
   ];
 
@@ -191,30 +179,16 @@ const ApprovedPospectActions = ({ row }) => {
     dispatch(toggleDrawer("isFreebieForm"));
   };
 
-  // const [createUpdateApprovedFreebiesStatus] =
-  //   useCreateUpdateApprovedFreebiesStatusMutation();
-  // const handleArchiveRestore = (id, isActive) => {
-  //   ModalToast(
-  //     `You are about to set this approved prospect ${
-  //       isActive ? "inactive" : "active"
-  //     }`,
-  //     "Are you sure you want to proceed?",
-  //     "question"
-  //   ).then((res) => {
-  //     if (res.isConfirmed) {
-  //       createUpdateApprovedFreebiesStatus(id);
-  //       BasicToast(
-  //         "success",
-  //         `Approved Freebies was ${isActive ? "archived" : "set active"}`,
-  //         3500
-  //       );
-  //     }
-  //   });
-  // };
+  const handleFreebiePrint = () => {
+    dispatch(setSelectedRow(row));
+    dispatch(toggleModal("isFreebieReleasing"));
+  };
 
   const handleOnClick = (items) => {
     if (items.type === "freebie") {
       handleFreebie();
+    } else if (items.type === "print") {
+      handleFreebiePrint();
     }
     toggleMenu();
   };

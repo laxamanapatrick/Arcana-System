@@ -136,10 +136,10 @@ const Routing = () => {
           path: "approval",
           element: <Approval />,
           children: [
-            {
-              path: "prospect-approval",
-              element: <ProspectApproval />,
-            },
+            // {
+            //   path: "prospect-approval",
+            //   element: <ProspectApproval />,
+            // },
             {
               path: "freebie-approval",
               element: <FreebieApproval />,

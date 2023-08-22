@@ -610,8 +610,8 @@ export const jsonServerApi = createApi({
       providesTags: ["Request Freebie"],
     }),
     createRequestFreebie: builder.mutation({
-      query: (payload) => ({
-        url: `Freebies/RequestFreebies`,
+      query: ({payload,id}) => ({
+        url: `Freebies/RequestFreebies/${encodeURIComponent(id)}`,
         method: "POST",
         body: payload,
       }),
@@ -621,7 +621,7 @@ export const jsonServerApi = createApi({
       query: ({ payload, id, freebieId }) => ({
         url: `Freebies/UpdateFreebieInformation/${encodeURIComponent(id)}`,
         method: "PUT",
-        params: {freebieId: freebieId},
+        params: { freebieId: freebieId },
         body: payload,
       }),
       invalidatesTags: ["Request Freebie"],
@@ -639,7 +639,7 @@ export const jsonServerApi = createApi({
     //Rejecting Freebie
     createRejectFreebieRequest: builder.mutation({
       query: ({ payload, id }) => ({
-        url: `Freebies/RejectFreebieRequest/${encodeURIComponent(id)}`,
+        url: `Freebies/RejectFreebies/${encodeURIComponent(id)}`,
         method: "PUT",
         body: payload,
       }),
@@ -679,6 +679,28 @@ export const jsonServerApi = createApi({
         method: "PATCH",
       }),
       invalidatesTags: ["Rejected Freebies"],
+    }),
+
+    //Releasing
+
+    createUpdateReleaseProspect: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `ReleasedProspectingRequest/ReleasedProspectingRequest/${encodeURIComponent(
+          id
+        )}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Released Prospect"],
+    }),
+
+    getAllReleasedProspect: builder.query({
+      query: (params) => ({
+        url: `Prospect/GetAllReleasedProspectingRequest`,
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Released Prospect"],
     }),
   }),
 });
@@ -803,4 +825,9 @@ export const {
 
   //Rejected Freebie
   useGetRejectedFreebiesQuery,
+
+  //Released Prospect
+  useCreateUpdateReleaseProspectMutation,
+  useGetAllReleasedProspectQuery
+
 } = jsonServerApi;

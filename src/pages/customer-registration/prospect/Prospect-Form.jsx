@@ -105,19 +105,23 @@ export const RequestProspectForm = () => {
     try {
       if (selectedRowData === null) {
         delete data["clientId"];
-        await createRequestProspect(addPayload).unwrap();
+        const res = await createRequestProspect(addPayload).unwrap();
         BasicToast(
           "success",
           `Prospect ${data?.ownersName} was requested`,
           1500
         );
         data["clientId"] = "";
+        // dispatch(setSelectedRow(res?.data));
+        console.log(res?.data)
+        dispatch(toggleDrawer("isFreebieForm"))
       } else {
         await createUpdateRequestProspect({
           payload: editPayload,
           id: selectedRowData?.id,
         }).unwrap();
         BasicToast("success", `Prospect Request Updated`, 1500);
+        dispatch(setSelectedRow(null));
       }
     } catch (error) {
       BasicToast("error", `${error?.data?.messages[0]}`, 1500);
@@ -125,7 +129,6 @@ export const RequestProspectForm = () => {
       return;
     }
     reset();
-    dispatch(setSelectedRow(null));
     dispatch(jsonServerApi.util.invalidateTags(["Request Prospect"]));
     dispatch(jsonServerApi.util.invalidateTags(["Approved Prospect"]));
     dispatch(jsonServerApi.util.invalidateTags(["Rejected Prospect"]));

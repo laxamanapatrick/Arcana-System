@@ -138,13 +138,13 @@ export const sidebarNavigationData = [
     name: "Approval",
     icon: "Approval",
     sub: [
+      // {
+      //   id: 2,
+      //   name: "Prospect Approval",
+      //   path: "/approval/prospect-approval",
+      // },
       {
         id: 1,
-        name: "Prospect Approval",
-        path: "/approval/prospect-approval",
-      },
-      {
-        id: 2,
         name: "Freebie Approval",
         path: "/approval/freebie-approval",
       },

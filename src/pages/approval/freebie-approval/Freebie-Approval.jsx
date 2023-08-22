@@ -233,7 +233,10 @@ const FreebieApprovalActions = ({ row }) => {
         BasicToast("success", `Freebie ${row?.ownersName} approved`, 3500);
       }
     });
-    dispatch(jsonServerApi.util.invalidateTags(["Approved Freebie"]));
+    dispatch(jsonServerApi.util.invalidateTags(["Approved Freebies"]));
+    dispatch(jsonServerApi.util.invalidateTags(["Approved Prospect"]));
+    dispatch(jsonServerApi.util.invalidateTags(["Request Freebie"]));
+    dispatch(jsonServerApi.util.invalidateTags(["Rejected Freebies"]));
   };
 
   const formatOptionsForRemarksToast = (options) => {
@@ -269,7 +272,10 @@ const FreebieApprovalActions = ({ row }) => {
         BasicToast("success", `Freebie ${row?.ownersName} rejected`, 3500);
       }
     });
-    dispatch(jsonServerApi.util.invalidateTags(["Rejected Freebie"]));
+    dispatch(jsonServerApi.util.invalidateTags(["Rejected Freebies"]));
+    dispatch(jsonServerApi.util.invalidateTags(["Approved Prospect"]));
+    dispatch(jsonServerApi.util.invalidateTags(["Request Freebie"]));
+    dispatch(jsonServerApi.util.invalidateTags(["Approved Freebies"]));
   };
 
   const handleOnClick = (items) => {
