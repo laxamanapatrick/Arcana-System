@@ -112,8 +112,7 @@ export const RequestProspectForm = () => {
           1500
         );
         data["clientId"] = "";
-        // dispatch(setSelectedRow(res?.data));
-        console.log(res?.data)
+        dispatch(setSelectedRow(res?.data));
         dispatch(toggleDrawer("isFreebieForm"))
       } else {
         await createUpdateRequestProspect({

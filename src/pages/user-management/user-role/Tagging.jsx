@@ -142,8 +142,6 @@ const Tagging = () => {
     );
   };
 
-  console.log(checkedItems);
-
   return (
     <Stack width="auto" flexDirection="row">
       <Modal

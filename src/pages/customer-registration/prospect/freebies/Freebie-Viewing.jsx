@@ -107,7 +107,9 @@ export const FreebieViewing = () => {
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: onDropProofOfDelivery,
-    accept: "image/*", // Only accept image files
+    accept: {
+      "image/*": [".jpeg", ".jpg", ".png"],
+    }, // Only accept image files
     multiple: false, // Allow only a single file to be uploaded
   });
 
@@ -383,8 +385,8 @@ export const FreebieViewing = () => {
                         }`}
                       >
                         <AttachFile />
-                        <input {...getInputProps()} />
                       </IconButton>
+                        <input {...getInputProps()} />
                       <IconButton onClick={toggleCamera}>
                         <CameraAlt />
                       </IconButton>
@@ -429,7 +431,7 @@ export const FreebieViewing = () => {
                 Close
               </Button>
               <Button
-                startIcon={<Print /> }
+                startIcon={<Print />}
                 className="primaryButtons"
                 onClick={handlePrint}
               >

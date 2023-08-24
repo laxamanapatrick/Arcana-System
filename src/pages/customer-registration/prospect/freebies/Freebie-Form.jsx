@@ -55,8 +55,6 @@ export const FreebieForm = () => {
     };
   });
 
-  console.log(selectedRowData)
-
   const {
     formState: { errors },
     control,
@@ -104,7 +102,7 @@ export const FreebieForm = () => {
     control,
     name: "freebies",
   });
-
+  
   const [requestFreebie] = useCreateRequestFreebieMutation();
   const [updateFreebieInformation] =
     useCreateUpdateFreebieInformationMutation();
@@ -157,7 +155,7 @@ export const FreebieForm = () => {
         await updateFreebieInformation({
           payload: editPayload,
           id: data?.clientId,
-          freebieId: selectedRowData?.clientId ? selectedRowData?.id : "",
+          freebieId: selectedRowData?.freebieRequestId ? selectedRowData?.freebieRequestId : "",
         }).unwrap();
         BasicToast(
           "success",

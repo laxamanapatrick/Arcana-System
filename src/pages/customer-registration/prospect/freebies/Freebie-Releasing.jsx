@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleModal } from "../../../../services/store/disclosureSlice";
 import { useDefaultStyles } from "../../../../hooks/useDefaultStyles";
 import {
+  jsonServerApi,
   useCreateUpdateReleaseProspectMutation,
   useGetItemsQuery,
 } from "../../../../services/api";
@@ -109,7 +110,9 @@ export const FreebieReleasing = () => {
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop: onDropProofOfDelivery,
-    accept: "image/*", // Only accept image files
+    accept: {
+      "image/*": [".jpeg", ".jpg", ".png"],
+    }, // Only accept image files
     multiple: false, // Allow only a single file to be uploaded
   });
 
@@ -170,8 +173,6 @@ export const FreebieReleasing = () => {
           };
 
           try {
-            console.log("Payload", payload);
-
             const response = await createUpdateReleaseProspect({
               id: clientDetails?.clientId,
               payload: payload,
@@ -185,6 +186,8 @@ export const FreebieReleasing = () => {
               value: "",
               isSigned: false,
             });
+            dispatch(jsonServerApi.util.invalidateTags(["Approved Freebies"]));
+            dispatch(jsonServerApi.util.invalidateTags(["Released Prospect"]));
             dispatch(toggleModal("isFreebieReleasing"));
           } catch (error) {
             console.log(error);
@@ -441,8 +444,8 @@ export const FreebieReleasing = () => {
                         }`}
                       >
                         <AttachFile />
-                        <input {...getInputProps()} />
                       </IconButton>
+                      <input {...getInputProps()} />
                       <IconButton onClick={toggleCamera}>
                         <CameraAlt />
                       </IconButton>

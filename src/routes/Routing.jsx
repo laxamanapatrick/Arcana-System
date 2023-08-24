@@ -27,6 +27,7 @@ import Approval from "../pages/approval";
 import { ProspectApproval } from "../pages/approval/prospect-approval/Prospect-Approval";
 import { FreebieApproval } from "../pages/approval/freebie-approval/Freebie-Approval";
 import StoreType from "../pages/setup/masterlist/products/Store-Type";
+import { Direct } from "../pages/customer-registration/direct/Direct";
 
 const Routing = () => {
   let routing = useRoutes([
@@ -128,7 +129,7 @@ const Routing = () => {
             },
             {
               path: "direct",
-              element: "",
+              element: <Direct />,
             },
           ],
         },

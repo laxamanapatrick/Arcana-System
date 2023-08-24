@@ -25,14 +25,15 @@ import {
 } from "../../../components/Lottie-Components";
 import {
   useCreateUpdateRequestedProspectStatusMutation,
-  useGetRequestedProspectQuery,
+  useGetApprovedProspectQuery,
+  // useGetRequestedProspectQuery,
 } from "../../../services/api";
 // import moment from "moment/moment";
 import { Add, Archive, Edit, More, List } from "@mui/icons-material";
 import { useDefaultStyles } from "../../../hooks/useDefaultStyles";
 import { toggleDrawer } from "../../../services/store/disclosureSlice";
 import { setSelectedRow } from "../../../services/store/selectedRowSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   BasicToast,
   ModalToast,
@@ -46,16 +47,20 @@ export const RequestProspect = () => {
   const { defaultButtonStyle } = useDefaultStyles();
   const dispatch = useDispatch();
 
-  // const { isRequestProspectForm } = useSelector(
-  //   (state) => state.disclosure.drawers
-  // );
-
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState(true);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(25);
 
-  const { data: requestedProspects, isLoading } = useGetRequestedProspectQuery({
+  // const { data: requestedProspects, isLoading } = useGetRequestedProspectQuery({
+  //   Search: search,
+  //   IsActive: status,
+  //   PageNumber: page + 1,
+  //   PageSize: pageSize,
+  // });
+  // const totalCount = requestedProspects?.data?.totalCount || 0;
+
+  const { data: requestedProspects, isLoading } = useGetApprovedProspectQuery({
     Search: search,
     IsActive: status,
     PageNumber: page + 1,
@@ -227,6 +232,11 @@ const RequestProspectActions = ({ row }) => {
     dispatch(toggleDrawer("isRequestProspectForm"));
   };
 
+  const handleFreebie = () => {
+    dispatch(setSelectedRow(row));
+    dispatch(toggleDrawer("isFreebieForm"));
+  };
+
   const [updateRequestedProspectStatus] =
     useCreateUpdateRequestedProspectStatusMutation();
   const handleArchive = () => {
@@ -255,8 +265,7 @@ const RequestProspectActions = ({ row }) => {
     if (items.type === "edit") {
       handleEdit();
     } else if (items.type === "freebie") {
-      setSelectedRow(row);
-      dispatch(toggleDrawer("isFreebieForm"));
+      handleFreebie();
     } else if (items.type === "archive") {
       handleArchive();
     }

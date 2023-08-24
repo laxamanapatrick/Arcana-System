@@ -17,10 +17,10 @@ import {
   useGetAllReleasedProspectQuery,
   useGetApprovedFreebiesQuery,
   useGetRejectedFreebiesQuery,
-  // useGetApprovedProspectQuery,
+  useGetApprovedProspectQuery,
   // useGetRejectedProspectQuery,
   // useGetRequestedFreebieQuery,
-  useGetRequestedProspectQuery,
+  // useGetRequestedProspectQuery,
 } from "../../../services/api";
 
 export const Prospect = () => {
@@ -29,8 +29,8 @@ export const Prospect = () => {
     useDefaultStyles();
   const [viewing, setViewing] = useState(0);
 
-  const { data: requested } = useGetRequestedProspectQuery({ IsActive: true });
-  // const { data: approved } = useGetApprovedProspectQuery({ status: true });
+  // const { data: requested } = useGetRequestedProspectQuery({ IsActive: true });
+  const { data: approved } = useGetApprovedProspectQuery({ status: true });
   // const { data: rejected } = useGetRejectedProspectQuery({ status: true });
   // const { data: requestedFreebies } = useGetRequestedFreebieQuery({
   //   Status: true,
@@ -46,8 +46,8 @@ export const Prospect = () => {
     Status: true,
   });
 
-  const totalRequest = requested?.data?.totalCount || 0;
-  // const totalApproved = approved?.data?.totalCount || 0;
+  // const totalRequest = requested?.data?.totalCount || 0;
+  const totalApproved = approved?.data?.totalCount || 0;
   // const totalRejected = rejected?.data?.totalCount || 0;
 
   // const totalRequestedFreebies = requestedFreebies?.data?.totalCount || 0;
@@ -60,7 +60,8 @@ export const Prospect = () => {
     {
       case: 1,
       name: "Requested Prospect",
-      badge: totalRequest || 0,
+      // badge: totalRequest || 0,
+      badge: totalApproved || 0,
     },
     // {
     //   case: 2,
