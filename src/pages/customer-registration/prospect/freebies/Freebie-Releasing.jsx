@@ -141,7 +141,7 @@ export const FreebieReleasing = () => {
 
   const [createUpdateReleaseProspect] =
     useCreateUpdateReleaseProspectMutation();
-  const handlePrint = () => {
+  const handleReleasing = () => {
     if (!signatureValue.isSigned) {
       BasicToast("warning", "Please provide a signature");
       return;
@@ -150,32 +150,43 @@ export const FreebieReleasing = () => {
       BasicToast("warning", "Please provide a proof of delivery photo");
       return;
     } else {
+      //Conversions to File Type
+
+      const imageType = "image/jpeg";
+      const base64ToBlob = (base64) => {
+        const binaryString = atob(base64.split(",")[1]);
+        const arrayBuffer = new ArrayBuffer(binaryString.length);
+        const uint8Array = new Uint8Array(arrayBuffer);
+        for (let i = 0; i < binaryString.length; i++) {
+          uint8Array[i] = binaryString.charCodeAt(i);
+        }
+        return new Blob([arrayBuffer], { type: "image/jpeg" });
+      };
+
+      const signatureBlob = base64ToBlob(signatureValue?.value);
+      const renamedSignatureImage = new File(
+        [signatureBlob],
+        `signature_${Date.now()}.jpg`,
+        { type: imageType }
+      );
+
+      const renamedProofOfDeliveryFile = new File(
+        [proofOfDeliveryFiles],
+        `proof_of_delivery_${Date.now()}.jpg`,
+        { type: imageType }
+      );
+      const formData = new FormData();
+      formData.append("ESignature", renamedSignatureImage);
+      formData.append("PhotoProof", renamedProofOfDeliveryFile);
+
+      //Submit after convertions
+
       ModalToast().then(async (res) => {
         if (res.isConfirmed) {
-          const imageType = "image/png";
-
-          const signatureImage = signatureValue.value;
-          const renamedSignatureImage = new File(
-            [signatureImage],
-            `signature_${Date.now()}.png`,
-            { type: imageType }
-          );
-
-          const renamedProofOfDeliveryFile = new File(
-            [proofOfDeliveryFiles],
-            `proof_of_delivery_${Date.now()}.png`,
-            { type: imageType }
-          );
-
-          const payload = {
-            eSignature: renamedSignatureImage,
-            photoProof: renamedProofOfDeliveryFile,
-          };
-
           try {
-            const response = await createUpdateReleaseProspect({
+            await createUpdateReleaseProspect({
               id: clientDetails?.clientId,
-              payload: payload,
+              payload: formData,
             }).unwrap();
             // printContent();
             BasicToast("success", "");
@@ -492,7 +503,7 @@ export const FreebieReleasing = () => {
               <Button
                 startIcon={<Check />}
                 className="primaryButtons"
-                onClick={handlePrint}
+                onClick={handleReleasing}
               >
                 {"Release"}
               </Button>

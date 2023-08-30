@@ -130,8 +130,8 @@ export const FreebieApproval = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody sx={{ maxHeight: "520px" }}>
-                  {requestedFreebies?.data?.freebieRequest?.map((row) => (
-                    <TableRow key={row.id}>
+                  {requestedFreebies?.data?.freebieRequest?.map((row, index) => (
+                    <TableRow key={index}>
                       <TableCell
                         component="th"
                         scope="row"
@@ -229,7 +229,7 @@ const FreebieApprovalActions = ({ row }) => {
       "question"
     ).then((res) => {
       if (res.isConfirmed) {
-        createApproveFreebieRequest(row.id);
+        createApproveFreebieRequest(row.freebieRequestId);
         BasicToast("success", `Freebie ${row?.ownersName} approved`, 3500);
       }
     });
@@ -267,7 +267,7 @@ const FreebieApprovalActions = ({ row }) => {
       if (res.isConfirmed) {
         createRejectFreebieRequest({
           payload: { reason: res.value },
-          id: row.id,
+          id: row.freebieRequestId,
         });
         BasicToast("success", `Freebie ${row?.ownersName} rejected`, 3500);
       }

@@ -61,7 +61,7 @@ const Login = () => {
       dispatch(SetSidebarNavigation(sidebarNavigationData));
       reset();
     } catch (error) {
-      BasicToast("error", error?.data?.messages[0], 700);
+      BasicToast("error", error?.data?.messages[0], 2000);
     }
   };
 

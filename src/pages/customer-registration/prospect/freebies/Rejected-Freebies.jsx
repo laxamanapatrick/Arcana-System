@@ -80,7 +80,7 @@ export const RejectedFreebies = ({
               </TableRow>
             </TableHead>
             <TableBody sx={{ maxHeight: "520px" }}>
-              {rejectedFreebies?.data?.approvedFreebies?.map((row, index) => (
+              {rejectedFreebies?.data?.rejectedFreebies?.map((row, index) => (
                 <TableRow key={index}>
                   <TableCell
                     component="th"

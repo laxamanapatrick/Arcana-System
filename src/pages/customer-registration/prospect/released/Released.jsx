@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
+  Button,
   IconButton,
   Menu,
   MenuItem,
+  Modal,
   Paper,
   Stack,
   Table,
@@ -13,21 +15,24 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  useTheme,
 } from "@mui/material";
 import SearchField from "../../../../components/SearchField";
 import {
   LoadingData,
   ZeroRecordsFound,
 } from "../../../../components/Lottie-Components";
-import { More, ViewAgenda } from "@mui/icons-material";
+import { List, AppRegistration, Image, More } from "@mui/icons-material";
 import { useDefaultStyles } from "../../../../hooks/useDefaultStyles";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useDisclosure } from "../../../../hooks/useDisclosure";
 import { setSelectedRow } from "../../../../services/store/selectedRowSlice";
-import { toggleModal } from "../../../../services/store/disclosureSlice";
+import {
+  toggleDrawer,
+  toggleModal,
+} from "../../../../services/store/disclosureSlice";
 import { useGetAllReleasedProspectQuery } from "../../../../services/api";
 import { FreebieViewing } from "../freebies/Freebie-Viewing";
+import { ReleasedToDirectForm } from "./Released-Direct-Form";
 
 export const Released = () => {
   const [search, setSearch] = useState("");
@@ -149,6 +154,7 @@ export const Released = () => {
         )}
       </Stack>
       <FreebieViewing />
+      <ReleasedToDirectForm />
     </>
   );
 };
@@ -161,35 +167,31 @@ const ReleasedActions = ({ row }) => {
 
   const menuItems = [
     {
-      type: "view",
-      name: "View More",
-      icon: <ViewAgenda />,
+      type: "view freebies",
+      name: "View Freebies",
+      icon: <List />,
+    },
+    {
+      type: "direct",
+      name: "Register as Direct",
+      icon: <AppRegistration />,
     },
   ];
 
-  const handleView = () => {
+  const handleViewFreebies = () => {
     dispatch(setSelectedRow(row));
     dispatch(toggleModal("isFreebieViewing"));
   };
 
-  const formatOptionsForRemarksToast = (options) => {
-    return options.reduce((formattedOptions, option) => {
-      formattedOptions[option.name] = option.name;
-      return formattedOptions;
-    }, {});
+  const handleDirectRegistration = () => {
+    dispatch(toggleDrawer("isReleasedToDirectForm"));
   };
 
-  const temporaryInputOptions = [
-    { id: 1, name: "Invalid Address" },
-    { id: 2, name: "Invalid Contact Number" },
-    { id: 3, name: "No DTI Permit" },
-  ];
-
-  const formattedOptions = formatOptionsForRemarksToast(temporaryInputOptions);
-
   const handleOnClick = (items) => {
-    if (items.type === "view") {
-      handleView();
+    if (items.type === "view freebies") {
+      handleViewFreebies();
+    } else if (items.type === "direct") {
+      handleDirectRegistration();
     }
     toggleMenu();
   };

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Box,
   Button,
@@ -14,31 +14,14 @@ import {
   Modal,
   Typography,
   Divider,
-  IconButton,
+  Dialog,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleModal } from "../../../../services/store/disclosureSlice";
 import { useDefaultStyles } from "../../../../hooks/useDefaultStyles";
-import {
-  useCreateUpdateReleaseProspectMutation,
-  useGetItemsQuery,
-} from "../../../../services/api";
-import {
-  AttachFile,
-  CameraAlt,
-  Check,
-  Clear,
-  Close,
-  Print,
-} from "@mui/icons-material";
+import { useGetItemsQuery } from "../../../../services/api";
+import { Image, Print, ImageNotSupported } from "@mui/icons-material";
 import { useReactToPrint } from "react-to-print";
-import ReactSignatureCanvas from "react-signature-canvas";
-import { useDropzone } from "react-dropzone";
-import Webcam from "react-webcam";
-import {
-  BasicToast,
-  ModalToast,
-} from "../../../../components/SweetAlert-Components";
 
 export const FreebieViewing = () => {
   const dispatch = useDispatch();
@@ -72,75 +55,9 @@ export const FreebieViewing = () => {
     freebies: defaultFreebieValues || [],
   };
 
-  const sigCanvasRef = useRef();
-  const [signatureValue, setSignatureValue] = useState({
-    value: "",
-    isSigned: false,
-  });
-
   const printContent = useReactToPrint({
     content: () => printRef?.current,
   });
-
-  const [proofOfDeliveryFiles, setProofOfDeliveryFiles] = useState();
-  const [isInvalidFile, setIsInvalidFile] = useState(false);
-  const [isValidProofOfDelivery, setIsValidProofOfDelivery] = useState(false);
-
-  const webcamRef = useRef(null);
-  const [isCameraActive, setIsCameraActive] = useState(false);
-  const [capturedPhoto, setCapturedPhoto] = useState(null);
-
-  const toggleCamera = () => {
-    setIsCameraActive(!isCameraActive);
-  };
-
-  const onDropProofOfDelivery = useCallback((acceptedFiles, rejectedFiles) => {
-    if (rejectedFiles.length > 0) {
-      setIsInvalidFile(true);
-      setIsValidProofOfDelivery(false);
-    } else {
-      setIsInvalidFile(false);
-      setProofOfDeliveryFiles(acceptedFiles[0]);
-      setIsValidProofOfDelivery(true);
-    }
-  }, []);
-
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop: onDropProofOfDelivery,
-    accept: {
-      "image/*": [".jpeg", ".jpg", ".png"],
-    }, // Only accept image files
-    multiple: false, // Allow only a single file to be uploaded
-  });
-
-  const handleRemoveProofOfDelivery = () => {
-    setProofOfDeliveryFiles(null);
-    setIsValidProofOfDelivery(false);
-  };
-
-  const handleCapturePhoto = () => {
-    const capturedImage = webcamRef.current.getScreenshot();
-    setCapturedPhoto(capturedImage);
-    setProofOfDeliveryFiles(capturedImage);
-    setIsCameraActive(false);
-    setIsValidProofOfDelivery(true);
-  };
-
-  const handleCloseViewing = () => {
-    setProofOfDeliveryFiles(null);
-    setIsValidProofOfDelivery(false);
-    setSignatureValue({
-      value: "",
-      isSigned: false,
-    });
-    dispatch(toggleModal("isFreebieViewing"));
-  };
-
-  const [createUpdateReleaseProspect] =
-    useCreateUpdateReleaseProspectMutation();
-  const handlePrint = () => {
-    printContent();
-  };
 
   return (
     <Modal
@@ -154,7 +71,6 @@ export const FreebieViewing = () => {
           position: "fixed",
           top: 0,
           left: 0,
-          width: "100%",
           height: "100%",
         },
       }}
@@ -196,8 +112,13 @@ export const FreebieViewing = () => {
               borderStyle: "dashed",
             }}
           >
-            <Typography fontWeight="bold" fontSize="12.5px" mt={1}>
-              Freebie Form
+            <Typography
+              fontWeight="bold"
+              fontSize="12.5px"
+              mt={1}
+              textAlign="center"
+            >
+              Freebie From
             </Typography>
 
             {/* Client Details  */}
@@ -290,7 +211,7 @@ export const FreebieViewing = () => {
               width="85%"
               mb={1}
             >
-              <Box width="25%" mt={3}>
+              <Box width="30%" mt={2}>
                 <Typography textAlign="center" fontSize="12.5px" mt={1}>
                   {fullname}
                 </Typography>
@@ -305,30 +226,14 @@ export const FreebieViewing = () => {
                 </Typography>
               </Box>
 
-              <Box width="30%" mt={1}>
-                <Box display="flex" flexDirection="row">
-                  <ReactSignatureCanvas
-                    ref={sigCanvasRef}
-                    canvasProps={{ width: 240, height: 40 }}
-                    onEnd={() =>
-                      setSignatureValue({
-                        value: sigCanvasRef?.current?.toDataURL(),
-                        isSigned: true,
-                      })
-                    }
-                  />
-                  {signatureValue && (
-                    <IconButton
-                      onClick={() => {
-                        sigCanvasRef?.current.clear();
-                        setSignatureValue({
-                          value: "",
-                          isSigned: false,
-                        });
-                      }}
-                    >
-                      <Clear />
-                    </IconButton>
+              <Box width="30%" mt={selectedRowData?.eSignaturePath ? "" : 3}>
+                <Box display="flex" flexDirection="row" justifyContent="center">
+                  {selectedRowData?.eSignaturePath ? (
+                    <img src={selectedRowData?.eSignaturePath || ""} />
+                  ) : (
+                    <Typography fontSize="small" fontStyle="italic">
+                      No signature provided
+                    </Typography>
                   )}
                 </Box>
                 <Divider
@@ -342,105 +247,105 @@ export const FreebieViewing = () => {
                 </Typography>
               </Box>
             </Stack>
-            {/* Signatures Start End  */}
+            {/* Signatures End  */}
 
             <></>
+            {selectedRowData?.photoProofPath ? (
+              <PhotoProof />
+            ) : (
+              <Stack
+                width="100%"
+                flexDirection="row"
+                alignItems="center"
+                justifyContent="start"
+              >
+                <ImageNotSupported sx={{ color: "black !important" }} />
+                <Typography
+                  sx={{
+                    fontSize: "small",
+                    fontStyle: "italic",
+                  }}
+                >
+                  no proof of delivery provided
+                </Typography>
+              </Stack>
+            )}
           </Stack>
           {/* Print End  */}
 
-          {/* Proof of Delivery  */}
-          <Stack width="100%">
-            {isCameraActive ? (
-              <div>
-                <Webcam
-                  audio={false}
-                  screenshotFormat="image/jpeg"
-                  width={240}
-                  height={180}
-                  ref={webcamRef}
-                />
-                <IconButton onClick={handleCapturePhoto}>
-                  <CameraAlt fontSize="50px" />
-                </IconButton>
-                <IconButton onClick={toggleCamera}>
-                  <Close />
-                </IconButton>
-              </div>
-            ) : (
-              <>
-                <Box display="flex" flexDirection="row" alignItems="center">
-                  <Typography fontSize="13.5px">Proof of Delivery</Typography>
-                  {proofOfDeliveryFiles ? (
-                    <>
-                      <IconButton onClick={handleRemoveProofOfDelivery}>
-                        <Clear />
-                      </IconButton>
-                    </>
-                  ) : (
-                    <>
-                      <IconButton
-                        {...getRootProps()}
-                        className={`dropzone ${
-                          proofOfDeliveryFiles ? "active" : ""
-                        }`}
-                      >
-                        <AttachFile />
-                      </IconButton>
-                        <input {...getInputProps()} />
-                      <IconButton onClick={toggleCamera}>
-                        <CameraAlt />
-                      </IconButton>
-                    </>
-                  )}
-                </Box>
-                {isInvalidFile && (
-                  <div>
-                    <Typography fontSize="10.5px" color="red">
-                      Invalid file type. Please upload a valid image file.
-                    </Typography>
-                  </div>
-                )}
-                {proofOfDeliveryFiles && !isInvalidFile && (
-                  <div>
-                    <Typography fontSize="10.5px" color="green">
-                      {`${proofOfDeliveryFiles?.name || "Photo"}`} uploaded
-                      successfully
-                    </Typography>
-                  </div>
-                )}
-              </>
-            )}
-          </Stack>
-          {/* Proof of Delivery End */}
-
-          {!isCameraActive && (
-            <ButtonGroup
-              sx={{
-                position: "sticky",
-                top: 0,
-                zIndex: 1,
-                mr: 2,
-                gap: 1,
-                justifyContent: "end",
-                width: "100%",
-                display: "flex",
-                ...defaultButtonStyle,
-              }}
+          <ButtonGroup
+            sx={{
+              position: "sticky",
+              top: 0,
+              zIndex: 1,
+              mr: 2,
+              gap: 1,
+              justifyContent: "end",
+              width: "100%",
+              display: "flex",
+              ...defaultButtonStyle,
+            }}
+          >
+            <Button
+              className="cancelButtons"
+              onClick={() => dispatch(toggleModal("isFreebieViewing"))}
             >
-              <Button className="cancelButtons" onClick={handleCloseViewing}>
-                Close
-              </Button>
-              <Button
-                startIcon={<Print />}
-                className="primaryButtons"
-                onClick={handlePrint}
-              >
-                {"Print"}
-              </Button>
-            </ButtonGroup>
-          )}
+              Close
+            </Button>
+            <Button
+              startIcon={<Print />}
+              className="primaryButtons"
+              onClick={() => printContent()}
+            >
+              {"Print"}
+            </Button>
+          </ButtonGroup>
         </Stack>
       </Box>
     </Modal>
+  );
+};
+
+const PhotoProof = () => {
+  const { selectedRowData } = useSelector((state) => state.selectedRowData);
+  const image = selectedRowData?.photoProofPath || "";
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Stack
+      width="100%"
+      flexDirection="row"
+      alignItems="center"
+      justifyContent="start"
+    >
+      <Image
+        sx={{ color: "black !important", cursor: "pointer" }}
+        onClick={() => setOpen(true)}
+      />
+      <Typography
+        sx={{
+          cursor: "pointer",
+          fontSize: "small",
+          fontStyle: "italic",
+        }}
+        onClick={() => setOpen(true)}
+      >
+        with proof of delivery
+      </Typography>
+      <Dialog fullWidth open={open} onClose={() => {}}>
+        <Box>
+          <img
+            src={image || ""}
+            style={{
+              maxWidth: "100%",
+              maxHeight: "calc(100vh - 150px)",
+              display: "block",
+              margin: "0 auto",
+            }}
+          />
+        </Box>
+        <Button onClick={() => setOpen(false)}>Close</Button>
+      </Dialog>
+    </Stack>
   );
 };

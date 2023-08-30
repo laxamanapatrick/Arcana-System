@@ -40,9 +40,9 @@ export const FreebieForm = () => {
   const { data: itemData } = useGetItemsQuery();
   const { selectedRowData } = useSelector((state) => state.selectedRowData);
 
-  const clientId = selectedRowData?.clientId
-    ? selectedRowData?.clientId
-    : selectedRowData?.id;
+  const clientId = selectedRowData?.clientId || selectedRowData?.id;
+
+  const freebieId = selectedRowData?.freebieRequestId;
 
   const defaultFreebieValues = selectedRowData?.freebies?.map((item) => {
     const selectedItem = itemData?.data?.items?.find(
@@ -102,7 +102,7 @@ export const FreebieForm = () => {
     control,
     name: "freebies",
   });
-  
+
   const [requestFreebie] = useCreateRequestFreebieMutation();
   const [updateFreebieInformation] =
     useCreateUpdateFreebieInformationMutation();
@@ -141,7 +141,7 @@ export const FreebieForm = () => {
       return;
     }
     try {
-      if (!selectedRowData?.clientId) {
+      if (!freebieId) {
         await requestFreebie({
           id: data?.clientId,
           payload: addPayload,
@@ -155,7 +155,7 @@ export const FreebieForm = () => {
         await updateFreebieInformation({
           payload: editPayload,
           id: data?.clientId,
-          freebieId: selectedRowData?.freebieRequestId ? selectedRowData?.freebieRequestId : "",
+          freebieId: freebieId,
         }).unwrap();
         BasicToast(
           "success",

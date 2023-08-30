@@ -24,8 +24,9 @@ import { MRP } from "../pages/setup/inventory/mrp/MRP";
 import CustomerRegistration from "../pages/customer-registration/index.jsx";
 import { Prospect } from "../pages/customer-registration/prospect/Prospect";
 import Approval from "../pages/approval";
-import { ProspectApproval } from "../pages/approval/prospect-approval/Prospect-Approval";
+// import { ProspectApproval } from "../pages/approval/prospect-approval/Prospect-Approval";
 import { FreebieApproval } from "../pages/approval/freebie-approval/Freebie-Approval";
+import { DirectApproval } from "../pages/approval/direct-approval/Direct-Approval";
 import StoreType from "../pages/setup/masterlist/products/Store-Type";
 import { Direct } from "../pages/customer-registration/direct/Direct";
 
@@ -147,7 +148,7 @@ const Routing = () => {
             },
             {
               path: "direct-approval",
-              element: "",
+              element: <DirectApproval />,
             },
           ],
         },
