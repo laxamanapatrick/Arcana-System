@@ -40,6 +40,7 @@ import {
   BasicToast,
   ModalToast,
 } from "../../../../components/SweetAlert-Components";
+import { SubmittingData } from "../../../../components/Lottie-Components";
 
 export const FreebieReleasing = () => {
   const dispatch = useDispatch();
@@ -139,7 +140,7 @@ export const FreebieReleasing = () => {
     dispatch(toggleModal("isFreebieReleasing"));
   };
 
-  const [createUpdateReleaseProspect] =
+  const [createUpdateReleaseProspect, { isLoading }] =
     useCreateUpdateReleaseProspectMutation();
   const handleReleasing = () => {
     if (!signatureValue.isSigned) {
@@ -240,6 +241,7 @@ export const FreebieReleasing = () => {
           background: "rgba(0, 0, 0, 0.75)",
         }}
       >
+        {isLoading && <SubmittingData text={"Releasing Freebie"} />}
         <Stack
           sx={{
             gap: 1,
@@ -279,29 +281,29 @@ export const FreebieReleasing = () => {
             >
               <Box>
                 <Typography fontSize="11.5px">
-                  Transaction #: {clientDetails.transactionNumber}
-                </Typography>
-                <Typography fontSize="11.5px">
                   Owner's Name: {clientDetails.ownersName}
                 </Typography>
-                <Typography fontSize="11.5px">
+                {/* <Typography fontSize="11.5px">
                   Phone Number: {clientDetails.phoneNumber}
-                </Typography>
-                <Typography fontSize="11.5px" width="95%">
+                </Typography> */}
+                <Typography fontSize="11.5px">
                   Owner's Address: {clientDetails.ownersAddress}
                 </Typography>
               </Box>
 
               <Box>
                 <Typography fontSize="11.5px">
-                  Store Type: To be added on get
+                  Transaction #: {clientDetails.transactionNumber}
                 </Typography>
-                <Typography fontSize="11.5px">
+                {/* <Typography fontSize="11.5px">
+                  Store Type: To be added on get
+                </Typography> */}
+                {/* <Typography fontSize="11.5px">
                   Freebie Form #: {clientDetails.freebieRequestId}
                 </Typography>
                 <Typography fontSize="11.5px">
                   Client #: {clientDetails.clientId}
-                </Typography>
+                </Typography> */}
               </Box>
             </Stack>
 

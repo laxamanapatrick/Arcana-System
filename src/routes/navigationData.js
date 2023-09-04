@@ -119,19 +119,19 @@ export const sidebarNavigationData = [
         path: "/customer-registration/prospect",
         name: "Prospect",
       },
-      {
-        id: 2,
-        path: "/customer-registration/direct",
-        name: "Direct",
-      },
+      // {
+      //   id: 2,
+      //   path: "/customer-registration/direct",
+      //   name: "Direct",
+      // },
     ],
   },
-  {
-    id: 8,
-    path: "/freebies",
-    name: "Freebies",
-    icon: "PostAdd",
-  },
+  // {
+  //   id: 8,
+  //   path: "/freebies",
+  //   name: "Freebies",
+  //   icon: "PostAdd",
+  // },
   {
     id: 9,
     path: "/approval",
@@ -148,30 +148,30 @@ export const sidebarNavigationData = [
         name: "Freebie Approval",
         path: "/approval/freebie-approval",
       },
-      {
-        id: 2,
-        name: "Direct Approval",
-        path: "/approval/direct-approval",
-      },
+      // {
+      //   id: 2,
+      //   name: "Direct Approval",
+      //   path: "/approval/direct-approval",
+      // },
     ],
   },
-  {
-    id: 10,
-    path: "/inventory",
-    name: "Inventory",
-    icon: "Inventory",
-    sub: [
-      {
-        id: 1,
-        name: "MRP",
-        path: "/inventory/mrp",
-      },
-      {
-        id: 2,
-        name: "Other",
-        path: "/inventory/other",
-      },
-    ],
-  },
+  // {
+  //   id: 10,
+  //   path: "/inventory",
+  //   name: "Inventory",
+  //   icon: "Inventory",
+  //   sub: [
+  //     {
+  //       id: 1,
+  //       name: "MRP",
+  //       path: "/inventory/mrp",
+  //     },
+  //     {
+  //       id: 2,
+  //       name: "Other",
+  //       path: "/inventory/other",
+  //     },
+  //   ],
+  // },
 ];
 

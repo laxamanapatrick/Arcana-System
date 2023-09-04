@@ -49,7 +49,7 @@ export const FreebieViewing = () => {
       : selectedRowData?.id,
     freebieRequestId: selectedRowData?.freebieRequestId,
     ownersName: selectedRowData?.ownersName,
-    ownersAddress: selectedRowData?.ownersAddress,
+    ownersAddress: selectedRowData?.address,
     phoneNumber: selectedRowData?.phoneNumber,
     transactionNumber: selectedRowData?.transactionNumber,
     freebies: defaultFreebieValues || [],
@@ -130,29 +130,29 @@ export const FreebieViewing = () => {
             >
               <Box>
                 <Typography fontSize="11.5px">
-                  Transaction #: {clientDetails.transactionNumber}
-                </Typography>
-                <Typography fontSize="11.5px">
                   Owner's Name: {clientDetails.ownersName}
                 </Typography>
-                <Typography fontSize="11.5px">
+                {/* <Typography fontSize="11.5px">
                   Phone Number: {clientDetails.phoneNumber}
-                </Typography>
-                <Typography fontSize="11.5px" width="95%">
+                </Typography> */}
+                <Typography fontSize="11.5px">
                   Owner's Address: {clientDetails.ownersAddress}
                 </Typography>
               </Box>
 
               <Box>
                 <Typography fontSize="11.5px">
-                  Store Type: To be added on get
+                  Transaction #: {clientDetails.transactionNumber}
                 </Typography>
-                <Typography fontSize="11.5px">
+                {/* <Typography fontSize="11.5px">
+                  Store Type: To be added on get
+                </Typography> */}
+                {/* <Typography fontSize="11.5px">
                   Freebie Form #: {clientDetails.freebieRequestId}
                 </Typography>
                 <Typography fontSize="11.5px">
                   Client #: {clientDetails.clientId}
-                </Typography>
+                </Typography> */}
               </Box>
             </Stack>
 

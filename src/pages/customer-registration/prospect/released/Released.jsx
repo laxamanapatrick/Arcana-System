@@ -191,7 +191,8 @@ const ReleasedActions = ({ row }) => {
     if (items.type === "view freebies") {
       handleViewFreebies();
     } else if (items.type === "direct") {
-      handleDirectRegistration();
+      // handleDirectRegistration();
+      alert("Handle Registration to Direct")
     }
     toggleMenu();
   };

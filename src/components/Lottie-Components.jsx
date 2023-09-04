@@ -123,7 +123,7 @@ export const LoadingData = ({ text }) => {
 
 export const SubmittingData = ({ text }) => {
   return (
-    <StyledBox sx={{ background: "#b1b3b5" }}>
+    <StyledBox sx={{ background: "#28282B" }}>
       <Lottie
         animationData={submittingData}
         style={{ padding: 0, margin: 0 }}
