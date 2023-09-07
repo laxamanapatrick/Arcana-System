@@ -40,7 +40,8 @@ export const ModalToast = (
   icon,
   confirmColor,
   cancelColor,
-  confirmButtonText
+  confirmButtonText,
+  cancelButtonText
 ) => {
   return Swal.fire({
     title: title ? title : "Are you sure you want to do this action?",
@@ -50,6 +51,7 @@ export const ModalToast = (
     confirmButtonColor: confirmColor ? confirmColor : "#243448",
     cancelButtonColor: cancelColor ? cancelColor : "#E5E5E5",
     confirmButtonText: confirmButtonText ? confirmButtonText : "Yes",
+    cancelButtonText: cancelButtonText ? cancelButtonText : 'Cancel',
     customClass: {
       container: "modal-toast-container",
       popup: "modal-toast-popup",

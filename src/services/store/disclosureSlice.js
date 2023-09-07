@@ -17,13 +17,13 @@ const initialState = {
     isTermDaysForm: false,
     isRequestProspectForm: false,
     isFreebieForm: false,
-    isReleasedToDirectForm: false,
     isDirectForm: false,
   },
   modals: {
     isTagging: false,
     isFreebieReleasing: false,
     isFreebieViewing: false,
+    isReleasedToDirectForm: false,
   },
 };
 

@@ -184,15 +184,14 @@ const ReleasedActions = ({ row }) => {
   };
 
   const handleDirectRegistration = () => {
-    dispatch(toggleDrawer("isReleasedToDirectForm"));
+    dispatch(toggleModal("isReleasedToDirectForm"));
   };
 
   const handleOnClick = (items) => {
     if (items.type === "view freebies") {
       handleViewFreebies();
     } else if (items.type === "direct") {
-      // handleDirectRegistration();
-      alert("Handle Registration to Direct")
+      handleDirectRegistration();
     }
     toggleMenu();
   };

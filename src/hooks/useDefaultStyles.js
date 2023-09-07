@@ -48,6 +48,26 @@ export const useDefaultStyles = () => {
         },
       },
     },
+    ".previousButtons": {
+      width: "90px",
+      fontSize: "11px",
+      color: theme.palette.common.white,
+      bgcolor: theme.palette.secondary.main,
+      ":hover": {
+        color: theme.palette.common.white,
+        bgcolor: theme.palette.primary.main,
+        variant: "contained",
+      },
+      ":disabled": {
+        color: theme.palette.common.white,
+        bgcolor: disabledBg,
+        border: `none`,
+        "&.MuiButtonBase-root:disabled": {
+          cursor: "not-allowed",
+          pointerEvents: "auto",
+        },
+      },
+    },
     ".addRowButtons": {
       fontSize: "11px",
       color: theme.palette.common.white,
@@ -99,7 +119,7 @@ export const useDefaultStyles = () => {
 
   const actionMenuStyle = {
     background: theme.palette.primary.main,
-    width: 'auto'
+    width: "auto",
   };
 
   return {
