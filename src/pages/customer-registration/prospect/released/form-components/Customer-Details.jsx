@@ -1,5 +1,5 @@
+import React, { useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { directCustomerDetails } from "../../../../../schema";
 import {
@@ -10,14 +10,16 @@ import {
   Checkbox,
 } from "@mui/material";
 import { Textfield } from "../../../../../components/Fields";
+import { useDispatch } from "react-redux";
+import { setClientDetails } from "../../../../../services/store/customerDetailsSlice";
 
-export const CustomerDetails = () => {
+export const CustomerDetails = ({ viewing, setCanNext }) => {
+  const dispatch = useDispatch();
   const ownersAddress = "This, Is, A, Sample, Default Address";
   const [block, street, barangay, municipality, province] =
     ownersAddress.split(", ");
 
   const {
-    handleSubmit,
     watch,
     getValues,
     setValue,
@@ -101,9 +103,66 @@ export const CustomerDetails = () => {
     return isChecked;
   };
 
+  const isRequiredFiedsFilled = (formData) => {
+    const {
+      businessBlock,
+      businessStreet,
+      businessBarangay,
+      businessMunicipality,
+      businessProvince,
+      businessAddress,
+      givenName,
+      lastName,
+      representativeName,
+      //   middleName,
+      //   suffix,
+      representativePosition,
+      cluster,
+    } = formData;
+
+    if (
+      businessBlock &&
+      businessStreet &&
+      businessBarangay &&
+      businessMunicipality &&
+      businessProvince &&
+      businessAddress &&
+      givenName &&
+      lastName &&
+      representativeName &&
+      representativePosition &&
+      cluster
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const formData = getValues();
+  const fieldsFilled = isRequiredFiedsFilled(formData);
+
+  useEffect(() => {
+    if (fieldsFilled) {
+      dispatch(
+        setClientDetails({
+          businessAddress: formData.businessAddress,
+          representativeName: formData.representativeName,
+          representativePosition: formData.representativePosition,
+          cluster: formData.cluster,
+        })
+      );
+      setCanNext(true);
+    }
+
+    return () => {
+      dispatch(setClientDetails(null));
+      setCanNext(false);
+    };
+  }, [viewing]);
+
   return (
     <>
-      <Stack component="form" gap={2}>
+      <Stack component="form" justifyContent="space-between" gap={4}>
         <Stack gap={1}>
           <Typography
             fontWeight="bold"
@@ -117,6 +176,9 @@ export const CustomerDetails = () => {
               value={"Details"}
               label="Owner's Name"
               size="small"
+              fullWidth
+              variant="filled"
+              sx={{ background: "#c5c9c6" }}
               inputProps={{
                 readOnly: true,
                 style: {
@@ -128,6 +190,9 @@ export const CustomerDetails = () => {
               value={"Details"}
               label="Owner's Name"
               size="small"
+              fullWidth
+              variant="filled"
+              sx={{ background: "#c5c9c6" }}
               inputProps={{
                 readOnly: true,
                 style: {
@@ -139,6 +204,9 @@ export const CustomerDetails = () => {
               value={"Details"}
               label="Owner's Name"
               size="small"
+              fullWidth
+              variant="filled"
+              sx={{ background: "#c5c9c6" }}
               inputProps={{
                 readOnly: true,
                 style: {
@@ -162,6 +230,8 @@ export const CustomerDetails = () => {
               label="Name"
               size="small"
               fullWidth
+              variant="filled"
+              sx={{ background: "#c5c9c6" }}
               inputProps={{
                 readOnly: true,
                 style: {
@@ -174,6 +244,8 @@ export const CustomerDetails = () => {
               label="Name"
               size="small"
               fullWidth
+              variant="filled"
+              sx={{ background: "#c5c9c6" }}
               inputProps={{
                 readOnly: true,
                 style: {
@@ -186,6 +258,8 @@ export const CustomerDetails = () => {
               label="Name"
               size="small"
               fullWidth
+              variant="filled"
+              sx={{ background: "#c5c9c6" }}
               inputProps={{
                 readOnly: true,
                 style: {
@@ -200,6 +274,8 @@ export const CustomerDetails = () => {
               label="Name"
               size="small"
               fullWidth
+              variant="filled"
+              sx={{ background: "#c5c9c6" }}
               inputProps={{
                 readOnly: true,
                 style: {
@@ -213,6 +289,8 @@ export const CustomerDetails = () => {
               label="Name"
               size="small"
               fullWidth
+              variant="filled"
+              sx={{ background: "#c5c9c6" }}
               inputProps={{
                 readOnly: true,
                 style: {
@@ -246,6 +324,8 @@ export const CustomerDetails = () => {
               label="Name"
               size="small"
               fullWidth
+              variant="filled"
+              sx={{ background: "#c5c9c6" }}
               inputProps={{
                 readOnly: true,
                 style: {

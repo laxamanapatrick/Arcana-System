@@ -16,7 +16,10 @@ import { useDefaultStyles } from "../../../../hooks/useDefaultStyles";
 import { CustomerDetails } from "./form-components/Customer-Details";
 import { Attachements } from "./form-components/Attachements";
 import { TermsAndConditions } from "./form-components/Terms-And-Conditions";
-import { ModalToast } from "../../../../components/SweetAlert-Components";
+import {
+  InteractiveToast,
+  ModalToast,
+} from "../../../../components/SweetAlert-Components";
 
 export const ReleasedToDirectForm = () => {
   const theme = useTheme();
@@ -26,15 +29,12 @@ export const ReleasedToDirectForm = () => {
     (state) => state.disclosure.modals
   );
   const { defaultButtonStyle } = useDefaultStyles();
-
-  const [clientId, setClientId] = useState("");
-
   const [viewing, setViewing] = useState(1);
-
+  const [canNext, setCanNext] = useState(false);
   const components = {
-    1: <CustomerDetails />,
-    2: <TermsAndConditions />,
-    3: <Attachements />,
+    1: <CustomerDetails viewing={viewing} setCanNext={setCanNext} />,
+    2: <TermsAndConditions viewing={viewing} setCanNext={setCanNext} />,
+    3: <Attachements viewing={viewing} setCanNext={setCanNext} />,
   };
 
   const handlePageChange = (action) => {
@@ -42,10 +42,18 @@ export const ReleasedToDirectForm = () => {
       setViewing((prev) => prev - 1);
     }
 
-    if (action === "next") {
+    if (action === "next" && canNext) {
       setViewing((prev) => prev + 1);
+    } else {
+      InteractiveToast(
+        "Required Fields",
+        "Please accomplish all required fields first",
+        "info"
+      );
     }
   };
+
+  console.log(canNext)
 
   const disablePrevious = () => {
     let value;
@@ -85,6 +93,8 @@ export const ReleasedToDirectForm = () => {
 
   const handleSubmit = () => {
     alert("submit details");
+    if (viewing === 3) {
+    }
   };
 
   return (
@@ -148,7 +158,9 @@ export const ReleasedToDirectForm = () => {
           </Stack>
 
           {/* Forms */}
-          <Stack>{components[viewing]}</Stack>
+          <Stack height="100%" width="100%">
+            {components[viewing]}
+          </Stack>
 
           {/* Footer */}
           <ButtonGroup
