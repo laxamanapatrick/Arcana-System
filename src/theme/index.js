@@ -132,7 +132,7 @@ const darkTheme = createTheme({
           padding: 0,
           "&:hover": {
             color: colorSchemes.dark.primary,
-          }
+          },
         },
       },
     },
@@ -141,6 +141,13 @@ const darkTheme = createTheme({
         root: {
           color: colorSchemes.dark.secondary,
           padding: 0,
+        },
+      },
+    },
+    MuiRadio: {
+      styleOverrides: {
+        root: {
+          color: colorSchemes.dark.secondary,
         },
       },
     },

@@ -14,37 +14,73 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleModal } from "../../../../services/store/disclosureSlice";
 import { useDefaultStyles } from "../../../../hooks/useDefaultStyles";
 import { CustomerDetails } from "./form-components/Customer-Details";
-import { Attachements } from "./form-components/Attachements";
+import { Attachments } from "./form-components/Attachments";
 import { TermsAndConditions } from "./form-components/Terms-And-Conditions";
 import {
   InteractiveToast,
   ModalToast,
 } from "../../../../components/SweetAlert-Components";
+import { setClientDetails } from "../../../../services/store/customerDetailsSlice";
 
 export const ReleasedToDirectForm = () => {
   const theme = useTheme();
+  const { defaultButtonStyle } = useDefaultStyles();
   const dispatch = useDispatch();
   const adjustWidth = useMediaQuery("(max-width:1030px)");
+  const { selectedRowData } = useSelector((state) => state.selectedRowData);
   const { isReleasedToDirectForm } = useSelector(
     (state) => state.disclosure.modals
   );
-  const { defaultButtonStyle } = useDefaultStyles();
+  const {
+    clientDetails,
+    termsAndConditions,
+    attachments: savedAttachments,
+  } = useSelector((state) => state.directRegistrationData);
+
+  const fields = {
+    clientId: selectedRowData?.id,
+    customer_details: {
+      businessAddress: clientDetails?.businessAddress || "",
+      representativeName: clientDetails?.representativeName || "",
+      representativePosition: "NA",
+      cluster: clientDetails?.cluster || "",
+    },
+    terms_and_conditions: {
+      freezer: termsAndConditions?.freezer || "",
+      typeOfCustomer: termsAndConditions?.typeOfCustomer || "",
+      directDelivery: termsAndConditions?.directDelivery || "",
+      bookingCoverage: termsAndConditions?.bookingCoverage || "",
+      modeOfPayment: termsAndConditions?.ModeOfPayment || "",
+      terms: termsAndConditions?.terms || "",
+      creditLimit: termsAndConditions?.creditLimit || "",
+      termDays: termsAndConditions?.termDays || "",
+      discountTypes: termsAndConditions?.discountTypes || "",
+    },
+    attachments: savedAttachments || [],
+  };
+
   const [viewing, setViewing] = useState(1);
   const [canNext, setCanNext] = useState(false);
   const components = {
-    1: <CustomerDetails viewing={viewing} setCanNext={setCanNext} />,
-    2: <TermsAndConditions viewing={viewing} setCanNext={setCanNext} />,
-    3: <Attachements viewing={viewing} setCanNext={setCanNext} />,
+    1: (
+      <CustomerDetails
+        selectedRowData={selectedRowData}
+        fields={fields}
+        setCanNext={setCanNext}
+      />
+    ),
+    2: <TermsAndConditions fields={fields} setCanNext={setCanNext} />,
+    3: <Attachments fields={fields} setCanNext={setCanNext} />,
   };
 
   const handlePageChange = (action) => {
     if (action === "previous") {
       setViewing((prev) => prev - 1);
     }
-
     if (action === "next" && canNext) {
       setViewing((prev) => prev + 1);
-    } else {
+    }
+    if (!canNext) {
       InteractiveToast(
         "Required Fields",
         "Please accomplish all required fields first",
@@ -52,8 +88,6 @@ export const ReleasedToDirectForm = () => {
       );
     }
   };
-
-  console.log(canNext)
 
   const disablePrevious = () => {
     let value;
@@ -67,7 +101,7 @@ export const ReleasedToDirectForm = () => {
 
   const disableNext = () => {
     let value;
-    if (viewing >= 3) {
+    if (viewing > 3) {
       value = true;
     } else {
       value = false;
@@ -86,6 +120,8 @@ export const ReleasedToDirectForm = () => {
       "No"
     ).then((res) => {
       if (res.isConfirmed) {
+        dispatch(setClientDetails(null))
+        setViewing(1)
         dispatch(toggleModal("isReleasedToDirectForm"));
       }
     });

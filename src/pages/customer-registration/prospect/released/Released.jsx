@@ -184,6 +184,7 @@ const ReleasedActions = ({ row }) => {
   };
 
   const handleDirectRegistration = () => {
+    dispatch(setSelectedRow(row));
     dispatch(toggleModal("isReleasedToDirectForm"));
   };
 

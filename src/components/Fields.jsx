@@ -1,6 +1,14 @@
 import React from "react";
 import { Controller } from "react-hook-form";
-import { IconButton, TextField } from "@mui/material";
+import {
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  IconButton,
+  Radio,
+  RadioGroup,
+  TextField,
+} from "@mui/material";
 import { PatternFormat, NumericFormat } from "react-number-format";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Autocomplete } from "@mui/material";
@@ -142,6 +150,45 @@ export const AutoComplete = ({
   );
 };
 
+export const RadioField = ({
+  name,
+  control,
+  label,
+  options,
+  columnOptions,
+  sx,
+  formLabelStyle,
+  ...props
+}) => {
+  const layout =
+    options && options.length === 3
+      ? { display: "block" } // Display in column layout when three options are provided
+      : { display: "inline-block" }; // Display in row layout
+
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
+        <FormControl sx={sx}>
+          <FormLabel sx={formLabelStyle}>{label}</FormLabel>
+          <RadioGroup {...field} {...props}>
+            {options?.map((option, index) => (
+              <FormControlLabel
+                key={index}
+                value={option.value}
+                control={<Radio />}
+                label={option.label}
+                sx={layout}
+              />
+            ))}
+          </RadioGroup>
+        </FormControl>
+      )}
+    />
+  );
+};
+
 export const SignatureField = ({ name, control, ...signatureProps }) => {
   return (
     <Controller
@@ -172,7 +219,9 @@ export const WebcamField = ({
           {field.value ? (
             <Webcam
               audio={false}
-              screenshotFormat={screenshotFormat ? screenshotFormat : "image/png"}
+              screenshotFormat={
+                screenshotFormat ? screenshotFormat : "image/png"
+              }
               {...webcamProps}
             />
           ) : (

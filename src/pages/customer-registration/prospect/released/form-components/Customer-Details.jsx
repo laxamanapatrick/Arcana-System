@@ -10,14 +10,23 @@ import {
   Checkbox,
 } from "@mui/material";
 import { Textfield } from "../../../../../components/Fields";
-import { useDispatch } from "react-redux";
 import { setClientDetails } from "../../../../../services/store/customerDetailsSlice";
+import { useDispatch } from "react-redux";
 
-export const CustomerDetails = ({ viewing, setCanNext }) => {
+export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
+  const requiredFieldLabelStyle = {
+    "& .MuiFormLabel-root": {
+      color: "red !important",
+    },
+    "& .MuiInputLabel-root.Mui-focused": {
+      color: "black !important",
+    },
+    "& .MuiInputLabel-root.MuiInputLabel-shrink": {
+      color: "black !important",
+    },
+  };
+
   const dispatch = useDispatch();
-  const ownersAddress = "This, Is, A, Sample, Default Address";
-  const [block, street, barangay, municipality, province] =
-    ownersAddress.split(", ");
 
   const {
     watch,
@@ -27,75 +36,18 @@ export const CustomerDetails = ({ viewing, setCanNext }) => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(directCustomerDetails),
-    defaultValues: {
-      businessBlock: "",
-      businessStreet: "",
-      businessBarangay: "",
-      businessMunicipality: "",
-      businessProvince: "",
-      businessAddress: "",
-      givenName: "",
-      middleName: "",
-      lastName: "",
-      suffix: "",
-      representativeName: "",
-      representativePosition: "NA",
-      cluster: "",
-    },
+    defaultValues: fields.customer_details,
   });
-
-  const {
-    businessBlock,
-    businessStreet,
-    businessBarangay,
-    businessMunicipality,
-    businessProvince,
-  } = getValues();
-  const updateBusinessAddress = () => {
-    const businessAddress = `${businessBlock || "NA"}, ${
-      businessStreet || "NA"
-    }, ${businessBarangay || "NA"}, ${businessMunicipality || "NA"}, ${
-      businessProvince || "NA"
-    }`;
-    setValue("businessAddress", businessAddress);
-  };
-
-  const { givenName, middleName, lastName, suffix } = getValues();
-  const updateRepresentativeName = () => {
-    const representativeName = `${givenName}, ${middleName}, ${lastName}, ${suffix}`;
-    setValue("representativeName", representativeName);
-  };
 
   const handleSameAddress = (isChecked) => {
     if (isChecked) {
-      setValue("businessBlock", block || "NA");
-      setValue("businessStreet", street || "NA");
-      setValue("businessBarangay", barangay || "NA");
-      setValue("businessMunicipality", municipality || "NA");
-      setValue("businessProvince", province || "NA");
-      const businessAddress = `${block || "NA"}, ${street || "NA"}, ${
-        barangay || "NA"
-      }, ${municipality || "NA"}, ${province || "NA"}`;
-      setValue("businessAddress", businessAddress);
-    } else {
-      setValue("businessBlock", "");
-      setValue("businessStreet", "");
-      setValue("businessBarangay", "");
-      setValue("businessMunicipality", "");
-      setValue("businessProvince", "");
-      setValue("businessAddress", "");
+      setValue("businessAddress", selectedRowData?.address);
     }
   };
 
   const handleCheckboxChecked = () => {
     let isChecked;
-    if (
-      block !== watch("businessBlock") ||
-      street !== watch("businessStreet") ||
-      barangay !== watch("businessBarangay") ||
-      municipality !== watch("businessMunicipality") ||
-      province !== watch("businessProvince")
-    ) {
+    if (selectedRowData?.address !== watch("businessAddress")) {
       isChecked = false;
     } else {
       isChecked = true;
@@ -103,62 +55,33 @@ export const CustomerDetails = ({ viewing, setCanNext }) => {
     return isChecked;
   };
 
-  const isRequiredFiedsFilled = (formData) => {
-    const {
-      businessBlock,
-      businessStreet,
-      businessBarangay,
-      businessMunicipality,
-      businessProvince,
-      businessAddress,
-      givenName,
-      lastName,
-      representativeName,
-      //   middleName,
-      //   suffix,
-      representativePosition,
-      cluster,
-    } = formData;
-
+  const isRequiredFieldsFilled = () => {
+    const formData = getValues();
     if (
-      businessBlock &&
-      businessStreet &&
-      businessBarangay &&
-      businessMunicipality &&
-      businessProvince &&
-      businessAddress &&
-      givenName &&
-      lastName &&
-      representativeName &&
-      representativePosition &&
-      cluster
+      watch("businessAddress") &&
+      watch("representativeName") &&
+      watch("representativePosition") &&
+      watch("cluster")
     ) {
-      return true;
+      dispatch(setClientDetails(formData));
+      setCanNext(true);
     } else {
-      return false;
+      setCanNext(false);
     }
   };
-  const formData = getValues();
-  const fieldsFilled = isRequiredFiedsFilled(formData);
 
   useEffect(() => {
-    if (fieldsFilled) {
-      dispatch(
-        setClientDetails({
-          businessAddress: formData.businessAddress,
-          representativeName: formData.representativeName,
-          representativePosition: formData.representativePosition,
-          cluster: formData.cluster,
-        })
-      );
-      setCanNext(true);
-    }
+    isRequiredFieldsFilled();
 
     return () => {
-      dispatch(setClientDetails(null));
       setCanNext(false);
     };
-  }, [viewing]);
+  }, [
+    watch("businessAddress"),
+    watch("representativeName"),
+    watch("representativePosition"),
+    watch("cluster"),
+  ]);
 
   return (
     <>
@@ -169,39 +92,36 @@ export const CustomerDetails = ({ viewing, setCanNext }) => {
             fontSize="13px"
             textTransform="uppercase"
           >
+            Business Name
+          </Typography>
+          <Box display="flex" flexDirection="row" gap={1}>
+            <MuiTextField
+              value={selectedRowData?.businessName || ""}
+              label="Name"
+              size="small"
+              fullWidth
+              variant="filled"
+              sx={{ background: "#c5c9c6" }}
+              inputProps={{
+                readOnly: true,
+                style: {
+                  cursor: "not-allowed",
+                },
+              }}
+            />
+          </Box>
+        </Stack>
+        <Stack gap={1}>
+          <Typography
+            fontWeight="bold"
+            fontSize="13px"
+            textTransform="uppercase"
+          >
             Customer's Information
           </Typography>
           <Box display="flex" flexDirection="row" gap={1}>
             <MuiTextField
-              value={"Details"}
-              label="Owner's Name"
-              size="small"
-              fullWidth
-              variant="filled"
-              sx={{ background: "#c5c9c6" }}
-              inputProps={{
-                readOnly: true,
-                style: {
-                  cursor: "not-allowed",
-                },
-              }}
-            />
-            <MuiTextField
-              value={"Details"}
-              label="Owner's Name"
-              size="small"
-              fullWidth
-              variant="filled"
-              sx={{ background: "#c5c9c6" }}
-              inputProps={{
-                readOnly: true,
-                style: {
-                  cursor: "not-allowed",
-                },
-              }}
-            />
-            <MuiTextField
-              value={"Details"}
+              value={selectedRowData?.ownersName || ""}
               label="Owner's Name"
               size="small"
               fullWidth
@@ -226,7 +146,7 @@ export const CustomerDetails = ({ viewing, setCanNext }) => {
           </Typography>
           <Box display="flex" flexDirection="row" gap={1}>
             <MuiTextField
-              value={block}
+              value={selectedRowData?.address || ""}
               label="Name"
               size="small"
               fullWidth
@@ -238,122 +158,10 @@ export const CustomerDetails = ({ viewing, setCanNext }) => {
                   cursor: "not-allowed",
                 },
               }}
-            />
-            <MuiTextField
-              value={street}
-              label="Name"
-              size="small"
-              fullWidth
-              variant="filled"
-              sx={{ background: "#c5c9c6" }}
-              inputProps={{
-                readOnly: true,
-                style: {
-                  cursor: "not-allowed",
-                },
-              }}
-            />
-            <MuiTextField
-              value={barangay}
-              label="Name"
-              size="small"
-              fullWidth
-              variant="filled"
-              sx={{ background: "#c5c9c6" }}
-              inputProps={{
-                readOnly: true,
-                style: {
-                  cursor: "not-allowed",
-                },
-              }}
-            />
-          </Box>
-          <Box display="flex" flexDirection="row" gap={1}>
-            <MuiTextField
-              value={municipality}
-              label="Name"
-              size="small"
-              fullWidth
-              variant="filled"
-              sx={{ background: "#c5c9c6" }}
-              inputProps={{
-                readOnly: true,
-                style: {
-                  cursor: "not-allowed",
-                },
-              }}
-            />
-
-            <MuiTextField
-              value={province}
-              label="Name"
-              size="small"
-              fullWidth
-              variant="filled"
-              sx={{ background: "#c5c9c6" }}
-              inputProps={{
-                readOnly: true,
-                style: {
-                  cursor: "not-allowed",
-                },
-              }}
-            />
-
-            <Textfield
-              name="dummy"
-              control={control}
-              label=""
-              size="small"
-              autoComplete="off"
-              sx={{ visibility: "hidden" }}
-              inputProps={{ readOnly: true }}
             />
           </Box>
         </Stack>
-        <Stack gap={1}>
-          <Typography
-            fontWeight="bold"
-            fontSize="13px"
-            textTransform="uppercase"
-          >
-            Business Name
-          </Typography>
-          <Box display="flex" flexDirection="row" gap={1}>
-            <MuiTextField
-              value={"Details"}
-              label="Name"
-              size="small"
-              fullWidth
-              variant="filled"
-              sx={{ background: "#c5c9c6" }}
-              inputProps={{
-                readOnly: true,
-                style: {
-                  cursor: "not-allowed",
-                },
-              }}
-            />
-            <Textfield
-              required
-              name="cluster"
-              control={control}
-              label="Cluster"
-              size="small"
-              autoComplete="off"
-              error={!!errors?.cluster}
-              helperText={errors?.city?.cluster}
-            />
-            <Textfield
-              name="dummy"
-              control={control}
-              label=""
-              size="small"
-              autoComplete="off"
-              sx={{ visibility: "hidden" }}
-              inputProps={{ readOnly: true }}
-            />
-          </Box>
-        </Stack>
+
         <Stack gap={1}>
           <Typography
             fontWeight="bold"
@@ -371,69 +179,12 @@ export const CustomerDetails = ({ viewing, setCanNext }) => {
           <Box display="flex" flexDirection="row" gap={1}>
             <Textfield
               required
-              name="businessBlock"
+              sx={requiredFieldLabelStyle}
+              name="businessAddress"
               control={control}
-              label="City"
+              label={`Block Number, Street, Barangay, City, Province, Zip Code`}
               size="small"
               autoComplete="off"
-              error={!!errors?.businessBlock}
-              helperText={errors?.city?.businessBlock}
-              onChange={updateBusinessAddress}
-            />
-            <Textfield
-              required
-              name="businessStreet"
-              control={control}
-              label="Street"
-              size="small"
-              autoComplete="off"
-              error={!!errors?.businessStreet}
-              helperText={errors?.street?.businessStreet}
-              onChange={updateBusinessAddress}
-            />
-            <Textfield
-              required
-              name="businessBarangay"
-              control={control}
-              label="Barangay"
-              size="small"
-              autoComplete="off"
-              error={!!errors?.businessBarangay}
-              helperText={errors?.barangay?.businessBarangay}
-              onChange={updateBusinessAddress}
-            />
-          </Box>
-          <Box display="flex" flexDirection="row" gap={1}>
-            <Textfield
-              required
-              name="businessMunicipality"
-              control={control}
-              label="Business Address"
-              size="small"
-              autoComplete="off"
-              error={!!errors?.businessMunicipality}
-              helperText={errors?.municipality?.businessMunicipality}
-            />
-
-            <Textfield
-              required
-              name="businessProvince"
-              control={control}
-              label="Business Address"
-              size="small"
-              autoComplete="off"
-              error={!!errors?.businessProvince}
-              helperText={errors?.province?.businessProvince}
-            />
-
-            <Textfield
-              name="dummy"
-              control={control}
-              label=""
-              size="small"
-              autoComplete="off"
-              sx={{ visibility: "hidden" }}
-              inputProps={{ readOnly: true }}
             />
           </Box>
         </Stack>
@@ -448,68 +199,41 @@ export const CustomerDetails = ({ viewing, setCanNext }) => {
           <Box display="flex" flexDirection="row" gap={1}>
             <Textfield
               required
-              name="givenName"
+              sx={requiredFieldLabelStyle}
+              name="representativeName"
               control={control}
-              label="Given Name"
+              label={`Givent Name, Middle Name(Optional), Last Name, Suffix`}
               size="small"
               autoComplete="off"
-              error={!!errors?.givenName}
-              helperText={errors?.city?.givenName}
-              onChange={updateRepresentativeName}
-            />
-            <Textfield
-              name="middleName"
-              control={control}
-              label="Middle Name (Optional)"
-              size="small"
-              autoComplete="off"
-              error={!!errors?.middleName}
-              helperText={errors?.street?.middleName}
-              onChange={updateRepresentativeName}
-            />
-            <Textfield
-              required
-              name="lastName"
-              control={control}
-              label="Last Name"
-              size="small"
-              autoComplete="off"
-              error={!!errors?.lastName}
-              helperText={errors?.barangay?.lastName}
-              onChange={updateRepresentativeName}
             />
           </Box>
-          <Box display="flex" flexDirection="row" gap={1}>
-            <Textfield
-              name="suffix"
-              control={control}
-              label="Suffix (Optional)"
-              size="small"
-              autoComplete="off"
-              error={!!errors?.suffix}
-              helperText={errors?.municipality?.suffix}
-              onChange={updateRepresentativeName}
-            />
-            <Textfield
-              name="dummy"
-              control={control}
-              label=""
-              size="small"
-              autoComplete="off"
-              sx={{ visibility: "hidden" }}
-              inputProps={{ readOnly: true }}
-            />
-
-            <Textfield
-              name="dummy"
-              control={control}
-              label=""
-              size="small"
-              autoComplete="off"
-              sx={{ visibility: "hidden" }}
-              inputProps={{ readOnly: true }}
-            />
-          </Box>
+        </Stack>
+        <Stack gap={1}>
+          <Typography
+            fontWeight="bold"
+            fontSize="13px"
+            textTransform="uppercase"
+          >
+            Cluster
+          </Typography>
+          <Textfield
+            required
+            sx={requiredFieldLabelStyle}
+            name="cluster"
+            control={control}
+            label="Cluster"
+            size="small"
+            autoComplete="off"
+            type="number"
+            inputProps={{
+              min: 1,
+            }}
+            onWheel={(e) => e.target.blur()}
+            onKeyDown={(e) =>
+              ["E", "e", ".", "+", "-"].includes(e.key) && e.preventDefault()
+            }
+            onPaste={(e) => e.preventDefault()}
+          />
         </Stack>
       </Stack>
     </>
