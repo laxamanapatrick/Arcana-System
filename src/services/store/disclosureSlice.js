@@ -22,6 +22,8 @@ const initialState = {
   modals: {
     isTagging: false,
     isFreebieReleasing: false,
+    isSignatureCanvas: false,
+    isPinLocation: false,
     isFreebieViewing: false,
     isReleasedToDirectForm: false,
   },

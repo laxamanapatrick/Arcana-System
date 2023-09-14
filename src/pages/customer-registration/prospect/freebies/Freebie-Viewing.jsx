@@ -229,7 +229,11 @@ export const FreebieViewing = () => {
               <Box width="30%" mt={selectedRowData?.eSignaturePath ? "" : 3}>
                 <Box display="flex" flexDirection="row" justifyContent="center">
                   {selectedRowData?.eSignaturePath ? (
-                    <img src={selectedRowData?.eSignaturePath || ""} />
+                    <img
+                      src={selectedRowData?.eSignaturePath || ""}
+                      width={"220px"}
+                      height={"39px"}
+                    />
                   ) : (
                     <Typography fontSize="small" fontStyle="italic">
                       No signature provided

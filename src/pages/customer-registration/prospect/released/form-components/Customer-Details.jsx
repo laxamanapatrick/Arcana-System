@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { directCustomerDetails } from "../../../../../schema";
@@ -8,10 +8,13 @@ import {
   Typography,
   TextField as MuiTextField,
   Checkbox,
+  IconButton,
 } from "@mui/material";
 import { Textfield } from "../../../../../components/Fields";
 import { setClientDetails } from "../../../../../services/store/customerDetailsSlice";
 import { useDispatch } from "react-redux";
+import { EditLocation, Pin } from "@mui/icons-material";
+import PinLocation from "../../../../../components/Pin-Location";
 
 export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
   const requiredFieldLabelStyle = {
@@ -27,6 +30,8 @@ export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
   };
 
   const dispatch = useDispatch();
+
+  const [position, setPosition] = useState({ lat: 15.0594, lng: 120.6567 });
 
   const {
     watch,
@@ -85,7 +90,7 @@ export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
 
   return (
     <>
-      <Stack component="form" justifyContent="space-between" gap={4}>
+      <Stack component="form" justifyContent="space-between" gap={3}>
         <Stack gap={1}>
           <Typography
             fontWeight="bold"
@@ -234,6 +239,21 @@ export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
             }
             onPaste={(e) => e.preventDefault()}
           />
+        </Stack>
+
+        <Stack sx={{ mt: "-2px" }}>
+          <Typography
+            fontWeight="bold"
+            fontSize="13px"
+            textTransform="uppercase"
+          >
+            <PinLocation
+              iconSize={"30px"}
+              position={position}
+              setPosition={setPosition}
+            />
+            Pin Location
+          </Typography>
         </Stack>
       </Stack>
     </>

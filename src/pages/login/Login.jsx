@@ -17,6 +17,7 @@ import systemLogoName from "../../assets/images/SystemLogoName.png";
 import misLogo from "../../assets/images/MIS-logo.png";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
+import loginBG from "../../assets/images/login-bg.svg";
 
 const Login = () => {
   const theme = useTheme();
@@ -69,7 +70,10 @@ const Login = () => {
   const pageBackground = {
     // background: "linear-gradient(120deg, rgba(135,143,196,1) 10%, rgba(149,113,167,1) 41%, rgba(149,113,167,1) 78%)",
     background: "linear-gradient(120deg, rgba(229,229,229,1) 10%, rgba(204,164,224,1) 39%, rgba(229,229,229,1) 78%)",
-    position: "fixed",
+    // background: `url(${loginBG})`,
+    backgroundRepeat: "none",
+    backgroundSize: "cover",
+    position: "fixed",  
     top: 0,
     left: 0,
     width: "100vw",
@@ -81,13 +85,13 @@ const Login = () => {
   };
 
   const loginPaper = {
-    background: 
-    // showLogo
-    //   ? 
+    background:
+      // showLogo
+      //   ?
       // "linear-gradient(90deg, rgba(255,255,255,1) 32%, rgba(35,2,74,1) 93%)",
       // "linear-gradient(120deg, rgba(229,229,229,1) 10%, rgba(204,164,224,1) 39%, rgba(229,229,229,1) 78%)",
       // "#E5E5E5",
-      // : 
+      // :
       "transparent",
     maxWidth: "48%",
     minWidth: "35%",

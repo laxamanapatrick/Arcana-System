@@ -30,10 +30,11 @@ import {
   Check,
   Clear,
   Close,
+  Draw,
   Print,
 } from "@mui/icons-material";
 // import { useReactToPrint } from "react-to-print";
-import ReactSignatureCanvas from "react-signature-canvas";
+// import ReactSignatureCanvas from "react-signature-canvas";
 import { useDropzone } from "react-dropzone";
 import Webcam from "react-webcam";
 import {
@@ -41,6 +42,7 @@ import {
   ModalToast,
 } from "../../../../components/SweetAlert-Components";
 import { SubmittingData } from "../../../../components/Lottie-Components";
+import SignatureCanvas from "../../../../components/Signature-Canvas";
 
 export const FreebieReleasing = () => {
   const dispatch = useDispatch();
@@ -76,7 +78,7 @@ export const FreebieReleasing = () => {
     freebies: defaultFreebieValues || [],
   };
 
-  const sigCanvasRef = useRef();
+  // const signCanvasRef = useRef(null);
   const [signatureValue, setSignatureValue] = useState({
     value: "",
     isSigned: false,
@@ -379,28 +381,45 @@ export const FreebieReleasing = () => {
 
               <Box width="30%" mt={1}>
                 <Box display="flex" flexDirection="row">
-                  <ReactSignatureCanvas
-                    ref={sigCanvasRef}
-                    canvasProps={{ width: 240, height: 40 }}
-                    onEnd={() =>
-                      setSignatureValue({
-                        value: sigCanvasRef?.current?.toDataURL(),
-                        isSigned: true,
-                      })
-                    }
-                  />
-                  {signatureValue && (
-                    <IconButton
-                      onClick={() => {
-                        sigCanvasRef?.current.clear();
-                        setSignatureValue({
-                          value: "",
-                          isSigned: false,
-                        });
-                      }}
-                    >
-                      <Clear />
-                    </IconButton>
+                  {signatureValue?.value ? (
+                    <>
+                      <img
+                        src={signatureValue?.value}
+                        width={"200px"}
+                        height={"37px"}
+                      />
+                      <IconButton
+                        onClick={() => {
+                          // signCanvasRef?.current.clear();
+                          setSignatureValue({
+                            value: "",
+                            isSigned: false,
+                          });
+                        }}
+                      >
+                        <Clear />
+                      </IconButton>
+                    </>
+                  ) : (
+                    <Box sx={{ width:'100%', display: "flex", justifyContent: "center" }}>
+                      <IconButton
+                        onClick={() =>
+                          dispatch(toggleModal("isSignatureCanvas"))
+                        }
+                      >
+                        <Draw sx={{ fontSize: "35px" }} />
+                      </IconButton>
+                    </Box>
+                    // <ReactSignatureCanvas
+                    //   ref={signCanvasRef}
+                    //   canvasProps={{ width: 240, height: 40 }}
+                    //   onEnd={() =>
+                    //     setSignatureValue({
+                    //       value: signCanvasRef?.current?.toDataURL(),
+                    //       isSigned: true,
+                    //     })
+                    //   }
+                    // />
                   )}
                 </Box>
                 <Divider
@@ -414,14 +433,16 @@ export const FreebieReleasing = () => {
                 </Typography>
               </Box>
             </Stack>
+            <SignatureCanvas
+              // signCanvasRef={signCanvasRef}
+              signatureValue={signatureValue}
+              setSignatureValue={setSignatureValue}
+            />
             {/* Signatures Start End  */}
 
             <></>
-          </Stack>
-          {/* Print End  */}
-
           {/* Proof of Delivery  */}
-          <Stack width="100%">
+          <Stack width="100%" mt={3}>
             {isCameraActive ? (
               <div>
                 <Webcam
@@ -484,6 +505,9 @@ export const FreebieReleasing = () => {
             )}
           </Stack>
           {/* Proof of Delivery End */}
+          </Stack>
+          {/* Print End  */}
+
 
           {!isCameraActive && (
             <ButtonGroup
