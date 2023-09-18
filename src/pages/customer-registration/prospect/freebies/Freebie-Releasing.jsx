@@ -117,7 +117,7 @@ export const FreebieReleasing = () => {
       "image/*": [".jpeg", ".jpg", ".png"],
     }, // Only accept image files
     multiple: false, // Allow only a single file to be uploaded
-  });
+  }); 
 
   const handleRemoveProofOfDelivery = () => {
     setProofOfDeliveryFiles(null);

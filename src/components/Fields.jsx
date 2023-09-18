@@ -155,7 +155,6 @@ export const RadioField = ({
   control,
   label,
   options,
-  columnOptions,
   sx,
   formLabelStyle,
   ...props
@@ -172,7 +171,11 @@ export const RadioField = ({
       render={({ field }) => (
         <FormControl sx={sx}>
           <FormLabel sx={formLabelStyle}>{label}</FormLabel>
-          <RadioGroup {...field} {...props}>
+          <RadioGroup
+            {...props}
+            value={field.value} // Set the RadioGroup value from the field value
+            onChange={(e) => field.onChange(e.target.value)} // Manually update the field value
+          >
             {options?.map((option, index) => (
               <FormControlLabel
                 key={index}

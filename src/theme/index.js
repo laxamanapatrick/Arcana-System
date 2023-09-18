@@ -133,6 +133,11 @@ const darkTheme = createTheme({
           "&:hover": {
             color: colorSchemes.dark.primary,
           },
+          "&:disabled": {
+            color: colorSchemes.dark.secondary,
+            cursor: "not-allowed",
+            pointerEvents: "auto",
+          },
         },
       },
     },

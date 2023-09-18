@@ -20,7 +20,10 @@ import {
   InteractiveToast,
   ModalToast,
 } from "../../../../components/SweetAlert-Components";
-import { setClientDetails } from "../../../../services/store/customerDetailsSlice";
+import {
+  setClientDetails,
+  setTermsAndConditions,
+} from "../../../../services/store/customerDetailsSlice";
 
 export const ReleasedToDirectForm = () => {
   const theme = useTheme();
@@ -31,11 +34,11 @@ export const ReleasedToDirectForm = () => {
   const { isReleasedToDirectForm } = useSelector(
     (state) => state.disclosure.modals
   );
-  const {
-    clientDetails,
-    termsAndConditions,
-    attachments: savedAttachments,
-  } = useSelector((state) => state.directRegistrationData);
+  const { clientDetails, termsAndConditions } = useSelector(
+    (state) => state.directRegistrationData
+  );
+
+  const [attachments, setAttachments] = useState();
 
   const fields = {
     clientId: selectedRowData?.id,
@@ -50,17 +53,28 @@ export const ReleasedToDirectForm = () => {
       typeOfCustomer: termsAndConditions?.typeOfCustomer || "",
       directDelivery: termsAndConditions?.directDelivery || "",
       bookingCoverage: termsAndConditions?.bookingCoverage || "",
-      modeOfPayment: termsAndConditions?.ModeOfPayment || "",
       terms: termsAndConditions?.terms || "",
-      creditLimit: termsAndConditions?.creditLimit || "",
-      termDays: termsAndConditions?.termDays || "",
+      modeOfPayment: termsAndConditions?.modeOfPayment || "",
       discountTypes: termsAndConditions?.discountTypes || "",
+      creditLimit:
+        termsAndConditions?.terms === "creditlimit"
+          ? termsAndConditions?.creditLimit
+          : "NA",
+      termDays:
+        termsAndConditions?.terms === "1up1down" ||
+        termsAndConditions?.terms === "creditlimit"
+          ? termsAndConditions?.termDays
+          : "NA",
+      fixedValue:
+        termsAndConditions?.discountTypes === "fixed"
+          ? termsAndConditions?.fixedValue
+          : "NA",
     },
-    attachments: savedAttachments || [],
   };
 
   const [viewing, setViewing] = useState(1);
   const [canNext, setCanNext] = useState(false);
+  const [canSubmit, setCanSubmit] = useState(false);
   const components = {
     1: (
       <CustomerDetails
@@ -70,15 +84,36 @@ export const ReleasedToDirectForm = () => {
       />
     ),
     2: <TermsAndConditions fields={fields} setCanNext={setCanNext} />,
-    3: <Attachments fields={fields} setCanNext={setCanNext} />,
+    3: (
+      <Attachments
+        setAttachments={setAttachments}
+        setCanSubmit={setCanSubmit}
+      />
+    ),
   };
 
   const handlePageChange = (action) => {
+    console.log(action, viewing);
     if (action === "previous") {
       setViewing((prev) => prev - 1);
     }
     if (action === "next" && canNext) {
       setViewing((prev) => prev + 1);
+    }
+    if (Number(viewing) === 3 && action === "previous") {
+      ModalToast(
+        "Attached Files will be removed.",
+        "Are you sure you want to go back?",
+        "",
+        "",
+        "",
+        "",
+        "No"
+      ).then((res) => {
+        if (res.isConfirmed) {
+          setViewing((prev) => prev - 1);
+        }
+      });
     }
     if (!canNext) {
       InteractiveToast(
@@ -120,16 +155,20 @@ export const ReleasedToDirectForm = () => {
       "No"
     ).then((res) => {
       if (res.isConfirmed) {
-        dispatch(setClientDetails(null))
-        setViewing(1)
+        dispatch(setClientDetails(null));
+        dispatch(setTermsAndConditions(null));
+        setViewing(1);
         dispatch(toggleModal("isReleasedToDirectForm"));
       }
     });
   };
 
   const handleSubmit = () => {
-    alert("submit details");
-    if (viewing === 3) {
+    if (viewing === 3 && canSubmit) {
+      alert("Submitted");
+    }
+    if (!canSubmit) {
+      alert("required attachments not met");
     }
   };
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { directCustomerDetails } from "../../../../../schema";
+import { realeasedToDirectCustomerDetails } from "../../../../../schema";
 import {
   Box,
   Stack,
@@ -40,7 +40,7 @@ export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
     control,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(directCustomerDetails),
+    resolver: yupResolver(realeasedToDirectCustomerDetails),
     defaultValues: fields.customer_details,
   });
 

@@ -26,9 +26,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   clientId: sessionStorage.getItem("Client ID") || null,
-  clientDetails: sessionStorage.getItem("Client Details") || null,
-  attachments: sessionStorage.getItem("Attachments") || null,
-  termsAndConditions: sessionStorage.getItem("Terms and Conditions") || null,
+  clientDetails: JSON.parse(sessionStorage.getItem("Client Details")) || null,
+  attachments: JSON.parse(sessionStorage.getItem("Attachments")) || null,
+  termsAndConditions:
+    JSON.parse(sessionStorage.getItem("Terms and Conditions")) || null,
 };
 
 const directDetailsSlice = createSlice({
@@ -37,19 +38,18 @@ const directDetailsSlice = createSlice({
   reducers: {
     setClientId: (state, action) => {
       state.clientId = action.payload;
-      sessionStorage.setItem("Client ID", action.payload);
+      sessionStorage.setItem("Client ID", JSON.stringify(action.payload));
     },
     setClientDetails: (state, action) => {
       state.clientDetails = action.payload;
-      sessionStorage.setItem("Client Details", action.payload);
-    },
-    setAttachments: (state, action) => {
-      state.attachments = action.payload;
-      sessionStorage.setItem("Attachments", action.payload);
+      sessionStorage.setItem("Client Details", JSON.stringify(action.payload));
     },
     setTermsAndConditions: (state, action) => {
       state.termsAndConditions = action.payload;
-      sessionStorage.setItem("Terms and Conditions", action.payload);
+      sessionStorage.setItem(
+        "Terms and Conditions",
+        JSON.stringify(action.payload)
+      );
     },
   },
 });
@@ -57,7 +57,6 @@ const directDetailsSlice = createSlice({
 export const {
   setClientId,
   setClientDetails,
-  setAttachments,
   setTermsAndConditions,
 } = directDetailsSlice.actions;
 

@@ -1,24 +1,25 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { directTermsAndConditions } from "../../../../../schema";
+import { realeasedToDirectdirectTermsAndConditions } from "../../../../../schema";
 import {
   FormControl,
-  FormControlLabel,
   FormLabel,
-  Radio,
-  RadioGroup,
   Stack,
-  useTheme,
+  TextField as MuiTextField,
 } from "@mui/material";
-import { RadioField } from "../../../../../components/Fields";
+import {
+  AutoComplete,
+  RadioField,
+  Textfield,
+} from "../../../../../components/Fields";
 import { toggleModal } from "../../../../../services/store/disclosureSlice";
 import { FreebieViewing } from "../../freebies/Freebie-Viewing";
 import { useDispatch } from "react-redux";
+import { useGetTermDaysQuery } from "../../../../../services/api";
+import { setTermsAndConditions } from "../../../../../services/store/customerDetailsSlice";
 
 export const TermsAndConditions = ({ fields, setCanNext }) => {
-  const dispatch = useDispatch();
-
   const formStyle = {
     bgcolor: "primary.main",
     color: "white !important",
@@ -26,19 +27,62 @@ export const TermsAndConditions = ({ fields, setCanNext }) => {
     borderRadius: "10px",
     width: "200px",
   };
-
+  const dispatch = useDispatch();
+  const { data: termData } = useGetTermDaysQuery();
   const {
     watch,
-    formState: { isValid },
+    getValues,
+    formState: { isValid, errors },
     control,
   } = useForm({
-    resolver: yupResolver(directTermsAndConditions),
+    resolver: yupResolver(realeasedToDirectdirectTermsAndConditions),
     defaultValues: fields.terms_and_conditions,
   });
 
+  const isRequiredFieldsFilled = () => {
+    const formData = getValues();
+    const termConditions =
+      (watch("terms") === "creditlimit"
+        ? watch("creditLimit")
+        : watch("terms")) ||
+      (watch("terms") === "1up1down" || watch("terms") === "creditlimit"
+        ? watch("termDays")
+        : watch("terms"));
+    if (
+      watch("freezer") &&
+      watch("typeOfCustomer") &&
+      watch("directDelivery") &&
+      watch("bookingCoverage") &&
+      watch("modeOfPayment") &&
+      // (
+      // watch("terms")
+      // || termConditions
+      // )
+      // &&
+      watch("discountTypes")
+    ) {
+      dispatch(setTermsAndConditions(formData));
+      setCanNext(true);
+    } else {
+      setCanNext(false);
+    }
+  };
+
   useEffect(() => {
-    setCanNext(true);
-  }, []);
+    isRequiredFieldsFilled();
+
+    return () => {
+      setCanNext(false);
+    };
+  }, [
+    watch("freezer"),
+    watch("typeOfCustomer"),
+    watch("directDelivery"),
+    watch("bookingCoverage"),
+    watch("modeOfPayment"),
+    watch("terms"),
+    watch("discountTypes"),
+  ]);
 
   return (
     <>
@@ -113,37 +157,104 @@ export const TermsAndConditions = ({ fields, setCanNext }) => {
               { value: "creditlimit", label: "Credit Limit" },
             ]}
           />
-          <FormControl sx={{ justifyContent: "center", display: "flex" }}>
-            <FormLabel sx={formStyle}>Mode Of Payment</FormLabel>
-            <RadioGroup row>
-              <FormControlLabel value="yes" control={<Radio />} label="Cash" />
-              <FormControlLabel
-                value="no"
-                control={<Radio />}
-                label="Check/Online"
+          {watch("terms") === "1up1down" ? (
+            <AutoComplete
+              name="termDays"
+              sx={{ width: "95%" }}
+              control={control}
+              options={termData?.data?.termDays}
+              getOptionLabel={(option) => JSON.stringify(option?.days)}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              renderInput={(params) => (
+                <MuiTextField
+                  {...params}
+                  label="Term Days"
+                  size="small"
+                  error={!!errors?.termDays}
+                  helperText={errors?.termDays?.message}
+                />
+              )}
+              disablePortal
+              disableClearable
+            />
+          ) : watch("terms") === "creditlimit" ? (
+            <>
+              <Textfield
+                name="creditLimit"
+                sx={{ width: "95%" }}
+                control={control}
+                label="Credit Limit"
+                type="number"
+                size="small"
+                autoComplete="off"
+                error={!!errors?.creditLimit}
+                helperText={errors?.creditLimit?.message}
               />
-            </RadioGroup>
-          </FormControl>
-          <FormControl sx={{ justifyContent: "center", display: "flex" }}>
-            <FormLabel sx={formStyle}>Discount</FormLabel>
-            <RadioGroup row>
-              <FormControlLabel
-                value="variable"
-                control={<Radio />}
-                label="Variable"
+              <AutoComplete
+                name="termDays"
+                sx={{ width: "95%" }}
+                control={control}
+                options={termData?.data?.termDays || ""}
+                getOptionLabel={(option) => JSON.stringify(option?.days)}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderInput={(params) => (
+                  <MuiTextField
+                    {...params}
+                    label="Term Days"
+                    size="small"
+                    error={!!errors?.termDays}
+                    helperText={errors?.termDays?.message}
+                  />
+                )}
+                disablePortal
+                disableClearable
               />
-              <FormControlLabel
-                value="fixed"
-                control={<Radio />}
-                label="Fixed"
-              />
-            </RadioGroup>
-          </FormControl>
+            </>
+          ) : (
+            <></>
+          )}
+          <RadioField
+            row
+            name="modeOfPayment"
+            control={control}
+            label="Mode Of Payment"
+            formLabelStyle={formStyle}
+            options={[
+              { value: "cash", label: "Cash" },
+              { value: "check/online", label: "Check/Online" },
+            ]}
+          />
+          <RadioField
+            row
+            name="discountTypes"
+            control={control}
+            label="Discount"
+            formLabelStyle={formStyle}
+            options={[
+              { value: "variable", label: "Variable" },
+              { value: "fixed", label: "Fixed" },
+            ]}
+          />
+          {watch("discountTypes") === "fixed" ? (
+            <Textfield
+              name="fixedValue"
+              sx={{ width: "95%" }}
+              control={control}
+              label="Percentage"
+              size="small"
+              type="number"
+              autoComplete="off"
+              error={!!errors?.fixedValue}
+              helperText={errors?.fixedValue?.message}
+            />
+          ) : (
+            <></>
+          )}
           <FormControl sx={{ justifyContent: "center", display: "flex" }}>
             <FormLabel
               onClick={() => dispatch(toggleModal("isFreebieViewing"))}
               sx={{
-                cursor: 'pointer',
+                cursor: "pointer",
                 bgcolor: "gray",
                 color: "black !important",
                 textAlign: "center",

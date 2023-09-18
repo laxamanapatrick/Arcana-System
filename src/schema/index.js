@@ -174,7 +174,7 @@ export const freebieSchema = yup
   })
   .required();
 
-export const directCustomerDetails = yup.object().shape({
+export const realeasedToDirectCustomerDetails = yup.object().shape({
   businessAddress: yup.string().required("Business Address is required"),
   representativeName: yup.string().required("Representative Name is required"),
   representativePosition: yup.string().required("Representative Position"),
@@ -184,14 +184,16 @@ export const directCustomerDetails = yup.object().shape({
     .typeError("Must be a number"),
 });
 
-export const directTermsAndConditions = yup.object().shape({
-  freezer: yup.boolean().required().typeError("Please select an option"),
+export const realeasedToDirectdirectTermsAndConditions = yup.object().shape({
+  freezer: yup.string().required().typeError("Please select an option"),
   typeOfCustomer: yup.string().required("Please select a customer type"),
-  directDelivery: yup.boolean().required().typeError("Please select an option"),
-  bookingCoverage: yup.number().required().typeError("Must be a number"),
-  ModeOfPayment: yup.number().required().typeError("Must be a number"),
-  Terms: yup.number().required().typeError("Must be a number"),
-  creditLimit: yup.number().required().typeError("Must be a number"),
+  directDelivery: yup.string().required().typeError("Please select an option"),
+  bookingCoverage: yup.string().required().typeError("Must be a number"),
+  ModeOfPayment: yup.string().required().typeError("Must be a number"),
+  Terms: yup.string().required().typeError("Must be a number"),
+  discountTypes: yup.string().required("Discount Type is required"),
+  creditLimit: yup.string().required().typeError("Must be a number"),
   termDays: yup.object().required("Term Days is required"),
-  discountTypes: yup.object().required("Discount Type is required"),
+  fixedValue: yup.string().required("Fixed Value is required")
 });
+
