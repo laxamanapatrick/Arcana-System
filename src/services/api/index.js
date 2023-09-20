@@ -610,7 +610,7 @@ export const jsonServerApi = createApi({
       providesTags: ["Request Freebie"],
     }),
     createRequestFreebie: builder.mutation({
-      query: ({payload,id}) => ({
+      query: ({ payload, id }) => ({
         url: `Freebies/RequestFreebies/${encodeURIComponent(id)}`,
         method: "POST",
         body: payload,
@@ -701,6 +701,15 @@ export const jsonServerApi = createApi({
         params: params,
       }),
       providesTags: ["Released Prospect"],
+    }),
+
+    getCoordinates: builder.query({
+      query: (address) => ({
+        url: `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+          address
+        )}&key=${"AIzaSyARUuQTuMNGcIB2vhuiH8MdoWaH_ALumxA"}`,
+        method: "GET",
+      }),
     }),
   }),
 });
@@ -828,6 +837,8 @@ export const {
 
   //Released Prospect
   useCreateUpdateReleaseProspectMutation,
-  useGetAllReleasedProspectQuery
+  useGetAllReleasedProspectQuery,
 
+  //Get Address Coordinates
+  useGetCoordinatesQuery
 } = jsonServerApi;

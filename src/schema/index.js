@@ -51,6 +51,7 @@ export const userAccountSchema = yup
     fullname: yup.string().required("Full Name is required"),
     username: yup.string().required("Username is required"),
     password: yup.string().required("Password is required"),
+    userType: yup.object().required("User Type is required"),
     userRole: yup.object().required("Role is required"),
     company: yup.object().required("Company is required"),
     department: yup.object().required("Department is required"),
@@ -184,6 +185,19 @@ export const realeasedToDirectCustomerDetails = yup.object().shape({
     .typeError("Must be a number"),
 });
 
+export const directRegistration = yup.object().shape({
+  businessName: yup.string().required("Business Name is required"),
+  ownersName: yup.string().required("Owner's Name is required"),
+  ownersAddress: yup.string().required("Owner's Address is required"),
+  businessAddress: yup.string().required("Business Address is required"),
+  representativeName: yup.string().required("Representative Name is required"),
+  representativePosition: yup.string().required("Representative Position"),
+  cluster: yup
+    .number()
+    .required("Number is required")
+    .typeError("Must be a number"),
+});
+
 export const realeasedToDirectdirectTermsAndConditions = yup.object().shape({
   freezer: yup.string().required().typeError("Please select an option"),
   typeOfCustomer: yup.string().required("Please select a customer type"),
@@ -194,6 +208,5 @@ export const realeasedToDirectdirectTermsAndConditions = yup.object().shape({
   discountTypes: yup.string().required("Discount Type is required"),
   creditLimit: yup.string().required().typeError("Must be a number"),
   termDays: yup.object().required("Term Days is required"),
-  fixedValue: yup.string().required("Fixed Value is required")
+  fixedValue: yup.string().required("Fixed Value is required"),
 });
-

@@ -119,11 +119,11 @@ export const sidebarNavigationData = [
         path: "/customer-registration/prospect",
         name: "Prospect",
       },
-      // {
-      //   id: 2,
-      //   path: "/customer-registration/direct",
-      //   name: "Direct",
-      // },
+      {
+        id: 2,
+        path: "/customer-registration/direct",
+        name: "Direct",
+      },
     ],
   },
   // {
@@ -148,11 +148,11 @@ export const sidebarNavigationData = [
         name: "Freebie Approval",
         path: "/approval/freebie-approval",
       },
-      // {
-      //   id: 2,
-      //   name: "Direct Approval",
-      //   path: "/approval/direct-approval",
-      // },
+      {
+        id: 2,
+        name: "Direct Approval",
+        path: "/approval/direct-approval",
+      },
     ],
   },
   // {

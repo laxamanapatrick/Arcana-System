@@ -17,7 +17,6 @@ const initialState = {
     isTermDaysForm: false,
     isRequestProspectForm: false,
     isFreebieForm: false,
-    isDirectForm: false,
   },
   modals: {
     isTagging: false,
@@ -26,6 +25,7 @@ const initialState = {
     isPinLocation: false,
     isFreebieViewing: false,
     isReleasedToDirectForm: false,
+    isDirectForm: false,
   },
 };
 

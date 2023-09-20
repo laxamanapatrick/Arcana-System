@@ -35,7 +35,7 @@ export const ReleasedToDirectForm = () => {
     (state) => state.disclosure.modals
   );
   const { clientDetails, termsAndConditions } = useSelector(
-    (state) => state.directRegistrationData
+    (state) => state.releasedToRegistrationData
   );
 
   const [attachments, setAttachments] = useState();
@@ -70,6 +70,7 @@ export const ReleasedToDirectForm = () => {
           ? termsAndConditions?.fixedValue
           : "NA",
     },
+    attachments: attachments,
   };
 
   const [viewing, setViewing] = useState(1);
@@ -94,12 +95,6 @@ export const ReleasedToDirectForm = () => {
 
   const handlePageChange = (action) => {
     console.log(action, viewing);
-    if (action === "previous") {
-      setViewing((prev) => prev - 1);
-    }
-    if (action === "next" && canNext) {
-      setViewing((prev) => prev + 1);
-    }
     if (Number(viewing) === 3 && action === "previous") {
       ModalToast(
         "Attached Files will be removed.",
@@ -112,8 +107,16 @@ export const ReleasedToDirectForm = () => {
       ).then((res) => {
         if (res.isConfirmed) {
           setViewing((prev) => prev - 1);
+        } else {
+          return;
         }
       });
+    }
+    if (action === "previous") {
+      setViewing((prev) => prev - 1);
+    }
+    if (action === "next" && canNext) {
+      setViewing((prev) => prev + 1);
     }
     if (!canNext) {
       InteractiveToast(
@@ -171,6 +174,8 @@ export const ReleasedToDirectForm = () => {
       alert("required attachments not met");
     }
   };
+
+  // console.log(fields)
 
   return (
     <Modal

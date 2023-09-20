@@ -12,12 +12,12 @@ const Index = () => {
   const [currentTheme, setCurrentTheme] = useState(darkTheme);
 
   const toggleTheme = () => {
-    setCurrentTheme((
-      // prevTheme
-      ) =>
-      // prevTheme === lightTheme ? 
-      darkTheme 
-      // : 
+    setCurrentTheme(
+      () =>
+        // prevTheme
+        // prevTheme === lightTheme ?
+        darkTheme
+      // :
       // lightTheme
     );
   };

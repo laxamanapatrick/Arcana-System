@@ -5,17 +5,15 @@ import {
   Box,
   Stack,
   Typography,
-  TextField as MuiTextField,
   Checkbox,
 } from "@mui/material";
-import { realeasedToDirectCustomerDetails } from "../../../../../schema";
-import { Textfield } from "../../../../../components/Fields";
-import { setClientDetails } from "../../../../../services/store/customerDetailsSlice";
 import { useDispatch } from "react-redux";
-import PinLocation from "../../../../../components/Pin-Location";
-import "../../../../../stylesheets/checkbox.scss";
+import { directRegistration } from "../../../../schema";
+import { setDirectClientDetails } from "../../../../services/store/directRegistrationSlice";
+import { Textfield } from "../../../../components/Fields";
+import PinLocation from "../../../../components/Pin-Location";
 
-export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
+export const DirectCustomerDetails = ({ fields, setCanNext }) => {
   const requiredFieldLabelStyle = {
     "& .MuiFormLabel-root": {
       color: "red !important",
@@ -27,9 +25,7 @@ export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
       color: "black !important",
     },
   };
-
   const dispatch = useDispatch();
-
   const {
     watch,
     getValues,
@@ -37,19 +33,19 @@ export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
     control,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(realeasedToDirectCustomerDetails),
+    resolver: yupResolver(directRegistration),
     defaultValues: fields.customer_details,
   });
 
   const handleSameAddress = (isChecked) => {
     if (isChecked) {
-      setValue("businessAddress", selectedRowData?.address);
+      setValue("businessAddress", watch("ownersAddress"));
     }
   };
 
   const handleCheckboxChecked = () => {
     let isChecked;
-    if (selectedRowData?.address !== watch("businessAddress")) {
+    if (watch("ownersAddress") !== watch("businessAddress")) {
       isChecked = false;
     } else {
       isChecked = true;
@@ -60,12 +56,15 @@ export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
   const isRequiredFieldsFilled = () => {
     const formData = getValues();
     if (
+      watch("businessName") &&
+      watch("ownersName") &&
+      watch("ownersAddress") &&
       watch("businessAddress") &&
       watch("representativeName") &&
       watch("representativePosition") &&
       watch("cluster")
     ) {
-      dispatch(setClientDetails(formData));
+      dispatch(setDirectClientDetails(formData));
       setCanNext(true);
     } else {
       setCanNext(false);
@@ -79,6 +78,9 @@ export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
       setCanNext(false);
     };
   }, [
+    watch("businessName"),
+    watch("ownersName"),
+    watch("ownersAddress"),
     watch("businessAddress"),
     watch("representativeName"),
     watch("representativePosition"),
@@ -97,19 +99,14 @@ export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
             Business Name
           </Typography>
           <Box display="flex" flexDirection="row" gap={1}>
-            <MuiTextField
-              value={selectedRowData?.businessName || ""}
-              label="Name"
+            <Textfield
+              required
+              sx={requiredFieldLabelStyle}
+              name="businessName"
+              control={control}
+              label={`Name of Business`}
               size="small"
-              fullWidth
-              variant="filled"
-              sx={{ background: "#c5c9c6" }}
-              inputProps={{
-                readOnly: true,
-                style: {
-                  cursor: "not-allowed",
-                },
-              }}
+              autoComplete="off"
             />
           </Box>
         </Stack>
@@ -119,22 +116,17 @@ export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
             fontSize="13px"
             textTransform="uppercase"
           >
-            Customer's Information
+            Owner's Name
           </Typography>
           <Box display="flex" flexDirection="row" gap={1}>
-            <MuiTextField
-              value={selectedRowData?.ownersName || ""}
-              label="Owner's Name"
+            <Textfield
+              required
+              sx={requiredFieldLabelStyle}
+              name="ownersName"
+              control={control}
+              label={`Name of Business Owner`}
               size="small"
-              fullWidth
-              variant="filled"
-              sx={{ background: "#c5c9c6" }}
-              inputProps={{
-                readOnly: true,
-                style: {
-                  cursor: "not-allowed",
-                },
-              }}
+              autoComplete="off"
             />
           </Box>
         </Stack>
@@ -147,19 +139,14 @@ export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
             Owner's Address
           </Typography>
           <Box display="flex" flexDirection="row" gap={1}>
-            <MuiTextField
-              value={selectedRowData?.address || ""}
-              label="Name"
+            <Textfield
+              required
+              sx={requiredFieldLabelStyle}
+              name="ownersAddress"
+              control={control}
+              label={`Block Number, Street, Barangay, City, Province, Zip Code`}
               size="small"
-              fullWidth
-              variant="filled"
-              sx={{ background: "#c5c9c6" }}
-              inputProps={{
-                readOnly: true,
-                style: {
-                  cursor: "not-allowed",
-                },
-              }}
+              autoComplete="off"
             />
           </Box>
         </Stack>

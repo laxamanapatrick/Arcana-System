@@ -30,8 +30,9 @@ import {
   InteractiveToast,
 } from "../../../../components/SweetAlert-Components";
 import { FreebieViewing } from "./Freebie-Viewing";
+import { setDirectFreebieRequest } from "../../../../services/store/directRegistrationSlice";
 
-export const FreebieForm = () => {
+export const FreebieForm = ({ isDirect }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const { defaultButtonStyle } = useDefaultStyles();
@@ -39,6 +40,9 @@ export const FreebieForm = () => {
 
   const { data: itemData } = useGetItemsQuery();
   const { selectedRowData } = useSelector((state) => state.selectedRowData);
+  const { directFreebieRequest } = useSelector(
+    (state) => state.directRegistrationData
+  );
 
   const clientId = selectedRowData?.clientId || selectedRowData?.id;
 
@@ -55,9 +59,23 @@ export const FreebieForm = () => {
     };
   });
 
+  const defaultDirectFreebieValues = directFreebieRequest?.freebies?.map(
+    (item) => {
+      const selectedItem = itemData?.data?.items?.find(
+        (option) => option?.id === item?.itemId
+      );
+
+      return {
+        items: selectedItem || null,
+        quantity: item?.quantity || 1,
+      };
+    }
+  );
+
   const {
     formState: { errors },
     control,
+    getValues,
     reset,
     handleSubmit,
     watch,
@@ -76,10 +94,15 @@ export const FreebieForm = () => {
     },
   });
 
+  console.log(defaultDirectFreebieValues);
+
   useEffect(() => {
     setValue("clientId", clientId);
     if (selectedRowData?.freebies?.length > 0) {
       setValue("freebies", defaultFreebieValues);
+    }
+    if (directFreebieRequest?.freebies?.length > 0) {
+      setValue("freebies", defaultDirectFreebieValues);
     }
 
     return () => {
@@ -91,7 +114,7 @@ export const FreebieForm = () => {
         },
       ]);
     };
-  }, [selectedRowData]);
+  }, [selectedRowData, directFreebieRequest]);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -173,11 +196,43 @@ export const FreebieForm = () => {
     dispatch(jsonServerApi.util.invalidateTags(["Rejected Freebies"]));
   };
 
+  const handleDirectFreebieRequest = () => {
+    const freebiesData = getValues();
+    const reduxPayload = {
+      freebies: freebiesData?.freebies?.map((item) => {
+        return {
+          itemId: item?.items?.id,
+          quantity: item?.quantity,
+        };
+      }),
+    };
+    const uniqueItems = new Set();
+    const isDuplicate = freebieData.some((item) => {
+      if (uniqueItems.has(item.items?.id)) {
+        return true;
+      }
+      uniqueItems.add(item.items?.id);
+      return false;
+    });
+    if (isDuplicate) {
+      InteractiveToast(
+        "Duplicate Items",
+        "You are not allowed to provide\nduplicate products in one freebie form",
+        "warning",
+        "Return"
+      );
+      return;
+    }
+    dispatch(setDirectFreebieRequest(reduxPayload));
+    dispatch(toggleDrawer("isFreebieForm"));
+  };
+
   return (
     <Drawer
       open={isFreebieForm}
       onClose={() => {}}
       sx={{
+        zIndex: "500 !important",
         "& .MuiDrawer-paper": {
           width: 965,
           height: "100%",
@@ -373,33 +428,37 @@ export const FreebieForm = () => {
             }}
           />
           <ButtonGroup sx={{ gap: 1, m: 1, justifyContent: "end" }}>
-            <Button
-              type="submit"
-              tabIndex={0}
-              disabled={fields?.length === 0}
-              sx={{
-                fontSize: "11px",
-                width: "90px",
-                color: theme.palette.common.white,
-                bgcolor: theme.palette.secondary.main,
-                ":hover": {
+            {isDirect ? (
+              <Button onClick={handleDirectFreebieRequest}>Save</Button>
+            ) : (
+              <Button
+                type="submit"
+                tabIndex={0}
+                disabled={fields?.length === 0}
+                sx={{
+                  fontSize: "11px",
+                  width: "90px",
                   color: theme.palette.common.white,
-                  bgcolor: theme.palette.primary.main,
-                  variant: "contained",
-                },
-                ":disabled": {
-                  color: theme.palette.common.white,
-                  bgcolor: "#6c5982",
-                  border: `none`,
-                  "&.MuiButtonBase-root:disabled": {
-                    cursor: "not-allowed",
-                    pointerEvents: "auto",
+                  bgcolor: theme.palette.secondary.main,
+                  ":hover": {
+                    color: theme.palette.common.white,
+                    bgcolor: theme.palette.primary.main,
+                    variant: "contained",
                   },
-                },
-              }}
-            >
-              Save
-            </Button>
+                  ":disabled": {
+                    color: theme.palette.common.white,
+                    bgcolor: "#6c5982",
+                    border: `none`,
+                    "&.MuiButtonBase-root:disabled": {
+                      cursor: "not-allowed",
+                      pointerEvents: "auto",
+                    },
+                  },
+                }}
+              >
+                Save
+              </Button>
+            )}
             <Button
               className="cancelButtons"
               onClick={() => {

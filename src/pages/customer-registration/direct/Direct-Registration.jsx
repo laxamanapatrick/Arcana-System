@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDefaultStyles } from "../../../hooks/useDefaultStyles";
 import { useDispatch } from "react-redux";
 import {
+  Button,
   Checkbox,
   Paper,
   Stack,
@@ -21,6 +22,9 @@ import {
   LoadingData,
   ZeroRecordsFound,
 } from "../../../components/Lottie-Components";
+import { DirectForm } from "./Direct-Form";
+import { toggleModal } from "../../../services/store/disclosureSlice";
+import { Add } from "@mui/icons-material";
 
 export const DirectRegistration = () => {
   const theme = useTheme();
@@ -118,9 +122,23 @@ export const DirectRegistration = () => {
             </Table>
           </TableContainer>
         ) : (
-          <ZeroRecordsFound text='text here' />
+          <ZeroRecordsFound text="text here" />
         )}
+        <Stack alignItems="end" mt={1} sx={defaultButtonStyle}>
+          <Button
+            onClick={() => {
+              // dispatch(setSelectedRow(null));
+              dispatch(toggleModal("isDirectForm"));
+            }}
+            startIcon={<Add sx={{ mb: "4px" }} />}
+            size="small"
+            className="primaryButtons"
+          >
+            Add
+          </Button>
+        </Stack>
       </Stack>
+      <DirectForm />
     </Stack>
   );
 };

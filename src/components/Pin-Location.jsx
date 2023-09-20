@@ -1,25 +1,63 @@
-import React from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleModal } from "../services/store/disclosureSlice";
 import { Box, Button, IconButton, Modal, Stack } from "@mui/material";
 import { EditLocation } from "@mui/icons-material";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+import {
+  GoogleMap,
+  useLoadScript,
+  MarkerF as Marker,
+} from "@react-google-maps/api";
 
-const PinLocation = ({ iconSize, position, setPosition }) => {
+const PinLocation = ({ iconSize, businessAddress }) => {
   const dispatch = useDispatch();
   const { isPinLocation } = useSelector((state) => state.disclosure.modals);
 
-  const handleMapClick = (e) => {
-    const { lat, lng } = e.latlng;
-    console.log(e)
-    setPosition({ lat: lat, lng: lng });
-  };
+  const [center, setCenter] = useState({ lat: 15.0594, lng: 120.6567 });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!businessAddress) return;
+
+    const apiKey = "AIzaSyARUuQTuMNGcIB2vhuiH8MdoWaH_ALumxA";
+    const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+      businessAddress
+    )}&key=${apiKey}`;
+
+    fetch(apiUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "OK" && data.results.length > 0) {
+          const location = data.results[0].geometry.location;
+          const lat = location.lat;
+          const lng = location.lng;
+          setCenter({ lat, lng });
+        } else {
+          setError(
+            `Unable to locate ${businessAddress}. Please provide more specific details regarding location.`
+          );
+        }
+      })
+      .catch((error) => {
+        setError("Error fetching data: " + error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [businessAddress]);
+
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: "AIzaSyARUuQTuMNGcIB2vhuiH8MdoWaH_ALumxA",
+  });
 
   return (
     <>
-      <IconButton onClick={() => dispatch(toggleModal("isPinLocation"))}>
+      <IconButton
+        disabled={!businessAddress}
+        title={!businessAddress ? "Provide an address first" : ""}
+        onClick={() => dispatch(toggleModal("isPinLocation"))}
+      >
         <EditLocation
           sx={{ mb: "3px", mr: "5px", fontSize: iconSize ? iconSize : "" }}
         />
@@ -63,37 +101,23 @@ const PinLocation = ({ iconSize, position, setPosition }) => {
               px: 2,
             }}
           >
-            <Box
-              sx={{
-                height: "80%",
-                width: "100%",
-              }}
-            >
-              <MapContainer
-                center={[15.0594, 120.6567]}
-                zoom={13}
-                onClick={(e) => handleMapClick(e)}
-              >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker
-                  position={position}
-                  icon={L.divIcon({
-                    className: "custom-icon",
-                    html: '<div class="pin">📍</div>',
-                    iconSize: [400, 400],
-                  })}
+            {!isLoaded ? (
+              <>Loading...</>
+            ) : loading ? (
+              <>Fetching location...</>
+            ) : error ? (
+              <div>Error: {error}</div>
+            ) : (
+              <>
+                <GoogleMap
+                  zoom={15} // Adjust the zoom level as needed
+                  center={center}
+                  mapContainerClassName="map-container"
                 >
-                  <Popup>
-                    Latitude: {position.lat.toFixed(6)}
-                    <br />
-                    Longitude: {position.lng.toFixed(6)}
-                  </Popup>
-                </Marker>
-              </MapContainer>
-            </Box>
+                  <Marker position={center} clickable title="Hello world" />
+                </GoogleMap>
+              </>
+            )}
             <Button onClick={() => dispatch(toggleModal("isPinLocation"))}>
               Close
             </Button>

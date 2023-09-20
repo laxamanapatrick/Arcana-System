@@ -1,25 +1,33 @@
 import React, { useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   FormControl,
   FormLabel,
   Stack,
   TextField as MuiTextField,
+  Button,
 } from "@mui/material";
+import { useGetTermDaysQuery } from "../../../../services/api";
+import { realeasedToDirectdirectTermsAndConditions } from "../../../../schema";
+import { setDirectTermsAndConditions } from "../../../../services/store/directRegistrationSlice";
+import { FreebieForm } from "../../prospect/freebies/Freebie-Form";
+import {
+  toggleDrawer,
+  toggleModal,
+} from "../../../../services/store/disclosureSlice";
 import {
   AutoComplete,
   RadioField,
   Textfield,
-} from "../../../../../components/Fields";
-import { realeasedToDirectdirectTermsAndConditions } from "../../../../../schema";
-import { toggleModal } from "../../../../../services/store/disclosureSlice";
-import { FreebieViewing } from "../../freebies/Freebie-Viewing";
-import { useGetTermDaysQuery } from "../../../../../services/api";
-import { setTermsAndConditions } from "../../../../../services/store/customerDetailsSlice";
+} from "../../../../components/Fields";
+import { Add } from "@mui/icons-material";
 
-export const TermsAndConditions = ({ fields, setCanNext }) => {
+export const DirectTermsAndConditions = ({ fields, setCanNext }) => {
+  const { directFreebieRequest } = useSelector(
+    (state) => state.directRegistrationData
+  );
   const formStyle = {
     bgcolor: "primary.main",
     color: "white !important",
@@ -61,7 +69,7 @@ export const TermsAndConditions = ({ fields, setCanNext }) => {
       // &&
       watch("discountTypes")
     ) {
-      dispatch(setTermsAndConditions(formData));
+      dispatch(setDirectTermsAndConditions(formData));
       setCanNext(true);
     } else {
       setCanNext(false);
@@ -250,24 +258,23 @@ export const TermsAndConditions = ({ fields, setCanNext }) => {
           ) : (
             <></>
           )}
-          <FormControl sx={{ justifyContent: "center", display: "flex" }}>
-            <FormLabel
-              onClick={() => dispatch(toggleModal("isFreebieViewing"))}
-              sx={{
-                cursor: "pointer",
-                bgcolor: "gray",
-                color: "black !important",
-                textAlign: "center",
-                borderRadius: "10px",
-                width: "200px",
-              }}
-            >
-              Freebies
-            </FormLabel>
-          </FormControl>
+          <Button
+            onClick={() => dispatch(toggleDrawer("isFreebieForm"))}
+            startIcon={<Add />}
+            sx={{
+              cursor: "pointer",
+              color: "black !important",
+              textAlign: "center",
+              borderRadius: "10px",
+              width: "200px",
+            }}
+          >
+            {directFreebieRequest?.freebies?.length > 0 ? "Edit" : "Add"}{" "}
+            Freebies
+          </Button>
+          <FreebieForm isDirect={true} />
         </Stack>
       </Stack>
-      <FreebieViewing />
     </>
   );
 };

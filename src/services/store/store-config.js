@@ -7,6 +7,7 @@ import sidebarNavigationReducer from "./navigationSlice";
 import disclosureReducer from "./disclosureSlice";
 import selectedRowReducer from "./selectedRowSlice";
 import directDetailsReducer from "./customerDetailsSlice";
+import directRegistrationReducer from "./directRegistrationSlice";
 
 const rootReducer = combineReducers({
   fullname: loginReducer,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   sidebarNavigation: sidebarNavigationReducer,
   disclosure: disclosureReducer,
   selectedRowData: selectedRowReducer,
-  directRegistrationData: directDetailsReducer,
+  releasedToRegistrationData: directDetailsReducer,
+  directRegistrationData: directRegistrationReducer,
   [jsonServerApi.reducerPath]: jsonServerApi.reducer,
 });
 

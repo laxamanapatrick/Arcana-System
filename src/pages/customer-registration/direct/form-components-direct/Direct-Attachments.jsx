@@ -3,10 +3,10 @@ import { Box, IconButton, Radio, Stack, Typography } from "@mui/material";
 import { AttachFile, CameraAlt, Edit, InsertPhoto } from "@mui/icons-material";
 import { useDropzone } from "react-dropzone";
 import { useDispatch } from "react-redux";
-import { toggleModal } from "../../../../../services/store/disclosureSlice";
-import SignatureCanvas from "../../../../../components/Signature-Canvas";
+import SignatureCanvas from "../../../../components/Signature-Canvas";
+import { toggleModal } from "../../../../services/store/disclosureSlice";
 
-export const Attachments = ({ setAttachments, setCanSubmit }) => {
+export const DirectAttachments = ({ setAttachments, setCanSubmit }) => {
   const dispatch = useDispatch();
   const [attachmentType, setAttachmentType] = useState("");
   const [signatureValue, setSignatureValue] = useState({
@@ -230,7 +230,7 @@ export const Attachments = ({ setAttachments, setCanSubmit }) => {
           border="1px solid black"
           justifyContent="space-between"
           alignItems="center"
-        > 
+        >
           <Typography fontStyle="italic" fontWeight={700} color="primary.main">
             Owner's Requirements
           </Typography>

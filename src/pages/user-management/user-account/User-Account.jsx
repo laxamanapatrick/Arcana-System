@@ -338,6 +338,16 @@ const UserAccountForm = () => {
   const { isUserAccountForm } = useSelector(
     (state) => state.disclosure.drawers
   );
+  const userTypes = [
+    {
+      id: 1,
+      userType: "CDO",
+    },
+    {
+      id: 2,
+      userType: "Approver",
+    },
+  ];
   const { data: userRoleData } = useGetUserRoleQuery();
   const { data: companyData } = useGetCompanyQuery();
   const { data: departmentData } = useGetDepartmentQuery();
@@ -358,6 +368,7 @@ const UserAccountForm = () => {
       fullname: "",
       username: "",
       password: "",
+      userType: null,
       userRole: null,
       company: null,
       department: null,
@@ -371,6 +382,13 @@ const UserAccountForm = () => {
       setValue("fullname", selectedRowData?.fullname);
       setValue("username", selectedRowData?.username);
       setValue("password", selectedRowData?.password);
+      setValue(
+        "userType",
+        userTypes?.find((item) => {
+          if (item?.userType === selectedRowData?.userType) return item;
+          return null;
+        })
+      );
       setValue(
         "userRole",
         userRoleData?.data?.userRoles?.find((item) => {
@@ -410,6 +428,7 @@ const UserAccountForm = () => {
       setValue("fullname", "");
       setValue("username", "");
       setValue("password", "");
+      setValue("userType", null);
       setValue("userRole", null);
       setValue("company", null);
       setValue("department", null);
@@ -424,6 +443,7 @@ const UserAccountForm = () => {
       fullname: data?.fullname,
       username: data?.username,
       password: data?.password,
+      userType: data?.userType?.userType,
       userRoleId: data?.userRole?.id,
       companyId: data?.company?.id,
       departmentId: data?.department?.id,
@@ -432,6 +452,7 @@ const UserAccountForm = () => {
     const editPayload = {
       fullname: data?.fullname,
       username: data?.username,
+      userType: data?.userType?.userType,
       userRoleId: data?.userRole?.id,
       companyId: data?.company?.id,
       departmentId: data?.department?.id,
@@ -439,19 +460,19 @@ const UserAccountForm = () => {
     };
     try {
       if (selectedRowData === null) {
-        await createUserAccount(addPayload).unwrap()
+        await createUserAccount(addPayload).unwrap();
         BasicToast("success", `User ${data?.fullname} was created`, 1500);
       } else {
         await updateUserAccount({
           payload: editPayload,
           id: selectedRowData?.id,
-        }).unwrap()
+        }).unwrap();
         BasicToast("success", `User Updated`, 1500);
       }
     } catch (error) {
       BasicToast("error", `${error?.data?.messages[0]}`, 1500);
       console.log(error);
-      return
+      return;
     }
     reset();
     dispatch(setSelectedRow(null));
@@ -552,6 +573,19 @@ const UserAccountForm = () => {
                   type="password"
                 />
               )}
+
+              <AutoComplete
+                name="userType"
+                control={control}
+                options={userTypes}
+                getOptionLabel={(option) => option?.userType}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                renderInput={(params) => (
+                  <MuiTextField {...params} label="User Type" size="small" />
+                )}
+                disablePortal
+                disableClearable
+              />
 
               <AutoComplete
                 name="userRole"
