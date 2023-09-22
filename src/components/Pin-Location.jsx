@@ -13,43 +13,11 @@ const PinLocation = ({ iconSize, businessAddress }) => {
   const dispatch = useDispatch();
   const { isPinLocation } = useSelector((state) => state.disclosure.modals);
 
-  const [center, setCenter] = useState({ lat: 15.0594, lng: 120.6567 });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    if (!businessAddress) return;
-
-    const apiKey = "AIzaSyARUuQTuMNGcIB2vhuiH8MdoWaH_ALumxA";
-    const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-      businessAddress
-    )}&key=${apiKey}`;
-
-    fetch(apiUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === "OK" && data.results.length > 0) {
-          const location = data.results[0].geometry.location;
-          const lat = location.lat;
-          const lng = location.lng;
-          setCenter({ lat, lng });
-        } else {
-          setError(
-            `Unable to locate ${businessAddress}. Please provide more specific details regarding location.`
-          );
-        }
-      })
-      .catch((error) => {
-        setError("Error fetching data: " + error.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [businessAddress]);
-
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyARUuQTuMNGcIB2vhuiH8MdoWaH_ALumxA",
   });
+
+  const center = useMemo(() => ({ lat: 15.0944152, lng: 120.6075827 }), []);
 
   return (
     <>
@@ -103,16 +71,13 @@ const PinLocation = ({ iconSize, businessAddress }) => {
           >
             {!isLoaded ? (
               <>Loading...</>
-            ) : loading ? (
-              <>Fetching location...</>
-            ) : error ? (
-              <div>Error: {error}</div>
             ) : (
               <>
                 <GoogleMap
                   zoom={15} // Adjust the zoom level as needed
                   center={center}
                   mapContainerClassName="map-container"
+                  mapContainerStyle={{height: '90%', width:'100%'}}
                 >
                   <Marker position={center} clickable title="Hello world" />
                 </GoogleMap>

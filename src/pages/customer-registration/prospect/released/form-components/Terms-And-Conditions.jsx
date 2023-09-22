@@ -262,7 +262,7 @@ export const TermsAndConditions = ({ fields, setCanNext }) => {
                 width: "200px",
               }}
             >
-              Freebies
+              View Freebies
             </FormLabel>
           </FormControl>
         </Stack>
