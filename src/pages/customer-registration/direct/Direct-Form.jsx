@@ -39,6 +39,10 @@ export const DirectForm = () => {
     directTermsAndConditions,
   } = useSelector((state) => state.directRegistrationData);
   const [attachments, setAttachments] = useState();
+  const [pinLocation, setPinLocation] = useState({
+    latitude: "",
+    longitude: "",
+  });
 
   const fields = {
     customer_details: {
@@ -85,6 +89,8 @@ export const DirectForm = () => {
         // selectedRowData={selectedRowData}
         fields={fields}
         setCanNext={setCanNext}
+        pinLocation={pinLocation}
+        setPinLocation={setPinLocation}
       />
     ),
     2: <DirectTermsAndConditions fields={fields} setCanNext={setCanNext} />,
@@ -172,14 +178,12 @@ export const DirectForm = () => {
 
   const handleSubmit = () => {
     if (viewing === 3 && canSubmit) {
-      alert("Submitted");
+      console.log(fields);
     }
     if (!canSubmit) {
-      alert("required attachments not met");
+      alert("required attachments not provided");
     }
   };
-
-  console.log(fields);
 
   return (
     <Modal

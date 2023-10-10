@@ -466,7 +466,6 @@ export const jsonServerApi = createApi({
     }),
 
     // Term Days
-
     getTermDays: builder.query({
       query: (params) => ({
         url: `TermDays/GetTermDays`,
@@ -498,6 +497,24 @@ export const jsonServerApi = createApi({
       }),
       invalidatesTags: ["Term Days"],
     }),
+
+    //Mode Of Payment
+    // getModeOfPayment: builder.query({
+    //   query: (params) => ({
+    //     url: `ModeOfPayments/GetAllModeOfPayments`,
+    //     method: "GET",
+    //     params: params,
+    //   }),
+    //   providesTags: ["Mode Of Payment"],
+    // }),
+    // createModeOfPayment: builder.mutation({
+    //   query: (payload) => ({
+    //     url: `ModeOfPayment/AddNewPaymentMethod`,
+    //     method: "POST",
+    //     body: payload,
+    //   }),
+    //   invalidatesTags: ["Mode Of Payment"],
+    // }),
 
     //Request Prospect
 
@@ -682,7 +699,6 @@ export const jsonServerApi = createApi({
     }),
 
     //Releasing
-
     createUpdateReleaseProspect: builder.mutation({
       query: ({ payload, id }) => ({
         url: `ReleasedProspectingRequest/ReleasedProspectingRequest/${encodeURIComponent(
@@ -710,6 +726,54 @@ export const jsonServerApi = createApi({
         )}&key=${"AIzaSyARUuQTuMNGcIB2vhuiH8MdoWaH_ALumxA"}`,
         method: "GET",
       }),
+    }),
+
+    //Released
+    createRegisterClient: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `Registration/RegisterClient/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Released Prospect"],
+    }),
+
+    createAddTermsAndConditions: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `Registration/AddTermsAndCondition/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Released Prospect"],
+    }),
+
+    createAddAttachments: builder.mutation({
+      query: ({ payload, id }) => ({
+        url: `Registration/AddAttachments/${encodeURIComponent(id)}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Released Prospect"],
+    }),
+
+    //Direct Registration
+    getDirectRegistrationClients: builder.query({
+      query: (params) => ({
+        url: "DirectRegistration/GetAllDirectRegistrationClients",
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Direct Registration"],
+    }),
+
+    //Approved Direct Client / From Released
+    getRegisteredClients: builder.query({
+      query: (params) => ({
+        url: "Registration/GetRegisteredClients",
+        method: "GET",
+        params: params,
+      }),
+      providesTags: ["Direct Registration"],
     }),
   }),
 });
@@ -839,6 +903,17 @@ export const {
   useCreateUpdateReleaseProspectMutation,
   useGetAllReleasedProspectQuery,
 
+  //Released To Direct Registration,
+  useCreateRegisterClientMutation,
+  useCreateAddTermsAndConditionsMutation,
+  useCreateAddAttachmentsMutation,
+
   //Get Address Coordinates
-  useGetCoordinatesQuery
+  useGetCoordinatesQuery,
+
+  //Direct Registration
+  useGetDirectRegistrationClientsQuery,
+
+  //Approved Direct Client / From Released
+  useGetRegisteredClientsQuery,
 } = jsonServerApi;

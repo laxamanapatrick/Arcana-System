@@ -15,7 +15,13 @@ import { useDispatch } from "react-redux";
 import PinLocation from "../../../../../components/Pin-Location";
 import "../../../../../stylesheets/checkbox.scss";
 
-export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
+export const CustomerDetails = ({
+  selectedRowData,
+  fields,
+  setCanNext,
+  pinLocation,
+  setPinLocation,
+}) => {
   const requiredFieldLabelStyle = {
     "& .MuiFormLabel-root": {
       color: "red !important",
@@ -63,7 +69,9 @@ export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
       watch("businessAddress") &&
       watch("representativeName") &&
       watch("representativePosition") &&
-      watch("cluster")
+      watch("cluster") &&
+      pinLocation.latitude &&
+      pinLocation.longitude
     ) {
       dispatch(setClientDetails(formData));
       setCanNext(true);
@@ -83,6 +91,8 @@ export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
     watch("representativeName"),
     watch("representativePosition"),
     watch("cluster"),
+    pinLocation.latitude,
+    pinLocation.longitude,
   ]);
 
   return (
@@ -248,9 +258,22 @@ export const CustomerDetails = ({ selectedRowData, fields, setCanNext }) => {
             <PinLocation
               iconSize={"30px"}
               businessAddress={watch("businessAddress")}
+              pinLocation={pinLocation}
+              setPinLocation={setPinLocation}
             />
-            See Location on Map
+            Click the icon to register current location
           </Typography>
+          {(!pinLocation.latitude || !pinLocation.longitude) && (
+            <Typography
+              ml={5}
+              fontWeight="bold"
+              color="error"
+              fontSize="10.5px"
+            >
+              Pin location must be registered. Please click on the Icon to
+              register location.
+            </Typography>
+          )}
         </Stack>
       </Stack>
     </>

@@ -25,6 +25,7 @@ import {
 import { DirectForm } from "./Direct-Form";
 import { toggleModal } from "../../../services/store/disclosureSlice";
 import { Add } from "@mui/icons-material";
+import { useGetDirectRegistrationClientsQuery } from "../../../services/api";
 
 export const DirectRegistration = () => {
   const theme = useTheme();
@@ -36,8 +37,16 @@ export const DirectRegistration = () => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(25);
 
-  const isLoading = false;
-  const totalCount = 1;
+  const { data: registeredClientsData, isLoading } =
+    useGetDirectRegistrationClientsQuery({
+      Search: search,
+      Status: status,
+      PageNumber: page + 1,
+      PageSize: pageSize,
+    });
+  const totalCount = registeredClientsData?.data?.totalCount || 0;
+
+  console.log(registeredClientsData);
 
   const handleChangePage = (event, newPage) => {
     setPage(Number(newPage));
@@ -45,6 +54,12 @@ export const DirectRegistration = () => {
 
   const handleChangeRowsPerPage = (event) => {
     setPageSize(Number(event.target.value));
+  };
+
+  const handleViewArchived = () => {
+    setPage(0);
+    setPageSize(25);
+    setStatus((prev) => !prev);
   };
 
   return (
@@ -55,16 +70,14 @@ export const DirectRegistration = () => {
         justifyContent="space-between"
         mb={2}
       >
-        <SearchField
-          onChange={(e) => console.log(`Search Field Value: ${e.target.value}`)}
-        />
+        <SearchField onChange={(e) => setSearch(e.target.value)} />
         <Stack flexDirection="row">
           <Checkbox
             size="small"
             checked={status === false}
             inputProps={{ "aria-label": "controlled" }}
             sx={{ color: theme.palette.secondary.main, mb: "2px", p: 0 }}
-            onClick={() => console.log("Status change viewing")}
+            onClick={handleViewArchived}
           />
           <Typography fontSize="small" mr={1}>
             Archived
@@ -83,17 +96,15 @@ export const DirectRegistration = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {[
-                  {
-                    name: "Table Body",
-                  },
-                ]?.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell component="th" scope="row">
-                      {row.name}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {registeredClientsData?.data?.directRegistrationClients?.map(
+                  (row, index) => (
+                    <TableRow key={index}>
+                      <TableCell component="th" scope="row">
+                        {row.name}
+                      </TableCell>
+                    </TableRow>
+                  )
+                )}
               </TableBody>
               <TableFooter>
                 <TableRow>
@@ -122,7 +133,9 @@ export const DirectRegistration = () => {
             </Table>
           </TableContainer>
         ) : (
-          <ZeroRecordsFound text="text here" />
+          <ZeroRecordsFound  text={`${
+            status ? "No active records" : "No archived records"
+          } for Direct Requests`} />
         )}
         <Stack alignItems="end" mt={1} sx={defaultButtonStyle}>
           <Button

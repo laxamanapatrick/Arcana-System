@@ -24,6 +24,11 @@ import {
   setClientDetails,
   setTermsAndConditions,
 } from "../../../../services/store/customerDetailsSlice";
+import {
+  useCreateAddAttachmentsMutation,
+  useCreateAddTermsAndConditionsMutation,
+  useCreateRegisterClientMutation,
+} from "../../../../services/api";
 
 export const ReleasedToDirectForm = () => {
   const theme = useTheme();
@@ -39,6 +44,10 @@ export const ReleasedToDirectForm = () => {
   );
 
   const [attachments, setAttachments] = useState();
+  const [pinLocation, setPinLocation] = useState({
+    latitude: "",
+    longitude: "",
+  });
 
   const fields = {
     clientId: selectedRowData?.id,
@@ -52,17 +61,16 @@ export const ReleasedToDirectForm = () => {
       freezer: termsAndConditions?.freezer || "",
       typeOfCustomer: termsAndConditions?.typeOfCustomer || "",
       directDelivery: termsAndConditions?.directDelivery || "",
-      bookingCoverage: termsAndConditions?.bookingCoverage || "",
-      terms: termsAndConditions?.terms || "",
-      modeOfPayment: termsAndConditions?.modeOfPayment || "",
+      bookingCoverageId: termsAndConditions?.bookingCoverageId || "",
+      terms: Number(termsAndConditions?.terms) || "",
+      modeOfPayment: Number(termsAndConditions?.modeOfPayment) || "",
       discountTypes: termsAndConditions?.discountTypes || "",
       creditLimit:
-        termsAndConditions?.terms === "creditlimit"
+        Number(termsAndConditions?.terms) === 3
           ? termsAndConditions?.creditLimit
           : "NA",
       termDays:
-        termsAndConditions?.terms === "1up1down" ||
-        termsAndConditions?.terms === "creditlimit"
+        termsAndConditions?.terms === 2 || termsAndConditions?.terms === 3
           ? termsAndConditions?.termDays
           : "NA",
       fixedValue:
@@ -82,6 +90,8 @@ export const ReleasedToDirectForm = () => {
         selectedRowData={selectedRowData}
         fields={fields}
         setCanNext={setCanNext}
+        pinLocation={pinLocation}
+        setPinLocation={setPinLocation}
       />
     ),
     2: <TermsAndConditions fields={fields} setCanNext={setCanNext} />,
@@ -160,22 +170,117 @@ export const ReleasedToDirectForm = () => {
       if (res.isConfirmed) {
         dispatch(setClientDetails(null));
         dispatch(setTermsAndConditions(null));
+        setPinLocation({
+          latitude: "",
+          longitude: "",
+        });
         setViewing(1);
         dispatch(toggleModal("isReleasedToDirectForm"));
       }
     });
   };
 
-  const handleSubmit = () => {
+  const [createRegisterClient] = useCreateRegisterClientMutation();
+  const [createAddTermsAndConditions] =
+    useCreateAddTermsAndConditionsMutation();
+  const [createAddAttachments] = useCreateAddAttachmentsMutation();
+  const handleSubmit = async () => {
+    //First Payload Start
+    const firstPayload = {
+      clientId: fields?.clientId,
+      businessAddress: fields?.customer_details?.businessAddress,
+      authorizedRepresentative: fields?.customer_details?.representativeName,
+      authorizedRepresentativePosition:
+        fields?.customer_details?.representativePosition,
+      cluster: fields?.customer_details?.cluster,
+      longitude: pinLocation?.longitude?.toString(),
+      latitude: pinLocation?.latitude?.toString(),
+    };
+    //First Payload End
+
+    //Second Payload Manpulation Start
+    let secondPayload;
+
+    const secondPayloadAll = {
+      clientId: fields?.clientId,
+      freezer: fields?.terms_and_conditions?.freezer === "yes" ? true : false,
+      typeOfCustomer: fields?.terms_and_conditions?.typeOfCustomer,
+      directDelivery:
+        fields?.terms_and_conditions?.directDelivery === "yes" ? true : false,
+      bookingCoverageId: Number(
+        fields?.terms_and_conditions?.bookingCoverageId
+      ),
+      modeOfPayment: Number(fields?.terms_and_conditions?.modeOfPayment),
+      terms: Number(fields?.terms_and_conditions?.terms),
+      creditLimit:
+        Number(fields?.terms_and_conditions?.terms) === 3
+          ? fields?.terms_and_conditions?.creditLimit
+          : null,
+      termDaysId:
+        termsAndConditions?.terms === 2 || termsAndConditions?.terms === 3
+          ? fields?.terms_and_conditions?.termDays?.id
+          : null,
+      fixedDiscounts: {
+        discountPercentage:
+          fields?.terms_and_conditions?.discountTypes === "fixed"
+            ? fields?.terms_and_conditions?.fixedValue
+            : 0,
+      },
+      variableDiscount:
+        fields?.terms_and_conditions?.discountTypes === "variable"
+          ? true
+          : false,
+    };
+
+    if (Number(fields?.terms_and_conditions?.terms) === 1) {
+      secondPayload = {
+        ...secondPayloadAll,
+      };
+      delete secondPayload.creditLimit;
+      delete secondPayload.termDaysId;
+    } else if (
+      Number(fields?.terms_and_conditions?.terms) === 3 &&
+      (Number(termsAndConditions?.terms) === 2 ||
+        Number(termsAndConditions?.terms) === 3)
+    ) {
+      secondPayload = secondPayloadAll;
+    } else {
+      secondPayload = {
+        ...secondPayloadAll,
+      };
+      delete secondPayload.creditLimit;
+    }
+    //Second Payload Manpulation End
+
+    //Third Payload Start
+    const thirdPayload = Object.values(fields?.attachments);
+    //Third Payload End
+
     if (viewing === 3 && canSubmit) {
-      alert("Submitted");
+      console.log(firstPayload);
+      console.log(secondPayload);
+      console.log(thirdPayload);
+      try {
+        await createRegisterClient({
+          id: fields?.clientId,
+          payload: firstPayload,
+        }).unwrap();
+        await createAddTermsAndConditions({
+          id: fields?.clientId,
+          payload: secondPayload,
+        }).unwrap();
+        await createAddAttachments({
+          id: fields?.clientId,
+          payload: thirdPayload,
+        }).unwrap();
+      } catch (error) {
+        console.log(error);
+      }
     }
     if (!canSubmit) {
-      alert("required attachments not met");
+      alert("Required attachments not provided");
     }
   };
-
-  // console.log(fields)
 
   return (
     <Modal

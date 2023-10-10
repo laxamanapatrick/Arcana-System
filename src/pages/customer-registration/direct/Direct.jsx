@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { DirectRegistration } from "./Direct-Registration";
 import { RegistrationStatus } from "./Registration-Status";
+import { useGetDirectRegistrationClientsQuery } from "../../../services/api";
 
 export const Direct = () => {
   const theme = useTheme();
@@ -17,22 +18,28 @@ export const Direct = () => {
     useDefaultStyles();
   const [viewing, setViewing] = useState(0);
 
+  const { data: registeredClientsData } = useGetDirectRegistrationClientsQuery({
+    Status: true,
+  });
+
+  const totalRequestedDirect = registeredClientsData?.data?.totalCount
+
   const directNavbar = [
     {
       case: 1,
       name: "Direct Register",
-      badge: 1,
+      badge: totalRequestedDirect || 0,
     },
-    {
-      case: 2,
-      name: "Direct Status",
-      badge: 2,
-    },
+    // {
+    //   case: 2,
+    //   name: "Direct Status",
+    //   badge: 2,
+    // },
   ];
 
   const components = {
     1: <DirectRegistration />,
-    2: <RegistrationStatus />,
+    // 2: <RegistrationStatus />,
   };
 
   return (

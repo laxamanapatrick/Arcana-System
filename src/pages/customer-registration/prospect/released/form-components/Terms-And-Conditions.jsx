@@ -52,7 +52,7 @@ export const TermsAndConditions = ({ fields, setCanNext }) => {
       watch("freezer") &&
       watch("typeOfCustomer") &&
       watch("directDelivery") &&
-      watch("bookingCoverage") &&
+      watch("bookingCoverageId") &&
       watch("modeOfPayment") &&
       // (
       // watch("terms")
@@ -78,7 +78,7 @@ export const TermsAndConditions = ({ fields, setCanNext }) => {
     watch("freezer"),
     watch("typeOfCustomer"),
     watch("directDelivery"),
-    watch("bookingCoverage"),
+    watch("bookingCoverageId"),
     watch("modeOfPayment"),
     watch("terms"),
     watch("discountTypes"),
@@ -130,15 +130,15 @@ export const TermsAndConditions = ({ fields, setCanNext }) => {
           />
           <RadioField
             row
-            name="bookingCoverage"
+            name="bookingCoverageId"
             control={control}
             label="Booking Coverage"
             formLabelStyle={formStyle}
             options={[
-              { value: "f1", label: "F1" },
-              { value: "f2", label: "F2" },
-              { value: "f3", label: "F3" },
-              { value: "f4", label: "F4" },
+              { value: 1, label: "F1" },
+              { value: 2, label: "F2" },
+              { value: 3, label: "F3" },
+              { value: 4, label: "F4" },
             ]}
           />
         </Stack>
@@ -152,12 +152,12 @@ export const TermsAndConditions = ({ fields, setCanNext }) => {
             label="Terms"
             formLabelStyle={formStyle}
             options={[
-              { value: "cod", label: "COD" },
-              { value: "1up1down", label: "1 Up 1 Down" },
-              { value: "creditlimit", label: "Credit Limit" },
+              { value: 1, label: "COD" },
+              { value: 2, label: "1 Up 1 Down" },
+              { value: 3, label: "Credit Limit" },
             ]}
           />
-          {watch("terms") === "1up1down" ? (
+          {watch("terms") === 2 ? (
             <AutoComplete
               name="termDays"
               sx={{ width: "95%" }}
@@ -177,7 +177,7 @@ export const TermsAndConditions = ({ fields, setCanNext }) => {
               disablePortal
               disableClearable
             />
-          ) : watch("terms") === "creditlimit" ? (
+          ) : watch("terms") === 3 ? (
             <>
               <Textfield
                 name="creditLimit"
@@ -220,8 +220,8 @@ export const TermsAndConditions = ({ fields, setCanNext }) => {
             label="Mode Of Payment"
             formLabelStyle={formStyle}
             options={[
-              { value: "cash", label: "Cash" },
-              { value: "check/online", label: "Check/Online" },
+              { value: 1, label: "Cash" },
+              { value: 2, label: "Check/Online" },
             ]}
           />
           <RadioField
